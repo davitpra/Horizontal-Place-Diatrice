@@ -7,8 +7,6 @@ import { useTableNumber } from "../hooks/useTableNumber";
 
 export function TableMap({residents}) {
 
-  const [tableModalOpen, setTableModalOpen] = useState(false);
-
   const tableModal = useTableModal();
   const onSelect = useTableNumber((state) => state.onSelect);
 
@@ -31,7 +29,10 @@ export function TableMap({residents}) {
 
   const peopleByTable = countPeopleByTable(residents);
 
+  if (tableModal.isOpen) return null;
+
   return (
+    <div className="h-screen flex justify-center">
     <div className="container">
       <div className="table center">X</div>
       {tablesNumbers.map((tableNumber) => (
@@ -39,18 +40,18 @@ export function TableMap({residents}) {
           key={tableNumber}
           className={`table table${tableNumber}`}
           onClick={() => {
-            setTableModalOpen(!tableModalOpen);
             onSelect(tableNumber);
             toggleModal(tableNumber);
           }}
         >
           {tableNumber}
-          <div className={`chair top ${peopleByTable[tableNumber] >= 4 ? 'bg-blue-500' : 'hidden'}`}></div>
-          <div className={`chair bottom ${peopleByTable[tableNumber] >= 3 ? 'bg-blue-500' : 'hidden'}`}></div>
-          <div className={`chair left ${peopleByTable[tableNumber] >= 2 ? 'bg-blue-500' : 'hidden'}`}></div>
-          <div className={`chair right ${peopleByTable[tableNumber] >= 1 ? 'bg-blue-500' : 'hidden'}`}></div>
+          <div className={`chair top ${peopleByTable[tableNumber] >= 4 ? 'bg-indigo-600' : 'hidden'}`}></div>
+          <div className={`chair bottom ${peopleByTable[tableNumber] >= 3 ? 'bg-indigo-600' : 'hidden'}`}></div>
+          <div className={`chair left ${peopleByTable[tableNumber] >= 2 ? 'bg-indigo-600' : 'hidden'}`}></div>
+          <div className={`chair right ${peopleByTable[tableNumber] >= 1 ? 'bg-indigo-600' : 'hidden'}`}></div>
         </div>
       ))}
+    </div>
     </div>
   );
 }

@@ -1,55 +1,32 @@
-import Image from "next/image";
+'use client'
 import { TableMap } from "./components/TableMap";
 import { TableModal } from "./components/TableModal";
+import {residents} from './data/residents';
+import { useSeatingConfigure } from "./hooks/useSeatingConfigure";
 
 export default function Home() {
-  const residents = [
-    {
-      name: "Juan",
-      table: 1,
-    },
-    {
-      name: "Angelica",
-      table: 1,
-    },
-    {
-      name: "David",
-      table: 1,
-    },
-    {
-      name: "Juan",
-      table: 1,
-    },
-    {
-      name: "Otro Pedro",
-      table: 2,
-    },
-    {
-      name: "Pedro",
-      table: 2,
-    }, 
-    {
-      name: "Maria",
-      table: 3,
-    },
-    {
-      name: "Maria",
-      table: 3,
-    },
-    {
-      name: "Maria",
-      table: 3,
-    },
-    {
-      name: "Maria",
-      table: 12,
-    }
-  ]
   
+  const seating = useSeatingConfigure((state) => state.seating);
+
+  let seatingMessage;
+  switch (seating) {
+    case 0:
+      seatingMessage = "Set up Tables";
+      break;
+    case 1:
+      seatingMessage = "First Seating";
+      break;
+    case 2:
+      seatingMessage = "Second Seating";
+      break;
+    default:
+      seatingMessage = "Unknown Seating";
+  }
 
   return (
   <>
-    <TableModal />
+    <h1 className="text-center pb-2 font-medium">{seatingMessage}</h1>
+    <TableModal residents={residents} />
     <TableMap residents={residents} />
   </>
   );
