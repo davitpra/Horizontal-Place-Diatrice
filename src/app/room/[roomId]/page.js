@@ -83,16 +83,20 @@ async function roomId({ params }) {
             {/* Image gallery */}
             <TabGroup className="flex flex-col-reverse">
               <TabPanels className="aspect-h-1 aspect-w-1 w-full">
-                  <TabPanel>
-                    { resident[0].image                     
-                    ? <img
-                        alt={`${fullName} image`}
-                        src={ resident[0].image }
-                        className="h-full w-full object-cover object-center sm:rounded-lg"
-                      />
-                    : <UserIcon className="h-full w-full object-cover object-center sm:rounded-lg" strokeWidth={0.2}/>
-                    }
-                  </TabPanel>
+                <TabPanel>
+                  {resident[0].image ? (
+                    <img
+                      alt={`${fullName} image`}
+                      src={resident[0].image}
+                      className="h-full w-full object-cover object-center sm:rounded-lg"
+                    />
+                  ) : (
+                    <UserIcon
+                      className="h-full w-full object-cover object-center sm:rounded-lg"
+                      strokeWidth={0.2}
+                    />
+                  )}
+                </TabPanel>
               </TabPanels>
             </TabGroup>
 
@@ -103,7 +107,7 @@ async function roomId({ params }) {
                   {fullName}
                 </h1>
                 <p className="text-3xl font-bold tracking-tight text-gray-900">
-                -  
+                  -
                 </p>
                 <h2 className="text-3xl font-bold tracking-tight text-gray-900">
                   Room {roomId}
@@ -150,63 +154,20 @@ async function roomId({ params }) {
                         <div>
                           <div className="mt-2 border-t border-gray-100">
                             <dl className="divide-y divide-gray-100">
-                              <div className="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                <dt className="text-sm/6 font-medium text-gray-900">
-                                  Water
-                                </dt>
-                                <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                  {meal.water}
-                                </dd>
-                              </div>
-                              <div className="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                <dt className="text-sm/6 font-medium text-gray-900">
-                                  Hot drink
-                                </dt>
-                                <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                  {meal.hotdrink}
-                                </dd>
-                              </div>
-                              <div className="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                <dt className="text-sm/6 font-medium text-gray-900">
-                                  Cereals
-                                </dt>
-                                <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                  {meal.cereals}
-                                </dd>
-                              </div>
-                              <div className="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                <dt className="text-sm/6 font-medium text-gray-900">
-                                  Juice
-                                </dt>
-                                <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                  {meal.juice}
-                                </dd>
-                              </div>
-                              <div className="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                <dt className="text-sm/6 font-medium text-gray-900">
-                                  Eggs
-                                </dt>
-                                <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                  {meal.eggs}
-                                </dd>
-                              </div>
-                              <div className="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                <dt className="text-sm/6 font-medium text-gray-900">
-                                  Bread
-                                </dt>
-                                <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                  {meal.bread}
-                                </dd>
-                              </div>
+                              {Object.entries(meal).map(([key, value]) => (
+                                <div
+                                  key={key}
+                                  className="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0"
+                                >
+                                  <dt className="text-sm/6 font-medium text-gray-900">
+                                    {key}
+                                  </dt>
+                                  <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                                    {value}
+                                  </dd>
+                                </div>
+                              ))}
                             </dl>
-                            <div className="px-4 sm:px-0 py-6 divide-y divide-gray-100">
-                              <h3 className="text-sm/6 font-semibold text-gray-900">
-                                Observation
-                              </h3>
-                              <p className="mt-1 max-w-2xl text-sm/6 text-gray-500 py-2">
-                                {meal.observation}
-                              </p>
-                            </div>
                           </div>
                         </div>
                       </DisclosurePanel>
