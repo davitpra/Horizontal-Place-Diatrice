@@ -20,7 +20,6 @@ import { useRouter } from 'next/navigation'
 const Seatings = [
   { name: "First Seating", seating: 1 },
   { name: "Second Seating", seating: 2 },
-  { name: "Set up Tables", seating: 0 },
 ];
 
 export function Header() {

@@ -67,7 +67,7 @@
 .left { left: -50%; top: 50%; transform: translateY(-50%); }
 .right { right: -50%; top: 50%; transform: translateY(-50%); }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .table {
     width: 2.5rem;
     height: 2.5rem;

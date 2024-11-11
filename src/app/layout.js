@@ -1,7 +1,7 @@
 import localFont from "next/font/local";
 import { Header } from "./components/Header"
 import "./globals.css";
-import { Footer } from "./components/Footer";
+import { Message } from "./components/Footer";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -20,6 +20,10 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+
+  let footerTitle = "IMPORTANT NOTE";
+  let footerMessage = "This information is only to help you get familiar with the residents and their preferences. There is no harm in asking them and offering other choices (especially their drink choices can change from time to time)";
+
   return (
     <html lang="en">
       <body
@@ -27,7 +31,7 @@ export default function RootLayout({ children }) {
       >
         <Header />
         {children}
-        <Footer />
+        <Message title={footerTitle} message={footerMessage}/>
       </body>
     </html>
   );
