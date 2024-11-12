@@ -1,6 +1,7 @@
 'use client'
 import { TableMap } from "./components/TableMap";
 import { TableModal } from "./components/TableModal";
+import Title from "./components/Title";
 import { Wraper } from "./components/Wraper";
 import {residents} from './data/residents';
 import { useSeatingConfigure } from "./hooks/useSeatingConfigure";
@@ -25,14 +26,16 @@ export default function Home() {
       residentOnSetting = residents.filter((resident) => resident.seating === 1);
   }
 
-  
+  const observations =[
+    "The chair positions may not be correct",
+    "The red chairs are for prioritary residents",
+  ]
+
   return (
   <>
     <h1 className="text-center pb-2 font-medium">{seatingMessage}</h1>
     <TableModal residents={residentOnSetting} />
-    <Wraper>
-      <p className="pb-4 2xl:pl-24 xl:pl-0 lg:pl-8 md:pl-4 text-gray-600"><span className="font-semibold">Note: </span> The chair position may not be correct.</p>
-    </Wraper>
+    <Title title={"Notes"} observations={observations} className="mb-4"/>
     <TableMap residents={residentOnSetting} />
   </>
   );

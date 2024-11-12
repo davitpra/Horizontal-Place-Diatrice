@@ -1,14 +1,36 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { Wraper } from "./Wraper";
-import { UserIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
+import { UserIcon, MinusCircleIcon } from "@heroicons/react/24/outline";
 import { useTrays } from "../hooks/useTrays";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-export function Table({ residents }) {
+export function TableForTrays({ residents }) {
   const router = useRouter();
   const trays = useTrays();
-  
+
+  const [ontrays, setOntrays] = useState([]);
+  const [filteredResidents, setFilteredResidents] = useState([]);
+
+  // dDefinir los residentes que están en las bandejas
+  useEffect(() => {
+    const roomIds = trays.trays.map((tray) => tray.roomId);
+    setOntrays(roomIds);
+    setFilteredResidents(
+      residents.filter((resident) => roomIds.includes(resident.roomId))
+    );
+  }, [trays.trays, residents]);
+
+  //Actualizar la lista  de residentes en las bandejas
+  const onSelection = (roomId, wing) => {
+    trays.addToTrays(roomId, wing);
+  };
+
+  const getDefaultWing = (roomId) => {
+    const tray = trays.trays.find(tray => tray.roomId === roomId);
+    return tray ? tray.wing : "East wing";
+  }
+
   return (
     <Wraper>
       <div className="mt-8 flow-root">
@@ -33,7 +55,7 @@ export function Table({ residents }) {
                     scope="col"
                     className="px-3 py-3.5 text-left font-semibold text-gray-900"
                   >
-                    Seating
+                    Wing
                   </th>
                   <th
                     scope="col"
@@ -50,7 +72,7 @@ export function Table({ residents }) {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
-                {residents.map((person) => (
+                {filteredResidents.map((person) => (
                   <tr key={person.id}>
                     <td className="whitespace-nowrap py-4 pl-4 pr-3 font-medium text-gray-900 sm:pl-6 lg:pl-8">
                       {person.name} {person.lastName}
@@ -59,7 +81,16 @@ export function Table({ residents }) {
                       {person.roomId}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-gray-500">
-                      {person.seating}
+                      <select
+                        id="location"
+                        name="location"
+                        defaultValue={getDefaultWing(person.roomId)}
+                        onChange={(e) => onSelection(person.roomId, e.target.value)}
+                        className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm/6"
+                      >
+                        <option value="East wing">East wing</option>
+                        <option value="West wing">West wing</option>
+                      </select>
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-gray-500">
                       {person.importantObservation}
@@ -78,14 +109,14 @@ export function Table({ residents }) {
                     </td>
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right font-medium sm:pr-6 lg:pr-8">
                       <a
-                        onClick={() => trays.addToTrays(person.roomId)}
+                        onClick={() => trays.removeFromTrays(person.roomId)}
                         className="hidden sm:inline text-indigo-600 hover:text-indigo-900"
                       >
-                        Add to trays{" "}
-                        <span className="sr-only">add to trays</span>
+                        Remove
+                        <span className="sr-only">remove to trays</span>
                       </a>
-                      <PlusCircleIcon
-                        onClick={() => trays.addToTrays(person.roomId)}
+                      <MinusCircleIcon
+                        onClick={() => trays.removeFromTrays(person.roomId)}
                         className="sm:hidden h-5 w-5 text-indigo-600 hover:text-indigo-900"
                       />
                     </td>

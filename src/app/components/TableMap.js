@@ -12,12 +12,16 @@ export function TableMap({residents}) {
 
   const tablesNumbers = Array.from({ length: 17 }, (_, i) => i + 1);
 
+  const prioritary = residents.filter((persona) => persona.prioritary===true);
+
   function countPeopleByTable (residents) {
     return residents .reduce((acc, persona) => {
       acc[persona.table] = acc[persona.table] ? acc[persona.table] + 1 : 1;
       return acc;
     }, {});
   }
+  const peopleByTable = countPeopleByTable(residents);
+  const prioritaryByTable = countPeopleByTable(prioritary);
 
   const toggleModal = useCallback(() => {
     if (tableModal.isOpen) {
@@ -27,7 +31,6 @@ export function TableMap({residents}) {
     }
   }, [tableModal]);
 
-  const peopleByTable = countPeopleByTable(residents);
 
   if (tableModal.isOpen) return null;
 
@@ -45,10 +48,23 @@ export function TableMap({residents}) {
           }}
         >
           {tableNumber}
-          <div className={`chair top ${peopleByTable[tableNumber] >= 4 ? 'bg-indigo-600' : 'hidden'}`}></div>
-          <div className={`chair bottom ${peopleByTable[tableNumber] >= 3 ? 'bg-indigo-600' : 'hidden'}`}></div>
-          <div className={`chair left ${peopleByTable[tableNumber] >= 2 ? 'bg-indigo-600' : 'hidden'}`}></div>
-          <div className={`chair right ${peopleByTable[tableNumber] >= 1 ? 'bg-indigo-600' : 'hidden'}`}></div>
+          {peopleByTable[tableNumber] - (prioritaryByTable[tableNumber] || 0) > 0 && (
+            <>
+              <div className={`chair top ${peopleByTable[tableNumber] >= 4 ? 'bg-indigo-600' : 'hidden'}`}></div>
+              <div className={`chair bottom ${peopleByTable[tableNumber] >= 3 ? 'bg-indigo-600' : 'hidden'}`}></div>
+              <div className={`chair left ${peopleByTable[tableNumber] >= 2 ? 'bg-indigo-600' : 'hidden'}`}></div>
+              <div className={`chair right ${peopleByTable[tableNumber] >= 1 ? 'bg-indigo-600' : 'hidden'}`}></div>
+            </>
+          )}
+          {(prioritaryByTable[tableNumber] || 0) > 0 && (
+          
+            <>
+              <div className={`chair top ${prioritaryByTable[tableNumber] >= 4 ? 'bg-red-600' : 'hidden'}`}></div>
+              <div className={`chair bottom ${prioritaryByTable[tableNumber] >= 3 ? 'bg-red-600' : 'hidden'}`}></div>
+              <div className={`chair left ${prioritaryByTable[tableNumber] >= 2 ? 'bg-red-600' : 'hidden'}`}></div>
+              <div className={`chair right ${prioritaryByTable[tableNumber] >= 1 ? 'bg-red-600' : 'hidden'}`}></div>
+            </>
+          )}
         </div>
       ))}
     </div>

@@ -14,7 +14,6 @@ import {
   TabPanel,
   TabPanels,
 } from "@headlessui/react";
-import { StarIcon } from "@heroicons/react/20/solid";
 import { UserIcon, MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
 
 const product = {

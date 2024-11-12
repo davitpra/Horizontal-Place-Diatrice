@@ -12,7 +12,7 @@ import {
   PopoverGroup,
   PopoverPanel,
 } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, XMarkIcon, BellIcon} from "@heroicons/react/24/outline";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import {useSeatingConfigure} from '../hooks/useSeatingConfigure'
 import { useRouter } from 'next/navigation'
@@ -86,12 +86,16 @@ export function Header() {
             By Rooms
           </a>
 
-          <a href="#" className="text-sm/6 font-semibold text-gray-900">
+          <a href="/trays" className="text-sm/6 font-semibold text-gray-900">
             Trays
           </a>
-
-
         </PopoverGroup>
+        <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+          <BellIcon className="h-6 w-6 text-gray-900 mr-4" />
+          <a href="#" className="text-sm/6 font-semibold text-gray-900">
+            Log out <span aria-hidden="true">&rarr;</span>
+          </a>
+        </div>
       </nav>
       <Dialog
         open={mobileMenuOpen}
@@ -152,12 +156,25 @@ export function Header() {
                   By Rooms
                 </a>
                 <a
-                  href="#"
+                  href="/trays"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
                 >
                   Trays
                 </a>
-
+              </div>
+              <div className="py-6">
+                <a
+                  href="#"
+                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
+                >
+                  Notifications
+                </a>
+                <a
+                  href="#"
+                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
+                >
+                  Log out
+                </a>
               </div>
             </div>
           </div>
