@@ -17,9 +17,19 @@ export function Table({ residents }) {
   const [sortDirection, setSortDirection] = useState("asc");
   const [sortedResidents, setSortedResidents] = useState(residents);
 
+  const [traysRooms, setTraysRooms] = useState([]);
+  const [isOnTrays, setIsOnTrays] = useState(() => () => false);
+
   useEffect(() => {
     setSortedResidents(sortedResidents);
   }, [sortedResidents]);
+
+  
+  useEffect(() => {
+    const ids = trays.trays.map((tray) => tray.roomId);
+    setTraysRooms(ids);
+    setIsOnTrays(() => (roomId) => ids.includes(roomId));
+  }, [trays.trays]);
 
   const toggleSortDirection = () => {
     setSortDirection(sortDirection === "asc" ? "desc" : "asc");
@@ -120,29 +130,29 @@ export function Table({ residents }) {
                     <td className="whitespace-nowrap px-3 py-4 text-gray-500">
                       {person.importantObservation}
                     </td>
-                    <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right font-medium sm:pr-6 lg:pr-8">
+                    <td className={`relative whitespace-nowrap py-4 pl-3 pr-4 text-right font-medium sm:pr-6 lg:pr-8 ${isOnTrays(person.roomId) ? "text-green-600 hover:text-green-900" : "text-indigo-600 hover:text-indigo-900"}`}>
                       <a
                         onClick={() => router.push(`./room/${person.roomId}`)}
-                        className="hidden sm:inline text-indigo-600 hover:text-indigo-900"
+                        className="hidden sm:inline "
                       >
                         Details <span className="sr-only">details</span>
                       </a>
                       <UserIcon
-                        className="sm:hidden h-4 w-4 text-indigo-600 hover:text-indigo-900"
+                        className="sm:hidden h-4 w-4"
                         onClick={() => router.push(`./room/${person.roomId}`)}
                       />
                     </td>
-                    <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right font-medium sm:pr-6 lg:pr-8">
+                    <td className={`relative whitespace-nowrap py-4 pl-3 pr-4 text-right font-medium sm:pr-6 lg:pr-8 ${isOnTrays(person.roomId) ? "text-green-600 hover:text-green-900" : "text-indigo-600 hover:text-indigo-900"}`}>
                       <a
                         onClick={() => trays.addToTrays(person.roomId)}
-                        className="hidden sm:inline text-indigo-600 hover:text-indigo-900"
+                        className="hidden sm:inline"
                       >
                         Add to trays{" "}
                         <span className="sr-only">add to trays</span>
                       </a>
                       <PlusCircleIcon
                         onClick={() => trays.addToTrays(person.roomId)}
-                        className="sm:hidden h-4 w-4 text-indigo-600 hover:text-indigo-900"
+                        className="sm:hidden h-4 w-4"
                       />
                     </td>
                   </tr>

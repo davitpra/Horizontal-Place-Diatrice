@@ -74,6 +74,7 @@ export function Header() {
             >
               {Seatings.map((item) => (
                 <Link
+                  href="/"
                   key={item.name}
                   onClick={() => {
                     seating.setSeating(item.seating);

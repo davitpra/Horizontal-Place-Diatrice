@@ -6,8 +6,11 @@ export const useTrays = ()=>{
     const [trays, setTrays] = useLocalStorage(
         'trays', 
         [
-            {roomId: 23, wing: "East wing"},
+            {roomId: 23, wing: "West wing"},
             {roomId: 33, wing: "West wing"},
+            {roomId: 29, wing: "West wing"},
+            {roomId: 54, wing: "East wing"},
+            {roomId: 40, wing: "East wing"},
         ]
     )
 

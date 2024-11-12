@@ -16,8 +16,7 @@ export const residents = [
       "He likes his water in room temperature",],
     importantObservation:null,
     meals:[
-      { name: "Breakfast",
-        water: "No Ice",
+      { water: "No Ice",
         hotdrink: "Tea",
         cereals: "Oatmeal with honey",
         juice: "Tomato juice",
@@ -25,13 +24,11 @@ export const residents = [
         toast: "Brown bread",
         observation: "Sandwiched scranbled eggs between two slices of brown bread toasted with butter, no cut in half"
       },
-      { name: "Lunch",
-        water: "No Ice",
+      { water: "No Ice",
         hotdrink: "Tea",
         juice: "Tomato juice",
       },
-      { name: "Dinner",
-        water: "No Ice",
+      { water: "No Ice",
         hotdrink: "Tea",
         juice: "Tomato juice",
       },
@@ -50,8 +47,7 @@ export const residents = [
       "she always does her menu selection"],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Coffee",
         cereals: "",
         juice: "Orange juice",
@@ -59,13 +55,11 @@ export const residents = [
         toast: "Brown bread",
         observation: "Don't hurt to ask if she wants something different"
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Tea",
         juice: "",
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Tea",
         juice: "",
       },
@@ -85,8 +79,7 @@ export const residents = [
       "She likes ice cream for dessert"],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         cereals: "",
         juice: "Orange juice",
@@ -94,14 +87,12 @@ export const residents = [
         toast: "Brown bread",
         observation: "Don't hurt to ask if she wants something different"
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "Orange juice",
         dessert: "Ice Cream"
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "Orange juice",
       },
@@ -121,8 +112,7 @@ export const residents = [
       "She likes orange juice in the morning and tomato in the afternoon"],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         cereals: "",
         juice: "Orange juice",
@@ -130,13 +120,11 @@ export const residents = [
         toast: "Cinnamon Raisin bread",
         observation: "Breakfast order everyday: fruit plate, Activia yogurt, and toasted and buttered raisin bread. She also likes beacon when is beacon day"
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "Tomato juice",
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "Tomato juice",
       },
@@ -156,8 +144,7 @@ export const residents = [
       "She likes coffe in the morning and tea in the afternoon"],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Coffee",
         cereals: "",
         juice: "",
@@ -165,13 +152,11 @@ export const residents = [
         toast: "",
         observation: ""
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Tea",
         juice: "",
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Tea",
         juice: "",
       },
@@ -183,15 +168,14 @@ export const residents = [
     lastName: "Mcleaod",
     table: 6,
     prioritary: false,
-    roomId: 2,
+    roomId: 12,
     seating: 1,
     image: null,
     observations:[ 
       "She sometimes doesn't come down and asks for a tray"],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Coffee",
         cereals: "",
         juice: "",
@@ -199,13 +183,11 @@ export const residents = [
         toast: "Brown bread",
         observation: ""
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
       },
@@ -226,8 +208,7 @@ export const residents = [
       "She likes extra veggies"],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Tea",
         cereals: "",
         juice: "",
@@ -235,13 +216,11 @@ export const residents = [
         toast: "Brown bread",
         observation: ""
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
       },
@@ -260,8 +239,7 @@ export const residents = [
       "she usually ask the same every morning",],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Coffee",
         cereals: "Rice crispies",
         juice: " cranberry juice",
@@ -269,13 +247,11 @@ export const residents = [
         toast: "Brown bread",
         observation: ""
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
       },
@@ -296,8 +272,7 @@ export const residents = [
       "If she doesn't like the lunch or dinner option, offer her a grilled cheese sandwich"],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "No Coffe or Tea",
         cereals: "Oatmeal",
         juice: "Cranberry juice",
@@ -305,13 +280,11 @@ export const residents = [
         toast: "Brown bread",
         observation: ""
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
       },
@@ -332,8 +305,7 @@ export const residents = [
       "She always asks for half and half for meals"],
     importantObservation: "Diabetic",
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         cereals: "",
         juice: "Cranberry juice",
@@ -341,13 +313,11 @@ export const residents = [
         toast: "Rye bread, if not available, white bread",
         observation: ""
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
       },
@@ -366,8 +336,7 @@ export const residents = [
       "No cereals & No Soup"],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Coffee",
         cereals: "",
         juice: "orange juice",
@@ -375,14 +344,12 @@ export const residents = [
         toast: "Brown bread",
         observation: "No cereals"
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Tea",
         juice: "",
         observation: "No soup"
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
       },
@@ -394,7 +361,7 @@ export const residents = [
     lastName: "Easter",
     table: 9,
     prioritary: false,
-    roomId: 38,
+    roomId: 56,
     seating: 1,
     image: null,
     observations:[ 
@@ -405,8 +372,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "No Ice",
+      { water: "No Ice",
         hotdrink: "",
         cereals: "",
         juice: "tomato juice & extra drink",
@@ -414,14 +380,12 @@ export const residents = [
         toast: "Brown bread",
         observation: "her eggs should be poached and she likes ketchup with it"
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Tea",
         juice: "tomato juice & extra drink",
         observation: "Extra napkin"
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "tomato juice & extra drink",
         observation: "Extra napkin"
@@ -442,8 +406,7 @@ export const residents = [
     ],
     importantObservation: "Require a PSW",
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         cereals: "",
         juice: "apple juice",
@@ -451,14 +414,12 @@ export const residents = [
         toast: "",
         observation: ""
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -480,8 +441,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         cereals: "",
         juice: "Tomato juice",
@@ -489,14 +449,12 @@ export const residents = [
         toast: "Cinnamon Raisin bread",
         observation: "Fruit plate and milk at each meal"
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: "A glass of milk"
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: "A glass of milk"
@@ -518,8 +476,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         cereals: "Oatmeal",
         juice: "Orange juice",
@@ -527,14 +484,12 @@ export const residents = [
         toast: "",
         observation: "No coffe or tea for breakfast"
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: "A glass of milk"
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: "A glass of milk"
@@ -555,8 +510,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Coffee",
         cereals: "Corn Flakes",
         juice: "Orange juice",
@@ -564,14 +518,12 @@ export const residents = [
         toast: "Brown bread",
         observation: ""
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -592,8 +544,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "No Coffe or Tea",
         cereals: "",
         juice: "apple juice",
@@ -601,14 +552,12 @@ export const residents = [
         toast: "Cinnamon Raisin bread",
         observation: "two additional milks"
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: "two additional milks"
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: "two additional milks"
@@ -629,8 +578,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink:  "Coffee",
         cereals: "",
         juice: "",
@@ -638,51 +586,12 @@ export const residents = [
         toast: "Brown bread",
         observation: ""
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
-        hotdrink: "",
-        juice: "",
-        observation: ""
-      },
-    ],
-  },
-  {
-    id: 19,
-    name: "Virginia",
-    lastName: "Caldwell",
-    table: 13,
-    prioritary: false,
-    roomId: 80,
-    seating: 1,
-    image: null,
-    observations:[ 
-      "",
-    ],
-    importantObservation: null,
-    meals:[
-      { name: "Breakfast",
-        water: "with Ice",
-        hotdrink:  "Coffee",
-        cereals: "",
-        juice: "",
-        eggs: "over-easy eggs",
-        toast: "Brown bread",
-        observation: ""
-      },
-      { name: "Lunch",
-        water: "with Ice",
-        hotdrink: "",
-        juice: "",
-        observation: ""
-      },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -704,8 +613,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink:  "Tea",
         cereals: "",
         juice: "",
@@ -713,15 +621,13 @@ export const residents = [
         toast: "",
         observation: ""
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Tea",
         juice: "",
         dessert: "Ice Cream",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Tea",
         juice: "",
         observation: ""
@@ -742,8 +648,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink:  "",
         cereals: "",
         juice: "",
@@ -751,14 +656,12 @@ export const residents = [
         toast: "brown bread",
         observation: ""
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -779,8 +682,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         cereals: "Oatmeal",
         juice: "Cranberry juice",
@@ -788,14 +690,12 @@ export const residents = [
         toast: "brown bread",
         observation: "fruit plate with muffin"
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -818,8 +718,7 @@ export const residents = [
     ],
     importantObservation: "Dementia",
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         cereals: "",
         juice: "Cranberry juice",
@@ -827,14 +726,12 @@ export const residents = [
         toast: "",
         observation: ""
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -857,8 +754,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Coffee",
         cereals: "Oatmeal",
         juice: "Orange juice",
@@ -866,15 +762,13 @@ export const residents = [
         toast: "",
         observation: "Fruit plate with muffin and yogurt"
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Tea",
         juice: "Tomato juice",
         dessert: "Ice Cream",
         observation: "She likes soups"
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Tea",
         juice: "Tomato juice",
         observation: ""
@@ -895,8 +789,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Coffee",
         cereals: "",
         juice: "Orange juice",
@@ -904,15 +797,13 @@ export const residents = [
         toast: "brown bread",
         observation: ""
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Tea",
         juice: "Tomato juice",
         dessert: "Ice Cream",
         observation: "She likes soups"
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Tea",
         juice: "Tomato juice",
         observation: ""
@@ -934,8 +825,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         cereals: "",
         juice: "Orange juice",
@@ -943,14 +833,12 @@ export const residents = [
         toast: "White bread",
         observation: ""
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -971,8 +859,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Coffee",
         cereals: "",
         juice: "Orange juice",
@@ -980,14 +867,12 @@ export const residents = [
         toast: "Brown bread",
         observation: ""
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -1009,8 +894,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Coffee",
         cereals: "",
         juice: "Orange juice",
@@ -1018,14 +902,12 @@ export const residents = [
         toast: "Brown bread",
         observation: ""
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -1047,8 +929,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         cereals: "He has his own cereal (Wheaties) if requested",
         juice: "Orange juice",
@@ -1056,14 +937,12 @@ export const residents = [
         toast: "Brown bread",
         observation: "He likes two bananas or a fruit plate with no oranges"
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -1084,8 +963,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Tea",
         cereals: "Bran Flakes",
         juice: "Tomato juice",
@@ -1093,14 +971,12 @@ export const residents = [
         toast: "Brown bread",
         observation: ""
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -1121,8 +997,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Coffee",
         cereals: "",
         juice: "Orange juice",
@@ -1130,14 +1005,12 @@ export const residents = [
         toast: "Brown bread",
         observation: ""
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -1159,8 +1032,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Coffee",
         cereals: "Corn Flakes",
         juice: "Orange juice",
@@ -1168,14 +1040,12 @@ export const residents = [
         toast: "Brown bread",
         observation: ""
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -1197,8 +1067,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Coffee",
         cereals: "Oatmeal",
         juice: "Orange juice",
@@ -1206,14 +1075,12 @@ export const residents = [
         toast: "Brown bread",
         observation: "She wans two cream and one sugar in her table "
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -1236,8 +1103,7 @@ export const residents = [
     ],
     importantObservation: "Lactose intolerant",
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         cereals: "",
         juice: "Orange juice",
@@ -1245,14 +1111,12 @@ export const residents = [
         toast: "Brown bread",
         observation: "Please, bring her a banana"
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -1273,8 +1137,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "No Ice",
+      { water: "No Ice",
         hotdrink: "",
         cereals: "Oatmeal",
         juice: "Orange juice",
@@ -1282,14 +1145,12 @@ export const residents = [
         toast: "",
         observation: "Her breakfast is only tomato juice, water with no ice, and a banana"
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -1310,8 +1171,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Coffee",
         cereals: "",
         juice: "",
@@ -1319,14 +1179,12 @@ export const residents = [
         toast: "",
         observation: "Half coffee and other half milk"
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -1347,8 +1205,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         cereals: "",
         juice: "",
@@ -1356,14 +1213,12 @@ export const residents = [
         toast: "Brown bread",
         observation: ""
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -1384,8 +1239,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Coffee",
         cereals: "Cornflakes",
         juice: "",
@@ -1393,51 +1247,12 @@ export const residents = [
         toast: "Brown bread",
         observation: ""
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
-        hotdrink: "",
-        juice: "",
-        observation: ""
-      },
-    ],
-  },
-  {
-    id: 39,
-    name: "James",
-    lastName: "Abel",
-    table: 6,
-    prioritary: false,
-    roomId: 66,
-    seating: 2,
-    image: null,
-    observations:[
-      "Ask James how he wants his eggs",
-    ],
-    importantObservation: null,
-    meals:[
-      { name: "Breakfast",
-        water: "with Ice",
-        hotdrink: "Coffee",
-        cereals: "Cornflakes",
-        juice: "",
-        eggs: "Sometimes Scrambled eggs",
-        toast: "Brown bread",
-        observation: ""
-      },
-      { name: "Lunch",
-        water: "with Ice",
-        hotdrink: "",
-        juice: " ",
-        observation: ""
-      },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -1458,8 +1273,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Coffee",
         cereals: "",
         juice: "",
@@ -1467,14 +1281,12 @@ export const residents = [
         toast: "Brown bread",
         observation: ""
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: " ",
         observation: "He maynot want coffee or tea, intead fill her cup with juice"
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: "He maynot want coffee or tea, intead fill her cup with juice"
@@ -1497,8 +1309,7 @@ export const residents = [
     ],
     importantObservation: "Cut up his food",
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Tea",
         cereals: "",
         juice: "Apple juice",
@@ -1506,14 +1317,12 @@ export const residents = [
         toast: "English muffin cut up",
         observation: "Make sure he has some creamers and white sugar"
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: " ",
         observation: "cut up into pieces his meal"
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: "cut up into pieces his meal"
@@ -1534,8 +1343,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Coffee",
         cereals: "Bran Flakes with 2 milks",
         juice: "Prune juice",
@@ -1543,14 +1351,12 @@ export const residents = [
         toast: "Brown bread (one slice)",
         observation: "No oranges in her plate"
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -1572,8 +1378,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Coffee",
         cereals: "Bran Flakes",
         juice: "Prune juice",
@@ -1581,14 +1386,12 @@ export const residents = [
         toast: "White bread",
         observation: "No oranges in her plate"
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -1609,8 +1412,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Tea (must be hot)",
         cereals: "Bran Flakes",
         juice: "Cramberry juice",
@@ -1618,14 +1420,12 @@ export const residents = [
         toast: "Raisen bread",
         observation: "Fruit plate"
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -1647,8 +1447,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Tea",
         cereals: "Bran Flakes",
         juice: "Orange juice",
@@ -1656,15 +1455,13 @@ export const residents = [
         toast: "",
         observation: "Fruit plate with a muffin and butter"
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Tea",
         juice: " ",
         dessert: "Ice Cream",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Tea",
         juice: "",
         observation: ""
@@ -1685,8 +1482,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Coffee",
         cereals: "",
         juice: "",
@@ -1694,14 +1490,12 @@ export const residents = [
         toast: "",
         observation: ""
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -1723,8 +1517,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "No Ice",
+      { water: "No Ice",
         hotdrink: "Coffee",
         cereals: "",
         juice: "",
@@ -1732,14 +1525,12 @@ export const residents = [
         toast: "4 slices of brown bread",
         observation: "Make sure he has some creamers and brown sugar"
       },
-      { name: "Lunch",
-        water: "No Ice",
+      { water: "No Ice",
         hotdrink: "",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "No Ice",
+      { water: "No Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -1760,8 +1551,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Tea",
         cereals: "",
         juice: "Apple juice",
@@ -1769,14 +1559,12 @@ export const residents = [
         toast: "brown bread (less butter)",
         observation: "Millie likes prunes at breakfast"
       },
-      { name: "Lunch",
-        water: "No Ice",
+      { water: "No Ice",
         hotdrink: "",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "No Ice",
+      { water: "No Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -1799,8 +1587,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "With Ice",
+      { water: "With Ice",
         hotdrink: "Coffee",
         cereals: "",
         juice: "Orange juice",
@@ -1808,15 +1595,13 @@ export const residents = [
         toast: "",
         observation: ""
       },
-      { name: "Lunch",
-        water: "With Ice",
+      { water: "With Ice",
         hotdrink: "",
         juice: " ",
         dessert: "Ice Cream",
         observation: ""
       },
-      { name: "Dinner",
-        water: "With Ice",
+      { water: "With Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -1837,8 +1622,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Tea",
         cereals: "",
         juice: "Apple juice",
@@ -1846,14 +1630,12 @@ export const residents = [
         toast: "Brown bread",
         observation: ""
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "With Ice",
+      { water: "With Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -1874,8 +1656,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Coffee",
         cereals: "",
         juice: "Cramberry juice",
@@ -1883,14 +1664,12 @@ export const residents = [
         toast: "Brown bread",
         observation: "Make sure she has some creamers"
       },
-      { name: "Lunch",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "With Ice",
+      { water: "With Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -1901,33 +1680,30 @@ export const residents = [
     id: 53,
     name: "Sharon",
     lastName: "Bergelt",
-    table: 12,
+    table: null,
     prioritary: false,
-    roomId: 74,
-    seating: 2,
+    roomId: 54,
+    seating: null,
     image: null,
     observations:[
       "Often on trays",
     ],
-    importantObservation: "Diabetic",
+    importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "",
-        hotdrink: "",
-        cereals: "",
-        juice: "",
-        eggs: "",
-        toast: "",
-        observation: ""
+      { water: "No Ice",
+        hotdrink: "Coffee",
+        cereals: "Oatmeal",
+        juice: "Apple juice",
+        eggs: "Pouched eggs",
+        toast: "Brown bread",
+        observation: "Milk"
       },
-      { name: "Lunch",
-        water: "",
+      { water: "",
         hotdrink: "",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "",
+      { water: "",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -1948,8 +1724,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Tea",
         cereals: "",
         juice: "",
@@ -1957,14 +1732,12 @@ export const residents = [
         toast: "Brown bread",
         observation: "Make sure she has some creamers"
       },
-      { name: "Lunch",
-        water: " with Ice",
+      { water: " with Ice",
         hotdrink: "",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -1987,8 +1760,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         cereals: "",
         juice: "",
@@ -1996,14 +1768,12 @@ export const residents = [
         toast: "",
         observation: ""
       },
-      { name: "Lunch",
-        water: " with Ice",
+      { water: " with Ice",
         hotdrink: "",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -2024,8 +1794,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         cereals: "",
         juice: "",
@@ -2033,14 +1802,12 @@ export const residents = [
         toast: "Brown bread",
         observation: "Fruit bowl"
       },
-      { name: "Lunch",
-        water: " with Ice",
+      { water: " with Ice",
         hotdrink: "",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -2062,8 +1829,7 @@ export const residents = [
     ],
     importantObservation: "Gluten & lactose intolerant",
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Tea",
         cereals: "",
         juice: "Apple juice",
@@ -2071,15 +1837,13 @@ export const residents = [
         toast: "Gluten free bread",
         observation: ""
       },
-      { name: "Lunch",
-        water: " with Ice",
+      { water: " with Ice",
         hotdrink: "",
         juice: " ",
         dessert: "Lactose free Ice Cream",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -2092,7 +1856,7 @@ export const residents = [
     lastName: "Wilton",
     table: 15,
     prioritary: false,
-    roomId: 69,
+    roomId: 59,
     seating: 2,
     image: null,
     observations:[
@@ -2102,8 +1866,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Tea",
         cereals: "",
         juice: "Apple juice",
@@ -2111,14 +1874,12 @@ export const residents = [
         toast: "white bread (no butter)",
         observation: ""
       },
-      { name: "Lunch",
-        water: " with Ice",
+      { water: " with Ice",
         hotdrink: "",
         juice: " ",
         observation: "no butter, no mayo, sauce on the side"
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: "no butter, no mayo, sauce on the side"
@@ -2140,8 +1901,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Coffee",
         cereals: "",
         juice: "",
@@ -2149,14 +1909,12 @@ export const residents = [
         toast: "",
         observation: ""
       },
-      { name: "Lunch",
-        water: " with Ice",
+      { water: " with Ice",
         hotdrink: "Coffee",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Coffee",
         juice: "",
         observation: ""
@@ -2177,8 +1935,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "No Ice",
+      { water: "No Ice",
         hotdrink: "Coffee",
         cereals: "",
         juice: "",
@@ -2186,14 +1943,12 @@ export const residents = [
         toast: "",
         observation: ""
       },
-      { name: "Lunch",
-        water: " No Ice",
+      { water: " No Ice",
         hotdrink: "",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "No Ice",
+      { water: "No Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -2214,8 +1969,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         cereals: "",
         juice: "",
@@ -2223,14 +1977,12 @@ export const residents = [
         toast: "",
         observation: ""
       },
-      { name: "Lunch",
-        water: " with Ice",
+      { water: " with Ice",
         hotdrink: "",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -2251,8 +2003,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         cereals: "",
         juice: "",
@@ -2260,14 +2011,12 @@ export const residents = [
         toast: "",
         observation: ""
       },
-      { name: "Lunch",
-        water: " with Ice",
+      { water: " with Ice",
         hotdrink: "",
         juice: " ",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -2288,8 +2037,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Coffee",
         cereals: "",
         juice: "",
@@ -2297,14 +2045,12 @@ export const residents = [
         toast: "Cinnamon raise bread (no butter)",
         observation: "Greek yogurt"
       },
-      { name: "Lunch",
-        water: " with Ice",
+      { water: " with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "",
         juice: "",
         observation: ""
@@ -2326,8 +2072,7 @@ export const residents = [
     ],
     importantObservation: null,
     meals:[
-      { name: "Breakfast",
-        water: "with Ice",
+      { water: "with Ice",
         hotdrink: "Coffee",
         cereals: "",
         juice: "tomato juice",
@@ -2335,15 +2080,83 @@ export const residents = [
         toast: "",
         observation: "She loves peanut butter"
       },
-      { name: "Lunch",
-        water: " with Ice",
+      { water: " with Ice",
         hotdrink: "",
         juice: "",
         dessert: "Ice Cream",
         observation: "She will ask for crackers"
       },
-      { name: "Dinner",
-        water: "with Ice",
+      { water: "with Ice",
+        hotdrink: "",
+        juice: "",
+        observation: ""
+      },
+    ],
+  },
+  {
+    id: 65,
+    name: "",
+    lastName: "",
+    table: null,
+    prioritary: false,
+    roomId: 29,
+    seating: null,
+    image: null,
+    observations:[
+      "Often on trays",
+    ],
+    importantObservation: null,
+    meals:[
+      { water: "No Ice",
+        hotdrink: "Coffee",
+        cereals: "Oatmeal",
+        juice: "Cramberry juice",
+        eggs: "",
+        toast: "",
+        observation: ""
+      },
+      { water: " No Ice",
+        hotdrink: "",
+        juice: "",
+        dessert: "",
+        observation: ""
+      },
+      { water: "No Ice",
+        hotdrink: "",
+        juice: "",
+        observation: ""
+      },
+    ],
+  },
+  {
+    id: 66,
+    name: "",
+    lastName: "",
+    table: null,
+    prioritary: false,
+    roomId: 40,
+    seating: null,
+    image: null,
+    observations:[
+      "Often on trays",
+    ],
+    importantObservation: null,
+    meals:[
+      { water: "No Ice",
+        hotdrink: "Coffee",
+        cereals: "Oatmeal",
+        juice: "Tomato juice",
+        eggs: "",
+        toast: "",
+        observation: "Milk"
+      },
+      { water: " No Ice",
+        hotdrink: "",
+        juice: "",
+        dessert: "",
+        observation: ""
+      },
+      { water: "No Ice",
         hotdrink: "",
         juice: "",
         observation: ""
