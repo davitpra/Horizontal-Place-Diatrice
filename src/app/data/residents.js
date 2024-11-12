@@ -2060,7 +2060,7 @@ export const residents = [
       "Dorothy is lactose intolerant",
       "Dorothy eats Gluten free bread for anything that needs bread",
     ],
-    importantObservation: "Gluten and lactose intolerant",
+    importantObservation: "Gluten & lactose intolerant",
     meals:[
       { name: "Breakfast",
         water: "with Ice",

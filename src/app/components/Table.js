@@ -109,7 +109,7 @@ export function Table({ residents }) {
                     <td className="whitespace-nowrap px-3 py-4 text-gray-500">
                       {person.roomId}
                     </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-gray-500">
+                    <td className="hidden sm:inline whitespace-nowrap px-3 py-4 text-gray-500">
                       {person.seating}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-gray-500">
@@ -123,7 +123,7 @@ export function Table({ residents }) {
                         Details <span className="sr-only">details</span>
                       </a>
                       <UserIcon
-                        className="sm:hidden h-5 w-5 text-indigo-600 hover:text-indigo-900"
+                        className="sm:hidden h-4 w-4 text-indigo-600 hover:text-indigo-900"
                         onClick={() => router.push(`./room/${person.roomId}`)}
                       />
                     </td>
@@ -137,7 +137,7 @@ export function Table({ residents }) {
                       </a>
                       <PlusCircleIcon
                         onClick={() => trays.addToTrays(person.roomId)}
-                        className="sm:hidden h-5 w-5 text-indigo-600 hover:text-indigo-900"
+                        className="sm:hidden h-4 w-4 text-indigo-600 hover:text-indigo-900"
                       />
                     </td>
                   </tr>

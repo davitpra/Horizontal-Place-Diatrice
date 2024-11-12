@@ -75,7 +75,12 @@ export function TableForTrays({ residents }) {
                 {filteredResidents.map((person) => (
                   <tr key={person.id}>
                     <td className="whitespace-nowrap py-4 pl-4 pr-3 font-medium text-gray-900 sm:pl-6 lg:pl-8">
+                      <div className="sm:hidden">
+                      {person.name} {person.lastName.charAt(0)}.
+                      </div>
+                      <div className="hidden sm:inline">
                       {person.name} {person.lastName}
+                      </div>
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-gray-500">
                       {person.roomId}
@@ -86,10 +91,20 @@ export function TableForTrays({ residents }) {
                         name="location"
                         defaultValue={getDefaultWing(person.roomId)}
                         onChange={(e) => onSelection(person.roomId, e.target.value)}
-                        className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm/6"
+                        className="hidden mt-2 sm:block w-full rounded-md border-0 py-1.5 pl-3 pr-4 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm/6"
                       >
-                        <option value="East wing">East wing</option>
                         <option value="West wing">West wing</option>
+                        <option value="East wing">East wing</option>
+                      </select>
+                      <select
+                        id="location"
+                        name="location"
+                        defaultValue={getDefaultWing(person.roomId)}
+                        onChange={(e) => onSelection(person.roomId, e.target.value)}
+                        className="sm:hidden  w-full rounded-md border-0 py-1.5 pl-3 pr-1 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm/6"
+                      >
+                        <option value="West wing">Wst</option>
+                        <option value="East wing">Est</option>
                       </select>
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-gray-500">
@@ -103,7 +118,7 @@ export function TableForTrays({ residents }) {
                         Details <span className="sr-only">details</span>
                       </a>
                       <UserIcon
-                        className="sm:hidden h-5 w-5 text-indigo-600 hover:text-indigo-900"
+                        className="sm:hidden h-4 w-4 text-indigo-600 hover:text-indigo-900"
                         onClick={() => router.push(`./room/${person.roomId}`)}
                       />
                     </td>
@@ -117,7 +132,7 @@ export function TableForTrays({ residents }) {
                       </a>
                       <MinusCircleIcon
                         onClick={() => trays.removeFromTrays(person.roomId)}
-                        className="sm:hidden h-5 w-5 text-indigo-600 hover:text-indigo-900"
+                        className="sm:hidden h-4 w-4 text-indigo-600 hover:text-indigo-900"
                       />
                     </td>
                   </tr>
