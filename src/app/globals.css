@@ -24,6 +24,7 @@ body {
   height: 100%;
   border: 2px solid #ddd;
   border-radius: 1rem;
+  padding: 0;
 }
 
 .table {
@@ -82,13 +83,32 @@ body {
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 650px) {
   .table {
-    width: 1.6rem;
-    height: 1.6rem;
+    width: 1.7rem;
+    height: 1.7rem;
+    border: 1.2px solid #4f46e5;
   }
   .chair {
     width: 0.4rem;
     height: 0.4rem;
   }
+  .table1 { left: 55%; }
+  .table2 { left: 15%; }
+  .table3 { left: 15%; }
+  .table4 { left: 41.6666%; }
+  .table5 { left: 68.3333%; }
+  .table6 { left: 95%; }
+  .table7 { left: 35%; }
+  .table8 { left: 15%; }
+  .table9 { left: 15%; }
+  .table10 { left: 41.6666%; }
+  .table11 { left: 68.3333%; }
+  .table12 { left: 55%; }
+  .table13 { left: 75%; }
+  .table14 { left: 95%; }
+  .table15 { left: 95%; }
+  .table16 { left: 95%; }
+  .table17 { left: 35%; }
+  .center { left: 55%; }
 }
