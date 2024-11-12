@@ -1,14 +1,58 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { Wraper } from "./Wraper";
-import { UserIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
+import {
+  UserIcon,
+  PlusCircleIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+} from "@heroicons/react/24/outline";
 import { useTrays } from "../hooks/useTrays";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 export function Table({ residents }) {
   const router = useRouter();
   const trays = useTrays();
+
+  const [sortDirection, setSortDirection] = useState("asc");
+  const [sortedResidents, setSortedResidents] = useState(residents);
+
+  useEffect(() => {
+    setSortedResidents(sortedResidents);
+  }, [sortedResidents]);
+
+  const toggleSortDirection = () => {
+    setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+  };
+
+  const sortResidents = (criteria) => {
+    const sorted = [...sortedResidents].sort((a, b) => {
+      if (sortDirection === "asc") {
+        return a[criteria] > b[criteria] ? 1 : -1;
+      } else {
+        return a[criteria] < b[criteria] ? 1 : -1;
+      }
+    });
+    setSortedResidents(sorted);
+  };
+
+  const direction = (criteria) => {
+    if (sortDirection === "asc") {
+      return <ChevronDownIcon className="h-4 w-4 text-gray-500" onClick={() => {
+        toggleSortDirection()
+        sortResidents(criteria)
+      } }
+      />;
+    } else {
+      return <ChevronUpIcon className="h-4 w-4 text-gray-500" onClick={() => {
+        toggleSortDirection()
+        sortResidents(criteria)
+      } }
+      />;;
+    }
+  }
   
+
   return (
     <Wraper>
       <div className="mt-8 flow-root">
@@ -21,19 +65,26 @@ export function Table({ residents }) {
                     scope="col"
                     className="py-3.5 pl-4 pr-3 text-left font-semibold text-gray-900 sm:pl-6 lg:pl-8"
                   >
-                    Name
+                    <div className="flex justify-evenly">
+                      Name
+                      {direction("name")}
+                    </div>
                   </th>
                   <th
                     scope="col"
                     className="px-3 py-3.5 text-left font-semibold text-gray-900"
                   >
-                    Room
+                    <div className="flex justify-evenly">
+                      Room
+                    </div>
                   </th>
                   <th
                     scope="col"
                     className="px-3 py-3.5 text-left font-semibold text-gray-900"
                   >
-                    Seating
+                    <div className="flex justify-evenly">
+                      Seating
+                    </div>
                   </th>
                   <th
                     scope="col"
@@ -50,7 +101,7 @@ export function Table({ residents }) {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
-                {residents.map((person) => (
+                {sortedResidents.map((person) => (
                   <tr key={person.id}>
                     <td className="whitespace-nowrap py-4 pl-4 pr-3 font-medium text-gray-900 sm:pl-6 lg:pl-8">
                       {person.name} {person.lastName}
