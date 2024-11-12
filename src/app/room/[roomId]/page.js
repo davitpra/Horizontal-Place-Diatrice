@@ -101,14 +101,14 @@ async function roomId({ params }) {
 
             {/* Product info */}
             <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
-              <div className="flex justify-evenly">
-                <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+              <div className="flex flex-col sm:flex-row sm:justify-evenly">
+                <h1 className="text-2xl font-bold tracking-tight text-gray-900">
                   {fullName}
                 </h1>
-                <p className="text-3xl font-bold tracking-tight text-gray-900">
+                <p className="hidden sm:inline text-3xl font-bold tracking-tight text-gray-900">
                   -
                 </p>
-                <h2 className="text-3xl font-bold tracking-tight text-gray-900">
+                <h2 className="sm:text-2xl font-bold tracking-tight text-gray-900">
                   Room {roomId}
                 </h2>
               </div>
