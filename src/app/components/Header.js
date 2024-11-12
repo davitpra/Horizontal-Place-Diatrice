@@ -16,6 +16,7 @@ import { Bars3Icon, XMarkIcon, BellIcon} from "@heroicons/react/24/outline";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import {useSeatingConfigure} from '../hooks/useSeatingConfigure'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 const Seatings = [
   { name: "First Seating", seating: 1 },
@@ -34,14 +35,14 @@ export function Header() {
         className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
       >
         <div className="flex lg:flex-1">
-          <a onClick={()=> router.push('/')} className="-m-1.5 p-1.5">
+          <Link href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Horizontal Place</span>
             <img
               alt="Horizontal Place Logo"
               src="https://levanteliving.com/wp-content/uploads/2023/08/Horizon-Place-color-8.png"
               className="h-20 w-auto"
             />
-          </a>
+          </Link>
         </div>
         <div className="flex lg:hidden">
           <button
@@ -68,27 +69,26 @@ export function Header() {
               className="absolute -left-8 top-full z-10 mt-3 w-56 rounded-xl bg-white p-2 shadow-lg ring-1 ring-gray-900/5 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
             >
               {Seatings.map((item) => (
-                <a
+                <Link
                   key={item.name}
                   onClick={() => {
                     seating.setSeating(item.seating);
-                    router.push('/');
                   }}
                   className="block rounded-lg px-3 py-2 text-sm/6 font-semibold text-gray-900 hover:bg-gray-50"
                 >
                   {item.name}
-                </a>
+                </Link>
               ))}
             </PopoverPanel>
           </Popover>
 
-          <a href="/room" className="text-sm/6 font-semibold text-gray-900">
+          <Link href="/room" className="text-sm/6 font-semibold text-gray-900">
             By Rooms
-          </a>
+          </Link>
 
-          <a href="/trays" className="text-sm/6 font-semibold text-gray-900">
+          <Link href="/trays" className="text-sm/6 font-semibold text-gray-900">
             Trays
-          </a>
+          </Link>
         </PopoverGroup>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <BellIcon className="h-6 w-6 text-gray-900 mr-4" />
@@ -149,32 +149,32 @@ export function Header() {
                     ))}
                   </DisclosurePanel>
                 </Disclosure>
-                <a
+                <Link
                   href="./room"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
                 >
                   By Rooms
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/trays"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
                 >
                   Trays
-                </a>
+                </Link>
               </div>
               <div className="py-6">
-                <a
+                <Link
                   href="#"
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
                 >
                   Notifications
-                </a>
-                <a
+                </Link>
+                <Link
                   href="#"
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
                 >
                   Log out
-                </a>
+                </Link>
               </div>
             </div>
           </div>
