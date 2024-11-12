@@ -33,7 +33,7 @@ export function TableModal({ residents }) {
             {ResidentsOnTable.map((resident) => (
               <button
                 key={resident.id}
-                className="bg-gray-100 p-2 rounded text-sm"
+                className="bg-gray-100 p-2 rounded text-sm flex flex-col justify-center items-center"
                 onClick={() => {
                   route.push(`./room/${resident.roomId}`);
                   tableModal.onClose();
@@ -42,7 +42,7 @@ export function TableModal({ residents }) {
                 <h3 className="sm:hidden pl-2 font-medium">
                   {resident.name} {resident.lastName.charAt(0)}.
                 </h3>
-                <h3 className="hidden sm:block pl-2">
+                <h3 className="hidden sm:block pl-2 font-medium">
                   {resident.name} {resident.lastName}
                 </h3>
                 <p className="text-xs pl-4">Room: {resident.roomId}</p>
