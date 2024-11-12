@@ -35,7 +35,7 @@ export function TableMap({residents}) {
   if (tableModal.isOpen) return null;
 
   return (
-    <div className="h-screen flex justify-center">
+    <div className="h-screen flex justify-center items-center">
     <div className="container">
       <div className="table center">X</div>
       {tablesNumbers.map((tableNumber) => (

@@ -28,6 +28,10 @@ export function Header() {
   const seating = useSeatingConfigure();
   const router = useRouter();
 
+  const toogleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  }
+
   return (
     <header className="bg-white">
       <nav
@@ -47,7 +51,7 @@ export function Header() {
         <div className="flex lg:hidden">
           <button
             type="button"
-            onClick={() => setMobileMenuOpen(true)}
+            onClick={() => toogleMobileMenu()}
             className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
           >
             <span className="sr-only">Open main menu</span>
@@ -115,7 +119,7 @@ export function Header() {
             </button>
             <button
               type="button"
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={() => toogleMobileMenu()}
               className="-m-2.5 rounded-md p-2.5 text-gray-700"
             >
               <span className="sr-only">Close menu</span>
@@ -141,6 +145,7 @@ export function Header() {
                         onClick={() => {
                             seating.setSeating(item.seating);
                             router.push('/');
+                            toogleMobileMenu();
                           }}
                         className="block rounded-lg py-2 pl-6 pr-3 text-sm/7 font-semibold text-gray-900 hover:bg-gray-50"
                       >
@@ -152,12 +157,14 @@ export function Header() {
                 <Link
                   href="./room"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
+                  onClick={() => toogleMobileMenu()}
                 >
                   By Rooms
                 </Link>
                 <Link
                   href="/trays"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
+                  onClick={() => toogleMobileMenu()}
                 >
                   Trays
                 </Link>
@@ -166,12 +173,14 @@ export function Header() {
                 <Link
                   href="#"
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
+                  onClick={() => toogleMobileMenu()}
                 >
                   Notifications
                 </Link>
                 <Link
                   href="#"
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
+                  onClick={() => toogleMobileMenu()}
                 >
                   Log out
                 </Link>

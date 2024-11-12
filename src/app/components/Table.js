@@ -80,7 +80,7 @@ export function Table({ residents }) {
                   </th>
                   <th
                     scope="col"
-                    className="px-3 py-3.5 text-left font-semibold text-gray-900"
+                    className="hidden sm:inline px-3 py-3.5 text-left font-semibold text-gray-900"
                   >
                     <div className="flex justify-evenly">
                       Seating
