@@ -2,6 +2,7 @@
 import { residents } from "../data/residents"
 import Title from "../components/Title"
 import { TableForTrays } from "../components/TableForTrays"
+import { MealBar } from "../components/MealBar"
   
   export default function Trays() {
     const observations =[
@@ -26,7 +27,8 @@ import { TableForTrays } from "../components/TableForTrays"
     }
     return (
       <>
-        <Title title="Trays" observations={observations} className="mb-16"/>
+        <Title title="Trays" observations={observations}/>
+        <MealBar />
         <TableForTrays residents={residents}/>
       </>
     )

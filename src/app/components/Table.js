@@ -65,8 +65,8 @@ export function Table({ residents }) {
 
   return (
     <Wraper>
-      <div className="mt-8 flow-root">
-        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+      <div className="flow-root">
+        <div className="-mx-4 -my-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle">
             <table className="min-w-full divide-y divide-gray-300 text-xs sm:text-sm">
               <thead>

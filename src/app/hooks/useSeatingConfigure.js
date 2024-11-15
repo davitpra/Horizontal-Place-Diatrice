@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 export const useSeatingConfigure = create((set) => ({
-    seating: 0,
+    seating: 1,
     setSeating: (number) => set({ seating: number }),
-    resetTable: () => set({ seating: 0 }),
+    resetTable: () => set({ seating: 1 }),
 }));

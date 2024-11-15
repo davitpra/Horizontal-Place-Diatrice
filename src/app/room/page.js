@@ -2,6 +2,7 @@
 import { residents } from "../data/residents";
 import { Table } from "../components/Table";
 import Title from "../components/Title";
+import { MealBar } from "../components/MealBar";
 
 export default function Room() {
   const observations =[
@@ -10,7 +11,8 @@ export default function Room() {
 
   return (
     <>
-      <Title observations={observations} />
+      <Title title={"Residents"} observations={observations} />
+      <MealBar />
       <Table
         residents={residents}
       />

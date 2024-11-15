@@ -716,7 +716,7 @@ export const residents = [
       "Doug likes hamburgers :)",
 
     ],
-    importantObservation: "Dementia",
+    importantObservation: null,
     meals:[
       { water: "with Ice",
         hotdrink: "",

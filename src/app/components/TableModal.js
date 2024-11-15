@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export function TableModal({ residents }) {
-  const route = useRouter();
 
   const tableModal = useTableModal();
   const selectTable = useTableNumber();
