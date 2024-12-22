@@ -5,41 +5,38 @@ import {
   Dialog,
   DialogBackdrop,
   DialogPanel,
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
   Menu,
   MenuButton,
   TransitionChild,
+  Popover,
+  PopoverButton,
+  PopoverPanel,
 } from "@headlessui/react";
 import {
   Bars3Icon,
   BellIcon,
-  ChartPieIcon,
-  ChevronRightIcon,
-  DocumentDuplicateIcon,
-  HomeIcon,
-  UsersIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import {
+  MagnifyingGlassIcon,
+  ChevronDownIcon,
+} from "@heroicons/react/20/solid";
 import { useSeatingConfigure } from "../hooks/useSeatingConfigure";
 import { ORDERSEATINGS } from "../constants/orderseatings";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
 const navigation = [
-  {
-    name: "Serving",
-    children: [
-      { name: ORDERSEATINGS[0].name, seating: ORDERSEATINGS[0].seating },
-      { name: ORDERSEATINGS[1].name, seating: ORDERSEATINGS[1].seating },
-    ],
-  },
+  { name: "Serving", href: "/" },
   { name: "By Room", href: "/room" },
   { name: "Trays", href: "/trays" },
   { name: "Analisis", href: "#" },
 ];
+
+const Serving =[
+  { name: ORDERSEATINGS[0].name, seating: ORDERSEATINGS[0].seating },
+  { name: ORDERSEATINGS[1].name, seating: ORDERSEATINGS[1].seating },
+]
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -52,10 +49,12 @@ export function Sidebar({ children }) {
   const [seatingLabel, setSeatingLabel] = useState(ORDERSEATINGS[0].name);
   const pathname = usePathname();
 
+  // Set seating label
   useEffect(() => {
-    setSeatingLabel( ORDERSEATINGS[seating.seating - 1].name);
+    setSeatingLabel(ORDERSEATINGS[seating.seating - 1].name);
   }, [seating.seating]);
 
+  // Show seating only on the home page
   useEffect(() => {
     setShowSeating(pathname === "/");
   }, [pathname]);
@@ -114,7 +113,6 @@ export function Sidebar({ children }) {
                       <ul role="list" className="-mx-2 space-y-1">
                         {navigation.map((item) => (
                           <div key={item.name}>
-                            {!item.children ? (
                               <Link
                                 href={item.href}
                                 className={classNames(
@@ -127,45 +125,6 @@ export function Sidebar({ children }) {
                               >
                                 {item.name}
                               </Link>
-                            ) : (
-                              <Disclosure as="div">
-                                  <DisclosureButton
-                                    className={classNames(
-                                      pathname === "/"
-                                        ? "bg-gray-50 text-indigo-600"
-                                        : "hover:bg-gray-50",
-                                      "group flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm/6 font-semibold text-gray-700"
-                                    )}
-                                  >
-                                    <ChevronRightIcon
-                                      aria-hidden="true"
-                                      className="size-5 shrink-0 text-gray-400 group-data-[open]:rotate-90 group-data-[open]:text-gray-500"
-                                    />
-                                    {item.name}
-                                  </DisclosureButton>
-                                <DisclosurePanel as="ul" className="mt-1 px-2">
-                                  {item.children.map((subItem) => (
-                                    <Link key={subItem.name} href='/'>
-                                      <DisclosureButton
-                                        as="div"
-                                        className={classNames(
-                                          subItem.name === seatingLabel
-                                            ? "text-indigo-600"
-                                            : "hover:bg-gray-50",
-                                          "block rounded-md py-2 pl-9 pr-2 text-sm/6 text-gray-700"
-                                        )}
-                                        onClick={() => {
-                                          seating.setSeating(subItem.seating);
-                                          toggleSidebar();
-                                        }}
-                                      >
-                                        {subItem.name}
-                                      </DisclosureButton>
-                                    </Link>
-                                  ))}
-                                </DisclosurePanel>
-                              </Disclosure>
-                            )}
                           </div>
                         ))}
                       </ul>
@@ -205,14 +164,32 @@ export function Sidebar({ children }) {
           {showSeating && (
             <>
               {/* Seating label */}
-              <span className="flex sm:items-center">
-                <span
-                  aria-hidden="true"
-                  className="mr-4 text-sm/6 font-semibold text-gray-900"
+              <Popover className="relative">
+                <PopoverButton className="inline-flex items-center gap-x-1 text-sm/6 font-semibold text-gray-900">
+                  <span>{seatingLabel}</span>
+                  <ChevronDownIcon aria-hidden="true" className="size-5" />
+                </PopoverButton>
+
+                <PopoverPanel
+                  transition
+                  className="absolute left-1/2 z-10 mt-5 flex w-screen max-w-min -translate-x-1/2 px-4 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
                 >
-                  {seatingLabel}
-                </span>
-              </span>
+                  <div className="w-56 shrink rounded-xl bg-white p-4 text-sm/6 font-semibold text-gray-900 shadow-lg ring-1 ring-gray-900/5">
+                    {Serving.map((item) => (
+                      <button
+                        key={item.name}
+                        href="#"
+                        className="block p-2 hover:text-indigo-600"
+                        onClick={() => {
+                          seating.setSeating(item.seating);
+                        }}
+                      >
+                        {item.name}
+                      </button>
+                    ))}
+                  </div>
+                </PopoverPanel>
+              </Popover>
             </>
           )}
           {/* Separator */}
@@ -270,16 +247,17 @@ export function Sidebar({ children }) {
           </div>
         </div>
         {/* Main content */}
-        <main className={`${showSeating ? 'lg:pl-[480px]' : ''}`}>
+        {/* <main className={`${showSeating ? 'lg:pl-[480px]' : ''}`}> */}
+        <main>
           <div className="px-4 py-4 sm:px-6 lg:px-8">{children}</div>
         </main>
       </div>
 
-      {showSeating && (
+      {/* {showSeating && (
       <aside className="fixed bottom-0 left-20 top-16 hidden w-96 overflow-y-auto border-r border-gray-200 px-4 py-6 sm:px-6 lg:px-8 lg:block">
         aqui va el submenu en el sidebar
       </aside>
-      )}
+      )} */}
     </>
   );
 }
