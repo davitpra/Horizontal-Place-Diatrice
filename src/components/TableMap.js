@@ -1,8 +1,8 @@
 "use client"
 
 import { useCallback, useEffect, useState} from "react";
-import { useTableModal } from "../hooks/useTableModal";
-import { useTableNumber } from "../hooks/useTableNumber";
+import { useTableModal } from "../app/hooks/useTableModal";
+import { useTableNumber } from "../app/hooks/useTableNumber";
 
 
 export function TableMap({residents}) {

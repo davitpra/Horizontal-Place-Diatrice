@@ -1,11 +1,11 @@
 'use client'
-import { MealBar } from "./components/MealBar";
-import { Modal } from "./components/Modal";
-import { Sidebar } from "./components/Sidebar";
-import { TableMap } from "./components/TableMap";
-import { TableModal } from "./components/TableModal";
-import Title from "./components/Title";
-import {residents} from './data/residents';
+import { MealBar } from "../components/MealBar";
+import { Modal } from "../components/Modal";
+import { Sidebar } from "../components/Sidebar";
+import { TableMap } from "../components/TableMap";
+import { TableModal } from "../components/TableModal";
+import Title from "../components/Title";
+import {residents} from '../data/residents';
 import { useSeatingConfigure } from "./hooks/useSeatingConfigure";
 
 export default function Home() {

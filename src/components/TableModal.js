@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import { useTableModal } from "../hooks/useTableModal";
-import { useTableNumber } from "../hooks/useTableNumber";
+import { useTableModal } from "../app/hooks/useTableModal";
+import { useTableNumber } from "../app/hooks/useTableNumber";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 

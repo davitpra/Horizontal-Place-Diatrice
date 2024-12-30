@@ -1,8 +1,8 @@
 "use client";
-import { residents } from "../data/residents";
-import { Table } from "../components/Table";
-import Title from "../components/Title";
-import { MealBar } from "../components/MealBar";
+import { residents } from "../../data/residents";
+import { Table } from "../../components/Table";
+import Title from "../../components/Title";
+import { MealBar } from "../../components/MealBar";
 
 export default function Room() {
   const observations =[

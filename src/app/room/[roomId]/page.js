@@ -1,6 +1,6 @@
 import React from "react";
-import { residents } from "../../data/residents";
-import { Wraper } from "@/app/components/Wraper";
+import { residents } from "../../../data/residents";
+import { Wraper } from "@/components/Wraper";
 import {
   Disclosure,
   DisclosureButton,
