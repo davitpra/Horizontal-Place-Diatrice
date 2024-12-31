@@ -1,4 +1,4 @@
-'use client'
+import { getAllResidents} from "@/lib/get-all-residents";
 import { MealBar } from "../components/MealBar";
 import { Modal } from "../components/Modal";
 import { Sidebar } from "../components/Sidebar";
@@ -8,20 +8,10 @@ import Title from "../components/Title";
 import {residents} from '../data/residents';
 import { useSeatingConfigure } from "./hooks/useSeatingConfigure";
 
-export default function Home() {
-  
-  const seating = useSeatingConfigure((state) => state.seating);
+export default async function Home() {
 
-  let seatingMessage = "";
-  let residentOnSetting = [];
-
-  if (seating === 1) {
-    residentOnSetting = residents.filter((resident) => resident.seating === 1);
-  }
-
-  if (seating === 2) {  
-    residentOnSetting = residents.filter((resident) => resident.seating === 2);
-  }
+  const residentOnSetting = await getAllResidents();
+  console.log(residentOnSetting);
 
   const observations =[
     "The chair positions may not be correct",
@@ -29,8 +19,8 @@ export default function Home() {
 
   return (
   <>
-    {/* <TableModal residents={residentOnSetting} /> */}
-    <Modal residents={residentOnSetting}/>
+    <TableModal residents={residentOnSetting} />
+    {/* <Modal residents={residentOnSetting}/> */}
     <MealBar />
     <TableMap residents={residentOnSetting} />
     <Title observations={observations} className="mb-4"/>

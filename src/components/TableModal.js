@@ -40,10 +40,10 @@ export function TableModal({ residents }) {
                 }}
               >
                 <h3 className="sm:hidden pl-2 font-medium">
-                  {resident.name} {resident.lastName.charAt(0)}.
+                  {resident.full_name}.
                 </h3>
                 <h3 className="hidden sm:block pl-2 font-medium">
-                  {resident.name} {resident.lastName}
+                  {resident.full_name}
                 </h3>
                 <p className="text-xs pl-4">Room: {resident.roomId}</p>
               </Link>
