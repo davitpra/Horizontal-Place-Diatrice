@@ -2,7 +2,7 @@ import { query } from "./strapi";
 
 export async function getAllResidents() {
   return query(
-    "residents?populate=Drink_preference&populate=breakfast_preference&populate=Picture"
+    "residents?populate=Picture&populate=Breakfast_preferences&populate=Lunch_preferences&populate=Supper_preferences"
   ).then((res) => {
     return res.data.map((resident) => {
       const {

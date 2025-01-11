@@ -20,11 +20,10 @@ export function Table({ residents }) {
   const [traysRooms, setTraysRooms] = useState([]);
   const [isOnTrays, setIsOnTrays] = useState(() => () => false);
 
-  useEffect(() => {
+   useEffect(() => {
     setSortedResidents(sortedResidents);
   }, [sortedResidents]);
 
-  
   useEffect(() => {
     const ids = trays.trays.map((tray) => tray.roomId);
     setTraysRooms(ids);
@@ -48,20 +47,27 @@ export function Table({ residents }) {
 
   const direction = (criteria) => {
     if (sortDirection === "asc") {
-      return <ChevronDownIcon className="h-4 w-4 text-gray-500" onClick={() => {
-        toggleSortDirection()
-        sortResidents(criteria)
-      } }
-      />;
+      return (
+        <ChevronDownIcon
+          className="h-4 w-4 text-gray-500"
+          onClick={() => {
+            toggleSortDirection();
+            sortResidents(criteria);
+          }}
+        />
+      );
     } else {
-      return <ChevronUpIcon className="h-4 w-4 text-gray-500" onClick={() => {
-        toggleSortDirection()
-        sortResidents(criteria)
-      } }
-      />;;
+      return (
+        <ChevronUpIcon
+          className="h-4 w-4 text-gray-500"
+          onClick={() => {
+            toggleSortDirection();
+            sortResidents(criteria);
+          }}
+        />
+      );
     }
-  }
-  
+  };
 
   return (
     <Wraper>
@@ -84,17 +90,13 @@ export function Table({ residents }) {
                     scope="col"
                     className="px-3 py-3.5 text-left font-semibold text-gray-900"
                   >
-                    <div className="flex justify-evenly">
-                      Room
-                    </div>
+                    <div className="flex justify-evenly">Room</div>
                   </th>
                   <th
                     scope="col"
                     className="hidden sm:inline px-3 py-3.5 text-left font-semibold text-gray-900"
                   >
-                    <div className="flex justify-evenly">
-                      Seating
-                    </div>
+                    <div className="flex justify-evenly">Seating</div>
                   </th>
                   <th
                     scope="col"
@@ -114,23 +116,24 @@ export function Table({ residents }) {
                 {sortedResidents.map((person) => (
                   <tr key={person.id}>
                     <td className="whitespace-nowrap py-4 pl-4 pr-3 font-medium text-gray-900 sm:pl-6 lg:pl-8">
-                    <div className="sm:hidden">
-                      {person.name} {person.lastName.charAt(0)}.
-                      </div>
-                      <div className="hidden sm:inline">
-                      {person.name} {person.lastName}
-                      </div>
+                      <div className="">{person.full_name}</div>
                     </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-gray-500">
+                    <td className="whitespace-nowrap px-3 py-4 text-gray-500 text-center">
                       {person.roomId}
                     </td>
-                    <td className="hidden sm:inline whitespace-nowrap px-3 py-4 text-gray-500">
-                      {person.seating}
+                    <td className="hidden sm:block whitespace-nowrap px-3 py-4 text-gray-500 text-center">
+                      {person.Seating}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-gray-500">
-                      {person.importantObservation}
+                      {person.Dietary_Guidelines}
                     </td>
-                    <td className={`relative whitespace-nowrap py-4 pl-3 pr-4 text-right font-medium sm:pr-6 lg:pr-8 ${isOnTrays(person.roomId) ? "text-green-600 hover:text-green-900" : "text-indigo-600 hover:text-indigo-900"}`}>
+                    <td
+                      className={`relative whitespace-nowrap py-4 pl-3 pr-4 text-right font-medium sm:pr-6 lg:pr-8 ${
+                        isOnTrays(person.roomId)
+                          ? "text-green-600 hover:text-green-900"
+                          : "text-indigo-600 hover:text-indigo-900"
+                      }`}
+                    >
                       <a
                         onClick={() => router.push(`./room/${person.roomId}`)}
                         className="hidden sm:inline "
@@ -142,7 +145,13 @@ export function Table({ residents }) {
                         onClick={() => router.push(`./room/${person.roomId}`)}
                       />
                     </td>
-                    <td className={`relative whitespace-nowrap py-4 pl-3 pr-4 text-right font-medium sm:pr-6 lg:pr-8 ${isOnTrays(person.roomId) ? "text-green-600 hover:text-green-900" : "text-indigo-600 hover:text-indigo-900"}`}>
+                    <td
+                      className={`relative whitespace-nowrap py-4 pl-3 pr-4 text-right font-medium sm:pr-6 lg:pr-8 ${
+                        isOnTrays(person.roomId)
+                          ? "text-green-600 hover:text-green-900"
+                          : "text-indigo-600 hover:text-indigo-900"
+                      }`}
+                    >
                       <a
                         onClick={() => trays.addToTrays(person.roomId)}
                         className="hidden sm:inline"

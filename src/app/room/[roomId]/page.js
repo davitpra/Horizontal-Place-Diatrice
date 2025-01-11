@@ -26,8 +26,8 @@ async function roomId({ params }) {
   return (
     <Wraper>
       <div className="bg-white">
-        <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
-          <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
+        <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 md:max-w-7xl md:px-8">
+          <div className="sm:grid sm:grid-cols-2 sm:items-start sm:gap-x-8">
             {/* Image gallery */}
             <TabGroup className="flex flex-col-reverse">
               <TabPanels className="aspect-h-1 aspect-w-1 w-full">

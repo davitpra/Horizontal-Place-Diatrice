@@ -12,6 +12,9 @@ export default async function Home() {
 
   const residentOnSetting = await getAllResidents();
 
+  /* todo */
+  /* clasify residents by seating */
+
   const observations =[
     "The chair positions may not be correct",
   ]

@@ -14,9 +14,9 @@ export function Modal({ residents }) {
   const [open, setOpen] = useState(tableModal.isOpen);
 
   let seating =useSeatingConfigure((state) => state.seating);
-  console.log("Seating", seating);
+  // console.log("Seating", seating);
   const sortedResidents = residents.filter((resident) => resident.Seating === seating);
-  console.log("SortedResidents", sortedResidents);
+  // console.log("SortedResidents", sortedResidents);
   const residentsOnTable = sortedResidents.filter(
     (resident) => resident.table === selectTable
   );

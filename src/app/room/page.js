@@ -1,14 +1,16 @@
-"use client";
-import { residents } from "../../data/residents";
+// import { residents } from "../../data/residents";
 import { Table } from "../../components/Table";
 import Title from "../../components/Title";
 import { MealBar } from "../../components/MealBar";
+import { getAllResidents } from "@/lib/get-all-residents";
 
-export default function Room() {
+export default async function Room() {
   const observations =[
     "A list of all residents in by the time of made this app including their name, room, seating and observation.",
   ]
 
+  const residents = await getAllResidents();
+ 
   return (
     <>
       <Title title={"Residents"} observations={observations} />
