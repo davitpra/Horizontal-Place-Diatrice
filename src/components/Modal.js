@@ -4,18 +4,32 @@ import { useState, useEffect } from "react";
 import { useTableModal } from "../app/hooks/useTableModal";
 import { useTableNumber } from "../app/hooks/useTableNumber";
 import { Dialog, DialogPanel } from "@headlessui/react";
-import {TableModal} from "./TableModal";
+import { TableModal } from "./TableModal";
 import { useSeatingConfigure } from "@/app/hooks/useSeatingConfigure";
+import { useMealBar } from "@/app/hooks/useMealBar";
+import { useSortedResidents } from "@/app/hooks/useSortedResidents";
 
 export function Modal({ residents }) {
+  // to open or close the modal
   const tableModal = useTableModal();
+  // to select a table number
   const selectTable = useTableNumber((state) => state.tableNumber);
 
   const [open, setOpen] = useState(tableModal.isOpen);
 
-  let seating =useSeatingConfigure((state) => state.seating);
-  // console.log("Seating", seating);
-  const sortedResidents = residents.filter((resident) => resident.Seating === seating);
+  // to get the seating number
+  const onSeating = useSeatingConfigure((state) => state.seating);
+  // to get the meal number of the meal bar
+  const mealNumber = useMealBar((state) => state.mealNumber);
+
+  // filter the residents by seating
+  let sortedResidents = useSortedResidents(residents, onSeating, mealNumber);
+
+  useEffect(() => {
+    // to get the residents on the selected seating
+    sortedResidents = useSortedResidents(residents, onSeating, mealNumber);
+  }, [onSeating, mealNumber]);
+
   // console.log("SortedResidents", sortedResidents);
   const residentsOnTable = sortedResidents.filter(
     (resident) => resident.table === selectTable
@@ -32,10 +46,6 @@ export function Modal({ residents }) {
       tableModal.onClose();
     }
   }, [open]);
-
-  const ResidentsOnTable = residents.filter(
-    (resident) => resident.table === selectTable.tableNumber
-  );
 
   return (
     <Dialog open={open} onClose={tableModal.onClose}>

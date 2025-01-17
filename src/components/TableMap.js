@@ -5,12 +5,7 @@ import { useTableModal } from "../app/hooks/useTableModal";
 import { useTableNumber } from "../app/hooks/useTableNumber";
 import { useSeatingConfigure } from "@/app/hooks/useSeatingConfigure";
 import { useMealBar } from "@/app/hooks/useMealBar";
-
-function filterResidents(residents, seating, meal) {
-  return residents
-    .filter((person) => person.Seating === seating)
-    .filter((person) => person.meals[meal]?.onTray !== true);
-}
+import { useSortedResidents } from "@/app/hooks/useSortedResidents";
 
 // function to count the people by table
 function countPeopleByTable (residentsOnSeating) {
@@ -27,15 +22,15 @@ export function TableMap({residents}) {
   const onSelect = useTableNumber((state) => state.onSelect);
   // to get the seating number
   const onSeating = useSeatingConfigure((state) => state.seating);
-
+  // to get the meal number of the meal bar
   const mealNumber = useMealBar((state) => state.mealNumber);
 
   // filter the residents by seating
-  let residentsOnSeating = filterResidents(residents, onSeating, mealNumber);
+  let residentsOnSeating = useSortedResidents(residents, onSeating, mealNumber);
 
   useEffect(() => {
     // to get the residents on the selected seating
-    residentsOnSeating = filterResidents(residents, onSeating, mealNumber);
+    residentsOnSeating = useSortedResidents(residents, onSeating, mealNumber);
   }, [onSeating, mealNumber]);
 
   // to get the number of tables from 1 to 17
