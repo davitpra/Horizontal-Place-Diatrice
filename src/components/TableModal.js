@@ -1,9 +1,9 @@
-'use client'
-
 import { UserIcon } from "@heroicons/react/24/outline";
 
 export function TableModal(residents) {
+  const host = process.env.NEXT_PUBLIC_STRAPI_HOST;
   // console.log('residents to Table Modal',residents.residents);
+
   return (
     <div className="mt-8 flow-root">
       <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -40,10 +40,10 @@ export function TableModal(residents) {
                   <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
                     <div className="flex items-center">
                       <div className="size-11 shrink-0">
-                        {resident.Picture ? (
+                        {resident.Picture?.url ? (
                           <img
                             alt={`${resident.full_name} image`}
-                            src={resident.Picture.url}
+                            src={`${host}${resident.Picture.url}`}
                             className="size-11 rounded-full"
                           />
                         ) : (
