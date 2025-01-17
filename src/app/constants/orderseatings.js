@@ -1,4 +1,4 @@
 export const ORDERSEATINGS = [
-    { name: 'First Seating', seating: 1 },
-    { name: 'Second Seating', seating: 2 },
+    { name: '1st Seating', seating: 1 },
+    { name: '2nd Seating', seating: 2 },
   ]
