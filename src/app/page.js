@@ -5,8 +5,6 @@ import { Sidebar } from "../components/Sidebar";
 import { TableMap } from "../components/TableMap";
 import Title from "../components/Title";
 import {residents} from '../data/residents';
-import { useSeatingConfigure } from "./hooks/useSeatingConfigure";
-import { TableModal } from "@/components/TableModal";
 
 export default async function Home() {
 
@@ -18,7 +16,6 @@ export default async function Home() {
 
   return (
   <>
-    {/* <TableModal residents={residents} /> */}
     <Modal residents={residents}/>
     <MealBar />
     <TableMap residents={residents} />

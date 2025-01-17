@@ -1,7 +1,11 @@
+'use client'
+
+import { useMealBar } from "@/app/hooks/useMealBar"
+
 const tabs = [
-    { name: 'Breakfast', href: '#', current: true },
-    { name: 'Lunch', href: '#', current: false },
-    { name: 'Dinner', href: '#', current: false },
+    { name: 'Breakfast', number: 1},
+    { name: 'Lunch', number: 2},
+    { name: 'Supper', number: 3},
   ]
   
   function classNames(...classes) {
@@ -9,6 +13,9 @@ const tabs = [
   }
   
   export function MealBar() {
+
+    const meal = useMealBar()
+
     return (
       <div>
         <div className="sm:hidden">
@@ -19,8 +26,9 @@ const tabs = [
           <select
             id="tabs"
             name="tabs"
-            defaultValue={tabs.find((tab) => tab.current).name}
+            defaultValue={tabs.find((tab) => tab.number === meal.mealNumber).name}
             className="block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+            onChange={(e) => meal.onSelect(tabs.find((tab) => tab.name === e.target.value).number)}
           >
             {tabs.map((tab) => (
               <option key={tab.name}>{tab.name}</option>
@@ -31,19 +39,18 @@ const tabs = [
           <div className="border-b border-gray-200">
             <nav aria-label="Tabs" className="-mb-px flex">
               {tabs.map((tab) => (
-                <a
+                <button
                   key={tab.name}
-                  href={tab.href}
-                  aria-current={tab.current ? 'page' : undefined}
                   className={classNames(
-                    tab.current
+                    tab.number === meal.mealNumber
                       ? 'border-indigo-500 text-indigo-600'
                       : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
                     'w-1/3 border-b-2 px-1 py-4 text-center text-sm font-medium',
                   )}
+                  onClick={() => meal.onSelect(tab.number)}
                 >
                   {tab.name}
-                </a>
+                </button>
               ))}
             </nav>
           </div>
