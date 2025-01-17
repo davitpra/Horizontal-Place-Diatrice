@@ -10,10 +10,7 @@ import { TableModal } from "@/components/TableModal";
 
 export default async function Home() {
 
-  const residentOnSetting = await getAllResidents();
-
-  /* todo */
-  /* clasify residents by seating */
+  const residents = await getAllResidents();
 
   const observations =[
     "The chair positions may not be correct",
@@ -21,10 +18,10 @@ export default async function Home() {
 
   return (
   <>
-    {/* <TableModal residents={residentOnSetting} /> */}
-    <Modal residents={residentOnSetting}/>
+    {/* <TableModal residents={residents} /> */}
+    <Modal residents={residents}/>
     <MealBar />
-    <TableMap residents={residentOnSetting} />
+    <TableMap residents={residents} />
     <Title observations={observations} className="mb-4"/>
   </>
   );
