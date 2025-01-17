@@ -69,6 +69,7 @@ export async function getAllResidents() {
           hotdrink: Lunch_preferences?.Lunch_drink_preference?.Hotdrink,
           juice: Lunch_preferences?.Lunch_drink_preference?.Juice,
           Milk: Lunch_preferences?.Lunch_drink_preference?.Milk,
+          onTray: Lunch_preferences?.onTray,
           observation: getComentariesText(Lunch_preferences),
         }),
         filterValidProperties({
@@ -76,6 +77,7 @@ export async function getAllResidents() {
           hotdrink: Supper_preferences?.Lunch_drink_preference?.Hotdrink,
           juice: Supper_preferences?.Lunch_drink_preference?.Juice,
           Milk: Supper_preferences?.Lunch_drink_preference?.Milk,
+          onTray: Supper_preferences?.onTray,
           observation: getComentariesText(Supper_preferences),
         }),
       ];

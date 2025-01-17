@@ -2,21 +2,8 @@
 
 import { UserIcon } from "@heroicons/react/24/outline";
 
-const people = [
-  {
-    name: "Jhon Salchichon",
-    title: "Scramble Eggs",
-    department: "Brown Toast",
-    email: "Room 11",
-    role: "Member",
-    image:
-      "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  // More people...
-];
-
 export function TableModal(residents) {
-  console.log('residents to Table Modal',residents.residents);
+  // console.log('residents to Table Modal',residents.residents);
   return (
     <div className="mt-8 flow-root">
       <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">

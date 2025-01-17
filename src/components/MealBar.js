@@ -3,9 +3,9 @@
 import { useMealBar } from "@/app/hooks/useMealBar"
 
 const tabs = [
-    { name: 'Breakfast', number: 1},
-    { name: 'Lunch', number: 2},
-    { name: 'Supper', number: 3},
+    { name: 'Breakfast', number: 0},
+    { name: 'Lunch', number: 1},
+    { name: 'Supper', number: 2},
   ]
   
   function classNames(...classes) {
