@@ -1,6 +1,6 @@
 import { getAllResidents} from "@/lib/get-all-residents";
 import { MealBar } from "../components/MealBar";
-import { Modal } from "../components/Modal";
+import { ServingModal } from "../components/ServingModal";
 import { Sidebar } from "../components/Sidebar";
 import { TableMap } from "../components/TableMap";
 import Title from "../components/Title";
@@ -16,7 +16,7 @@ export default async function Home() {
 
   return (
   <>
-    <Modal residents={residents}/>
+    <ServingModal residents={residents}/>
     <MealBar />
     <TableMap residents={residents} />
     <Title observations={observations} className="mb-4"/>
