@@ -50,40 +50,40 @@ export async function getAllResidents() {
       // Array of meals preferences with the valid properties
       const meals = [
         filterValidProperties({
-          water: Breakfast_preferences?.Breakfast_drink_preference?.water,
-          hotdrink: Breakfast_preferences?.Breakfast_drink_preference?.Hotdrink,
-          cereals: Breakfast_preferences?.Cereals,
-          juice: Breakfast_preferences?.Breakfast_drink_preference?.Juice,
+          Water: Breakfast_preferences?.Breakfast_drink_preference?.water,
+          Hotdrink: Breakfast_preferences?.Breakfast_drink_preference?.Hotdrink,
+          Cereals: Breakfast_preferences?.Cereals,
+          Juice: Breakfast_preferences?.Breakfast_drink_preference?.Juice,
           Milk: Breakfast_preferences?.Breakfast_drink_preference?.Milk,
-          eggs: Breakfast_preferences?.eggs,
-          toast: Breakfast_preferences?.toast,
-          FruitPlate: Breakfast_preferences?.Fruit_plate,
-          Yogurt: Breakfast_preferences?.Yogurt,
-          Muffing: Breakfast_preferences?.Muffing,
+          Eggs: Breakfast_preferences?.eggs,
+          Toast: Breakfast_preferences?.toast,
+          FruitPlate: Breakfast_preferences?.Fruit_plate ? "Fruit Plate" : "",
+          Yogurt: Breakfast_preferences?.Yogurt ? "Yogurt" : "",
+          Muffing: Breakfast_preferences?.Muffing ? "Muffing" : "",
           onTray: Breakfast_preferences?.onTray,
-          additionals: Breakfast_preferences?.additionals,
-          observation: getComentariesText(Breakfast_preferences),
+          Additionals: Breakfast_preferences?.additionals,
+          Observation: getComentariesText(Breakfast_preferences),
         }),
         filterValidProperties({
-          water: Lunch_preferences?.Lunch_drink_preference?.water,
-          hotdrink: Lunch_preferences?.Lunch_drink_preference?.Hotdrink,
-          juice: Lunch_preferences?.Lunch_drink_preference?.Juice,
+          Water: Lunch_preferences?.Lunch_drink_preference?.water,
+          Hotdrink: Lunch_preferences?.Lunch_drink_preference?.Hotdrink,
+          Juice: Lunch_preferences?.Lunch_drink_preference?.Juice,
           Milk: Lunch_preferences?.Lunch_drink_preference?.Milk,
           onTray: Lunch_preferences?.onTray,
-          observation: getComentariesText(Lunch_preferences),
+          Observation: getComentariesText(Lunch_preferences),
         }),
         filterValidProperties({
-          water: Supper_preferences?.Lunch_drink_preference?.water,
-          hotdrink: Supper_preferences?.Lunch_drink_preference?.Hotdrink,
-          juice: Supper_preferences?.Lunch_drink_preference?.Juice,
+          Water: Supper_preferences?.Lunch_drink_preference?.water,
+          Hotdrink: Supper_preferences?.Lunch_drink_preference?.Hotdrink,
+          Juice: Supper_preferences?.Lunch_drink_preference?.Juice,
           Milk: Supper_preferences?.Lunch_drink_preference?.Milk,
           onTray: Supper_preferences?.onTray,
-          observation: getComentariesText(Supper_preferences),
+          Observation: getComentariesText(Supper_preferences),
         }),
       ];
 
-      // if it is Tuesday or Thursday, add pancakes to breakfast
-      if (dayOfWeek === 2 || dayOfWeek === 4) {
+      // if it is Thursday, add pancakes to breakfast
+      if (dayOfWeek === 4) {
         if (Breakfast_preferences?.Pancake) {
           meals[0].Pancakes = ' Add pancakes';
         } else {

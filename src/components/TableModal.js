@@ -1,8 +1,30 @@
-import { UserIcon } from "@heroicons/react/24/outline";
+import { useMealBar } from "@/app/hooks/useMealBar";
+import {
+  FolderOpenIcon,
+  FolderPlusIcon,
+  UserIcon,
+} from "@heroicons/react/24/outline";
 
 export function TableModal(residents) {
   const host = process.env.NEXT_PUBLIC_STRAPI_HOST;
-  // console.log('residents to Table Modal',residents.residents);
+  const mealNumber = useMealBar((state) => state.mealNumber);
+
+  // Función para quitar elementos con ciertas claves
+  function removeKeysFromObject(obj, keysToRemove) {
+    const newObj = { ...obj };
+    keysToRemove.forEach((key) => {
+      delete newObj[key];
+    });
+    return newObj;
+  }
+
+  // Claves a quitar
+  const keyForDrinks = ["Water", "Hotdrink", "Juice", "Milk"];
+
+  // Array resultante
+  const mealWithoutDrinks = residents.residents.map((resident) =>
+    removeKeysFromObject(resident.meals[mealNumber], keyForDrinks)
+  );
 
   return (
     <div className="mt-8 flow-root">
@@ -35,7 +57,7 @@ export function TableModal(residents) {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
-              {residents.residents.map((resident) => (
+              {residents.residents.map((resident, index) => (
                 <tr key={resident.id}>
                   <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
                     <div className="flex items-center">
@@ -58,30 +80,48 @@ export function TableModal(residents) {
                           {resident.full_name}
                         </div>
                         <div className="mt-1 text-gray-500">
-                         Room {resident.roomId}
+                          Room {resident.roomId}
                         </div>
                       </div>
                     </div>
                   </td>
-                  <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                    <div className="text-gray-900">{resident.meals[0].eggs}</div>
-                    <div className="mt-1 text-gray-500">
-                      {resident.meals[0].toast}
-                    </div>
+                  <td className="hidden sm:block whitespace-nowrap px-3 py-5 text-sm text-gray-500">
+                    {Object.entries(mealWithoutDrinks[index]).map(
+                      ([key, value]) => (
+                        <div
+                          key={key}
+                          className="py-0 grid grid-cols-3 gap-0 px-0"
+                        >
+                          <dt className="text-sm/6 font-medium text-gray-900">
+                            {key}
+                          </dt>
+                          <dd className="text-sm/6 text-gray-700 col-span-1 mt-0 overflow-hidden text-ellipsis whitespace-nowrap">
+                            {value}
+                          </dd>
+                        </div>
+                      )
+                    )}
+                    <button className="hidden sm:block text-indigo-600 hover:text-indigo-900">
+                      View all..
+                    </button>
+                  </td>
+                  <td className="sm:hidden whitespace-nowrap px-3 py-5 text-sm text-gray-500">
+                    <FolderOpenIcon className="sm:hidden h-6 w-6" />
                   </td>
                   <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
                     <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
                       Complete
                     </span>
                   </td>
-                  <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                  <td className="relative whitespace-nowrap py-5 pl-3 pr-2 text-right text-sm font-medium sm:pr-0">
                     <a
                       href="#"
-                      className="text-indigo-600 hover:text-indigo-900"
+                      className="hidden sm:block text-indigo-600 hover:text-indigo-900"
                     >
-                      Switch Status
+                      Change Selection
                       <span className="sr-only">, {resident.full_name}</span>
                     </a>
+                    <FolderPlusIcon className="sm:hidden h-6 w-6" />
                   </td>
                 </tr>
               ))}
