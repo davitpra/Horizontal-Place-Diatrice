@@ -14,7 +14,7 @@ import {
 } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon, BellIcon} from "@heroicons/react/24/outline";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import {useSeatingConfigure} from '../app/hooks/useSeatingConfigure'
+import {useSeatingConfigure} from '../hooks/useSeatingConfigure'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 

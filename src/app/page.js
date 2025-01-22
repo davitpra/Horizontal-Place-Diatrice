@@ -4,11 +4,18 @@ import { ServingModal } from "../components/ServingModal";
 import { Sidebar } from "../components/Sidebar";
 import { TableMap } from "../components/TableMap";
 import Title from "../components/Title";
-import {residents} from '../data/residents';
+import {residents as rawData} from '../data/residents';
 
 export default async function Home() {
 
-  const residents = await getAllResidents();
+  let residents = [];
+  try {
+    residents = await getAllResidents();
+  }	catch (error) {
+    residents = rawData;
+    console.error(error);
+  }
+
 
   const observations =[
     "The chair positions may not be correct",

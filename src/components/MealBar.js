@@ -1,6 +1,6 @@
 'use client'
 
-import { useMealBar } from "@/app/hooks/useMealBar"
+import { useMealBar } from "@/hooks/useMealBar"
 
 const tabs = [
     { name: 'Breakfast', number: 0},

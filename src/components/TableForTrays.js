@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import { Wraper } from "./Wraper";
 import { UserIcon, MinusCircleIcon } from "@heroicons/react/24/outline";
-import { useTrays } from "../app/hooks/useTrays";
+import { useTrays } from "../hooks/useTrays";
 import { useEffect, useState } from "react";
 
 export function TableForTrays({ residents }) {

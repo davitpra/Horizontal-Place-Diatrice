@@ -7,7 +7,7 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
 } from "@heroicons/react/24/outline";
-import { useTrays } from "../app/hooks/useTrays";
+import { useTrays } from "../hooks/useTrays";
 import { useState, useEffect } from "react";
 
 export function Table({ residents }) {

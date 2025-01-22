@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useMoreInfoModal } from "@/app/hooks/useMoreInfoModal";
+import { useMoreInfoModal } from "@/hooks/useMoreInfoModal";
 import { Modal } from "./Modal";
-import { useMealBar } from "@/app/hooks/useMealBar";
+import { useMealBar } from "@/hooks/useMealBar";
 
 export function MoreInfoModal({ resident }) {
   // to open or close the modal

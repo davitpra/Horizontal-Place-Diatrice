@@ -1,5 +1,5 @@
 //import { create } from "zustand";
-import {useLocalStorage} from '../hooks/useLocalStorage'
+import {useLocalStorage} from './useLocalStorage'
 
 
 export const useTrays = ()=>{

@@ -1,11 +1,11 @@
 "use client"
 
 import { useCallback, useEffect, useState} from "react";
-import { useTableModal } from "../app/hooks/useTableModal";
-import { useTableNumber } from "../app/hooks/useTableNumber";
-import { useSeatingConfigure } from "@/app/hooks/useSeatingConfigure";
-import { useMealBar } from "@/app/hooks/useMealBar";
-import { useSortedResidents } from "@/app/hooks/useSortedResidents";
+import { useTableModal } from "../hooks/useTableModal";
+import { useTableNumber } from "../hooks/useTableNumber";
+import { useSeatingConfigure } from "@/hooks/useSeatingConfigure";
+import { useMealBar } from "@/hooks/useMealBar";
+import { useSortedResidents } from "@/hooks/useSortedResidents";
 
 // function to count the people by table
 function countPeopleByTable (residentsOnSeating) {

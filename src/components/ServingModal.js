@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useTableModal } from "../app/hooks/useTableModal";
-import { useTableNumber } from "../app/hooks/useTableNumber";
+import { useTableModal } from "../hooks/useTableModal";
+import { useTableNumber } from "../hooks/useTableNumber";
 import { TableModal } from "./TableModal";
-import { useSeatingConfigure } from "@/app/hooks/useSeatingConfigure";
-import { useMealBar } from "@/app/hooks/useMealBar";
-import { useSortedResidents } from "@/app/hooks/useSortedResidents";
+import { useSeatingConfigure } from "@/hooks/useSeatingConfigure";
+import { useMealBar } from "@/hooks/useMealBar";
+import { useSortedResidents } from "@/hooks/useSortedResidents";
 import { Modal } from "./Modal";
 
 export function ServingModal({ residents }) {

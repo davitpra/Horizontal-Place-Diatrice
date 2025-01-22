@@ -1,5 +1,5 @@
-import { useMealBar } from "@/app/hooks/useMealBar";
-import { useMoreInfoModal } from "@/app/hooks/useMoreInfoModal";
+import { useMealBar } from "@/hooks/useMealBar";
+import { useMoreInfoModal } from "@/hooks/useMoreInfoModal";
 import {
   FolderOpenIcon,
   FolderPlusIcon,
