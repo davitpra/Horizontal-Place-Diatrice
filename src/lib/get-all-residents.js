@@ -42,7 +42,7 @@ export async function getAllResidents() {
         return Object.fromEntries(
           Object.entries(obj).filter(
             ([key, value]) =>
-              value !== undefined && value !== null && value !== "" && value !== false
+              value !== undefined && value !== null && value !== "" && value !== false && value !== "none"
           )
         );
       }
@@ -57,9 +57,9 @@ export async function getAllResidents() {
           Milk: Breakfast_preferences?.Breakfast_drink_preference?.Milk,
           Eggs: Breakfast_preferences?.eggs,
           Toast: Breakfast_preferences?.toast,
-          FruitPlate: Breakfast_preferences?.Fruit_plate ? "Fruit Plate" : "",
-          Yogurt: Breakfast_preferences?.Yogurt ? "Yogurt" : "",
-          Muffing: Breakfast_preferences?.Muffing ? "Muffing" : "",
+          FruitPlate: Breakfast_preferences?.Fruit_plate ? "Add" : "none",
+          Yogurt: Breakfast_preferences?.Yogurt ? "Add" : "none",
+          Muffing: Breakfast_preferences?.Muffing ? "Add" : "none",
           onTray: Breakfast_preferences?.onTray,
           Additionals: Breakfast_preferences?.additionals,
           Observation: getComentariesText(Breakfast_preferences),
@@ -70,6 +70,7 @@ export async function getAllResidents() {
           Juice: Lunch_preferences?.Lunch_drink_preference?.Juice,
           Milk: Lunch_preferences?.Lunch_drink_preference?.Milk,
           onTray: Lunch_preferences?.onTray,
+          Additionals: Lunch_preferences?.additionals,
           Observation: getComentariesText(Lunch_preferences),
         }),
         filterValidProperties({
@@ -78,6 +79,7 @@ export async function getAllResidents() {
           Juice: Supper_preferences?.Lunch_drink_preference?.Juice,
           Milk: Supper_preferences?.Lunch_drink_preference?.Milk,
           onTray: Supper_preferences?.onTray,
+          Additionals: Supper_preferences?.additionals,
           Observation: getComentariesText(Supper_preferences),
         }),
       ];
@@ -85,18 +87,18 @@ export async function getAllResidents() {
       // if it is Thursday, add pancakes to breakfast
       if (dayOfWeek === 4) {
         if (Breakfast_preferences?.Pancake) {
-          meals[0].Pancakes = ' Add pancakes';
+          meals[0].Pancakes = 'Add';
         } else {
-          meals[0].Pancakes = ' No pancakes';
+          meals[0].Pancakes = 'none';
         }
       }
 
       // if it is Sunday or Wednesday, add bacon to breakfast
       if (dayOfWeek === 0 || dayOfWeek === 3) {
         if (Breakfast_preferences?.Bacon) {
-          meals[0].Bacon = ' Add Bacon';
+          meals[0].Bacon = 'Add';
         } else {
-          meals[0].Bacon = ' No Bacon';
+          meals[0].Bacon = 'none';
         }
       }
 

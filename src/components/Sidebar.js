@@ -12,17 +12,13 @@ import {
   PopoverButton,
   PopoverPanel,
 } from "@headlessui/react";
-import {
-  Bars3Icon,
-  BellIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import {
   MagnifyingGlassIcon,
   ChevronDownIcon,
 } from "@heroicons/react/20/solid";
 import { useSeatingConfigure } from "../hooks/useSeatingConfigure";
-import { ORDERSEATINGS } from "../app/constants/orderseatings";
+import { ORDERSEATINGS } from "../constants/orderseatings";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
@@ -33,10 +29,10 @@ const navigation = [
   { name: "Analisis", href: "#" },
 ];
 
-const Serving =[
+const Serving = [
   { name: ORDERSEATINGS[0].name, seating: ORDERSEATINGS[0].seating },
   { name: ORDERSEATINGS[1].name, seating: ORDERSEATINGS[1].seating },
-]
+];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -69,7 +65,7 @@ export function Sidebar({ children }) {
         <Dialog
           open={sidebarOpen}
           onClose={setSidebarOpen}
-          className="relative z-50"
+          className="relative z-2"
         >
           <DialogBackdrop
             transition
@@ -113,18 +109,18 @@ export function Sidebar({ children }) {
                       <ul role="list" className="-mx-2 space-y-1">
                         {navigation.map((item) => (
                           <div key={item.name}>
-                              <Link
-                                href={item.href}
-                                className={classNames(
-                                  item.href === pathname
-                                    ? "bg-gray-50 text-indigo-600"
-                                    : "hover:bg-gray-50",
-                                  "block rounded-md py-2 pl-10 pr-2 text-sm/6 font-semibold text-gray-700"
-                                )}
-                                onClick={toggleSidebar}
-                              >
-                                {item.name}
-                              </Link>
+                            <Link
+                              href={item.href}
+                              className={classNames(
+                                item.href === pathname
+                                  ? "bg-gray-50 text-indigo-600"
+                                  : "hover:bg-gray-50",
+                                "block rounded-md py-2 pl-10 pr-2 text-sm/6 font-semibold text-gray-700"
+                              )}
+                              onClick={toggleSidebar}
+                            >
+                              {item.name}
+                            </Link>
                           </div>
                         ))}
                       </ul>
@@ -150,7 +146,7 @@ export function Sidebar({ children }) {
           </div>
         </Dialog>
 
-        <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
+        <div className="sticky top-0 z-2 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
           {/* Menu Icon */}
           <button
             type="button"

@@ -24,8 +24,6 @@ export function MoreInfoModal({ resident }) {
     }
   }, [open]);
 
-  console.log(resident, "resident");
-
   return (
     <Modal
       isOpen={open}

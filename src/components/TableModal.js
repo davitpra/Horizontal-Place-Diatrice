@@ -7,6 +7,8 @@ import {
 } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { MoreInfoModal } from "./MoreInfoModal";
+import { useSelectionModal } from "@/hooks/useSelectionModal";
+import { SelectionModal } from "./SelectionModal";
 
 export function TableModal(residents) {
   const host = process.env.NEXT_PUBLIC_STRAPI_HOST;
@@ -15,12 +17,18 @@ export function TableModal(residents) {
   const [residentInfo, setResidentInfo] = useState({});
   // Función para abrir el modal
   const InfoModal = useMoreInfoModal();
+  const SelecModal = useSelectionModal();
 
-  function handleOpenModal(resident) {
+  function handleOpenMoreInfo(resident) {
     setResidentInfo(resident);
     InfoModal.onOpen();
   }
 
+  function handleSelectionModal(resident) {
+    setResidentInfo(resident);
+    SelecModal.onOpen();
+  }
+  
   // Función para quitar elementos con ciertas claves
   function removeKeysFromObject(obj, keysToRemove) {
     const newObj = { ...obj };
@@ -114,12 +122,18 @@ export function TableModal(residents) {
                           </div>
                         )
                       )}
-                      <button onClick={()=>handleOpenModal(resident)} className="hidden sm:block text-indigo-600 hover:text-indigo-900">
+                      <button
+                        onClick={() => handleOpenMoreInfo(resident)}
+                        className="hidden sm:block text-indigo-600 hover:text-indigo-900"
+                      >
                         View all..
                       </button>
                     </td>
                     <td className="sm:hidden whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                      <FolderOpenIcon className="sm:hidden h-6 w-6" onClick={()=>handleOpenModal(resident)}/>
+                      <FolderOpenIcon
+                        className="sm:hidden h-6 w-6"
+                        onClick={() => handleOpenMoreInfo(resident)}
+                      />
                     </td>
                     <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
                       <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
@@ -127,14 +141,18 @@ export function TableModal(residents) {
                       </span>
                     </td>
                     <td className="relative whitespace-nowrap py-5 pl-3 pr-2 text-right text-sm font-medium sm:pr-0">
-                      <a
+                      <button
                         href="#"
                         className="hidden sm:block text-indigo-600 hover:text-indigo-900"
+                        onClick={() => handleSelectionModal(resident)}
                       >
                         Change Selection
                         <span className="sr-only">, {resident.full_name}</span>
-                      </a>
-                      <FolderPlusIcon className="sm:hidden h-6 w-6" />
+                      </button>
+                      <FolderPlusIcon
+                        className="sm:hidden h-6 w-6"
+                        onClick={() => handleSelectionModal(resident)}
+                      />
                     </td>
                   </tr>
                 ))}
@@ -144,6 +162,7 @@ export function TableModal(residents) {
         </div>
       </div>
       <MoreInfoModal resident={residentInfo} />
+      <SelectionModal resident={residentInfo} />
     </>
   );
 }
