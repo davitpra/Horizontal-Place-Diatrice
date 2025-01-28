@@ -65,7 +65,7 @@ export function Sidebar({ children }) {
         <Dialog
           open={sidebarOpen}
           onClose={setSidebarOpen}
-          className="relative z-2"
+          className="relative z-50"
         >
           <DialogBackdrop
             transition
@@ -146,7 +146,7 @@ export function Sidebar({ children }) {
           </div>
         </Dialog>
 
-        <div className="sticky top-0 z-2 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
+        <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
           {/* Menu Icon */}
           <button
             type="button"

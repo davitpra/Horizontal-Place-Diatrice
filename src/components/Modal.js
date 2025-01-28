@@ -20,8 +20,8 @@ export function Modal({ isOpen, close, title, button, children }) {
   }, [open, close]);
 
   return (
-    <Dialog open={open} onClose={close} className="z-100">
-      <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center">
+    <Dialog open={open} onClose={close} className="">
+      <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center z-50">
         <div className="w-10/12 flex flex-col">
           <DialogPanel className="bg-white p-6 rounded overflow-auto max-h-screen">
             <div className="flex justify-between items-center">
