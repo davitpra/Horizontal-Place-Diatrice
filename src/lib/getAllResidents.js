@@ -1,3 +1,5 @@
+import { useGetFormattedDate } from "@/hooks/useGetFormattedDate";
+import { createBreakfast } from "./createBreakfast";
 import { query } from "./strapi";
 
 export async function getAllResidents() {
@@ -22,6 +24,21 @@ export async function getAllResidents() {
         Supper_preferences,
       } = resident;
 
+      // 1. Quita la propiedad 'id' de Breakfast_preferences.
+      const {
+        id: _omitBreakfastId,
+        Breakfast_drink_preference,
+        ...cleanBreakfastPreferences
+      } = Breakfast_preferences || {};
+
+      // 2. Quita la propiedad 'id' de Breakfast_drink_preference.
+      const { id: _omitDrinkId, ...cleanBreakfastDrinkPreference } =
+        Breakfast_drink_preference || {};
+
+      // Reemplaza el objeto anidado por su versión sin 'id'.
+      cleanBreakfastPreferences.Breakfast_drink_preference =
+        cleanBreakfastDrinkPreference;
+
       //GET DAY OF WEEK
       let today = new Date();
       const dayOfWeek = today.getDay();
@@ -35,7 +52,7 @@ export async function getAllResidents() {
             texts.push(child.text);
           });
         });
-      
+
         return texts;
       }
 
@@ -44,7 +61,11 @@ export async function getAllResidents() {
         return Object.fromEntries(
           Object.entries(obj).filter(
             ([key, value]) =>
-              value !== undefined && value !== null && value !== "" && value !== false && value !== "none"
+              value !== undefined &&
+              value !== null &&
+              value !== "" &&
+              value !== false &&
+              value !== "none"
           )
         );
       }
@@ -89,18 +110,18 @@ export async function getAllResidents() {
       // if it is Thursday, add pancakes to breakfast
       if (dayOfWeek === 4) {
         if (Breakfast_preferences?.Pancake) {
-          meals[0].Pancakes = 'Add';
+          meals[0].Pancakes = "Add";
         } else {
-          meals[0].Pancakes = 'none';
+          meals[0].Pancakes = "none";
         }
       }
 
       // if it is Sunday or Wednesday, add bacon to breakfast
       if (dayOfWeek === 0 || dayOfWeek === 3) {
         if (Breakfast_preferences?.Bacon) {
-          meals[0].Bacon = 'Add';
+          meals[0].Bacon = "Add";
         } else {
-          meals[0].Bacon = 'none';
+          meals[0].Bacon = "none";
         }
       }
 
@@ -114,6 +135,7 @@ export async function getAllResidents() {
         roomId,
         Seating,
         meals,
+        Breakfast_preferences: cleanBreakfastPreferences,
         Picture,
         Service_Notes,
         Dietary_Guidelines,

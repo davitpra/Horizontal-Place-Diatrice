@@ -19,7 +19,7 @@ export async function createMenus({date, full_name, documentId=null}) {
 
   try {
     const response = await query("menus", 'POST', body);
-    console.log(response);
+    console.log("Response from createMenus", response);
     return response;
   } catch (error) {
     console.error("Error creating menu:", error);
