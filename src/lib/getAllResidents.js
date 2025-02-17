@@ -7,7 +7,9 @@ export async function getAllResidents() {
     return res.data.map((resident) => {
       const {
         id,
+        documentId,
         full_name,
+        slug,
         table,
         priority,
         roomId,
@@ -104,6 +106,8 @@ export async function getAllResidents() {
 
       return {
         id,
+        documentId,
+        slug,
         full_name,
         table,
         priority,

@@ -9,7 +9,7 @@ import {
   TabPanels,
 } from "@headlessui/react";
 import { UserIcon, MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
-import { getAllResidents } from "@/lib/get-all-residents";
+import { getAllResidents } from "@/lib/getAllResidents";
 
 async function roomId({ params }) {
   const { roomId } = await params;

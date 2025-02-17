@@ -2,7 +2,7 @@
 import { Table } from "../../components/Table";
 import Title from "../../components/Title";
 import { MealBar } from "../../components/MealBar";
-import { getAllResidents } from "@/lib/get-all-residents";
+import { getAllResidents } from "@/lib/getAllResidents";
 
 export default async function Room() {
   const observations =[
