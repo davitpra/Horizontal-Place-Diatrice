@@ -3,8 +3,7 @@ import { getDayBreakfasts } from "@/lib/getDayBreakfasts";
 
 export const useCreateBreakfast = async (residents,date, menus) => {
 
-    const dayBreakfast = await getDayBreakfasts(date);
-    // let date = useGetFormattedDate();
+    let dayBreakfast = await getDayBreakfasts(date);
     // Check if the breakfast for the day have been created for each resident and create them if they don't exist
 
     for (const resident of residents) {
@@ -28,4 +27,7 @@ export const useCreateBreakfast = async (residents,date, menus) => {
         console.log(`Breakfast created for ${resident.full_name}`);
         }
     }
+  // get the last version of the day breakfast
+  dayBreakfast = await getDayBreakfasts(date);
+  return dayBreakfast;
 }

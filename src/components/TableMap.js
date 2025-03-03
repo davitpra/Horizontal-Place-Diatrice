@@ -1,11 +1,8 @@
 "use client"
-
-import { useCallback, useEffect, useState} from "react";
+import { useCallback} from "react";
 import { useTableModal } from "../hooks/useTableModal";
 import { useTableNumber } from "../hooks/useTableNumber";
-import { useSeatingConfigure } from "@/hooks/useSeatingConfigure";
-import { useMealBar } from "@/hooks/useMealBar";
-import { useSortedResidents } from "@/hooks/useSortedResidents";
+import { useResidentsOnSeating } from "@/store/useResidentsOnSeating";
 
 // function to count the people by table
 function countPeopleByTable (residentsOnSeating) {
@@ -15,23 +12,12 @@ function countPeopleByTable (residentsOnSeating) {
   }, {});
 }
 
-export function TableMap({residents}) {
+export function TableMap() {
+  const residentsOnSeating = useResidentsOnSeating((state) => state.residents);
   // to open or close the modal
   const tableModal = useTableModal();
   // to select a table
   const onSelect = useTableNumber((state) => state.onSelect);
-  // to get the seating number
-  const onSeating = useSeatingConfigure((state) => state.seating);
-  // to get the meal number of the meal bar
-  const mealNumber = useMealBar((state) => state.mealNumber);
-
-  // filter the residents by seating
-  let residentsOnSeating = useSortedResidents(residents, onSeating, mealNumber);
-
-  useEffect(() => {
-    // to get the residents on the selected seating
-    residentsOnSeating = useSortedResidents(residents, onSeating, mealNumber);
-  }, [onSeating, mealNumber]);
 
   // to get the number of tables from 1 to 17
   const tablesNumbers = Array.from({ length: 17 }, (_, i) => i + 1);
