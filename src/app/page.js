@@ -7,6 +7,7 @@ import Title from "../components/Title";
 import { residents as rawData } from "../data/residents";
 import { useCreateMenus } from "@/hooks/useCreateMenus";
 import { useCreateBreakfast } from "@/hooks/useCreateBreakfast";
+import { Serving } from "@/components/Serving";
 
 export default async function Home() {
   let residents = [];
@@ -22,15 +23,9 @@ export default async function Home() {
     residents = rawData;
     console.log("Error", error);
   }
-
-  const observations = ["The chair positions may not be correct"];
-
   return (
     <>
-      <ServingModal residents={residents} />
-      <MealBar />
-      <TableMap residents={residents} />
-      <Title observations={observations} className="mb-4" />
+     <Serving residents={residents} />
     </>
   );
 }

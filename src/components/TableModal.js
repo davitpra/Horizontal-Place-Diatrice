@@ -10,6 +10,7 @@ import { MoreInfoModal } from "./MoreInfoModal";
 import { useSelectionModal } from "@/hooks/useSelectionModal";
 import { SelectionModal } from "./SelectionModal";
 
+// TODO: change info from meals instead of residents
 export function TableModal(residents) {
   const host = process.env.NEXT_PUBLIC_STRAPI_HOST;
   const mealNumber = useMealBar((state) => state.mealNumber);

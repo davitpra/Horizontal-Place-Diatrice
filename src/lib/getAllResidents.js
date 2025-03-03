@@ -1,12 +1,10 @@
-import { useGetFormattedDate } from "@/hooks/useGetFormattedDate";
-import { createBreakfast } from "./createBreakfast";
 import { query } from "./strapi";
 
 export async function getAllResidents() {
   return query(
     "residents?populate[Breakfast_preferences][populate]=*&populate[Lunch_preferences][populate]=*&populate[Supper_preferences][populate]=*&populate=Picture"
   ).then((res) => {
-    return res.data.map((resident) => {
+    const residents = res.data.map((resident) => {
       const {
         id,
         documentId,
@@ -141,5 +139,7 @@ export async function getAllResidents() {
         Dietary_Guidelines,
       };
     });
+
+    return residents
   });
 }
