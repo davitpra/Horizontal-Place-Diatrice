@@ -148,7 +148,7 @@ body {
   transform: translateY(-50%);
 }
 
-@media (max-width: 650px) or (max-height: 650px) {
+@media (max-width: 650px) {
   .table {
     width: 1.7rem;
     height: 1.7rem;
