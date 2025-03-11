@@ -5,11 +5,9 @@ import { useTableModal } from "../hooks/useTableModal";
 import { useTableNumber } from "../hooks/useTableNumber";
 import { TableModal } from "./TableModal";
 import { Modal } from "./Modal";
-import { useResidentsOnSeating } from "@/store/useResidentsOnSeating";
 
-export function ServingModal() {
+export function ServingModal({residentsOnSeating}) {
 
-  const residentsOnSeating = useResidentsOnSeating((state) => state.residents);
   // to open or close the modal
   const tableModal = useTableModal();
   // to select a table number

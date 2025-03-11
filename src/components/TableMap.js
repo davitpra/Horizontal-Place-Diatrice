@@ -2,7 +2,6 @@
 import { useCallback} from "react";
 import { useTableModal } from "../hooks/useTableModal";
 import { useTableNumber } from "../hooks/useTableNumber";
-import { useResidentsOnSeating } from "@/store/useResidentsOnSeating";
 
 // function to count the people by table
 function countPeopleByTable (residentsOnSeating) {
@@ -12,8 +11,7 @@ function countPeopleByTable (residentsOnSeating) {
   }, {});
 }
 
-export function TableMap() {
-  const residentsOnSeating = useResidentsOnSeating((state) => state.residents);
+export function TableMap({ residentsOnSeating }) {
   // to open or close the modal
   const tableModal = useTableModal();
   // to select a table

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export const useResidentsOnSeating = create((set) => ({
+export const useResidentsStore = create((set) => ({
   residents: [],
   setResidents: (residents) => set({ residents }),
 }));
