@@ -19,6 +19,7 @@ export function Serving({ residents, date, breakFast }) {
   useEffect(() => {
     async function storeData() {
       try {
+        console.log("residents on serving", residents);
         setResidents(residents);
         // TODO ACTUALIZAR BREAKFAST EN EL STORE: useDayBreakfastStore
       } catch (error) {
@@ -39,11 +40,14 @@ export function Serving({ residents, date, breakFast }) {
   // filter the residents by seating
   const storeResidents = useResidentsStore((state) => state.residents)
 
+  console.log(storeResidents, "storeResidents");
+
   useEffect(() => {
     // to get the residents on the selected seating
     const result = useSortedResidents(storeResidents, onSeating, mealNumber);
     setResidentsOnSeating(result);
   }, [onSeating, mealNumber, storeResidents]);
+
 
   console.log(residentsOnSeating, "residentsOnSeating");
 
