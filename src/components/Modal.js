@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
-export function Modal({ isOpen, close, title, button, children }) {
+export function Modal({ isOpen, close, title, button, children, buttonAction }) {
   const [open, setOpen] = useState(isOpen);
 
   // Close modal when the TableModal state changes
@@ -33,6 +33,11 @@ export function Modal({ isOpen, close, title, button, children }) {
                   <button
                     type="button"
                     className="relative inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    onClick={() => {
+                      buttonAction();
+                      setOpen(false);
+                    }
+                    }
                   >
                     {button}
                   </button>

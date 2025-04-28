@@ -5,17 +5,20 @@ import {
   FolderPlusIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MoreInfoModal } from "./MoreInfoModal";
 import { useSelectionModal } from "@/hooks/useSelectionModal";
 import { SelectionModal } from "./SelectionModal";
+import { useDayBreakfastStore } from "@/store/useDayBreakfastStore";
 
-// TODO: change info from meals instead of residents
-export function TableModal(residents) {
+export function TableModal(residentsOnSeating) {
   const host = process.env.NEXT_PUBLIC_STRAPI_HOST;
   const mealNumber = useMealBar((state) => state.mealNumber);
+  const dayBreakfast = useDayBreakfastStore((state) => state.dayBreakfast);
 
   const [residentInfo, setResidentInfo] = useState({});
+  const [preferences, setPreferences] = useState([]);
+
   // Función para abrir el modal
   const InfoModal = useMoreInfoModal();
   const SelecModal = useSelectionModal();
@@ -29,7 +32,22 @@ export function TableModal(residents) {
     setResidentInfo(resident);
     SelecModal.onOpen();
   }
-  
+
+  // Función para encontrar el desayuno de los residentes
+  function BreakfastPreference(slug) {
+    return dayBreakfast.find((breakfast) => breakfast.slug.includes(slug));
+  }
+
+  // Inicializar las preferencias de desayuno
+  useEffect(() => {
+    if (residentsOnSeating?.residents && dayBreakfast) {
+      const updatedPreferences = residentsOnSeating.residents.map((resident) =>
+        BreakfastPreference(resident.slug)
+      );
+      setPreferences(updatedPreferences[mealNumber]?.meals[0] || []);
+    }
+  }, [residentsOnSeating, dayBreakfast, mealNumber]);
+
   // Función para quitar elementos con ciertas claves
   function removeKeysFromObject(obj, keysToRemove) {
     const newObj = { ...obj };
@@ -42,10 +60,11 @@ export function TableModal(residents) {
   // Claves a quitar
   const keyForDrinks = ["Water", "Hotdrink", "Juice", "Milk"];
 
-  // Array resultante
-  const mealWithoutDrinks = residents.residents.map((resident) =>
-    removeKeysFromObject(resident.meals[mealNumber], keyForDrinks)
-  );
+  // Array resultante sin las claves de bebidas
+  const mealWithoutDrinks =
+    residentsOnSeating?.residents?.map(() =>
+      removeKeysFromObject(preferences, keyForDrinks)
+    ) || [];
 
   return (
     <>
@@ -79,7 +98,7 @@ export function TableModal(residents) {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
-                {residents.residents.map((resident, index) => (
+                {residentsOnSeating.residents.map((resident, index) => (
                   <tr key={resident.id}>
                     <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
                       <div className="flex items-center">
@@ -108,7 +127,7 @@ export function TableModal(residents) {
                       </div>
                     </td>
                     <td className="hidden sm:block whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                      {Object.entries(mealWithoutDrinks[index]).map(
+                      {Object.entries(mealWithoutDrinks[index] || {}).map(
                         ([key, value]) => (
                           <div
                             key={key}
@@ -118,7 +137,13 @@ export function TableModal(residents) {
                               {key}
                             </dt>
                             <dd className="text-sm/6 text-gray-700 mt-0 overflow-hidden text-ellipsis whitespace-nowrap text-left">
-                              {value}
+                              {Array.isArray(value)
+                                ? value.map((item, idx) => (
+                                    <span key={idx} className="block">
+                                      {item}
+                                    </span>
+                                  ))
+                                : value}
                             </dd>
                           </div>
                         )
@@ -162,8 +187,8 @@ export function TableModal(residents) {
           </div>
         </div>
       </div>
-      <MoreInfoModal resident={residentInfo} />
-      <SelectionModal resident={residentInfo} />
+      <MoreInfoModal resident={residentInfo} preferences={preferences} />
+      <SelectionModal resident={residentInfo} preferences={preferences} />
     </>
   );
 }

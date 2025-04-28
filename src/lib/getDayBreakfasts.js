@@ -8,7 +8,7 @@ export async function getDayBreakfasts(date) {
   )  
   .then((res) => {
     return res.data.map((breakFast) => {
-    const { Breakfast, complete, went_out_to_eat, slug} = breakFast;
+    const { Breakfast, complete, went_out_to_eat, slug, documentId} = breakFast;
 
       //GET DAY OF WEEK
       let today = new Date();
@@ -99,6 +99,7 @@ export async function getDayBreakfasts(date) {
       const onTray = Breakfast?.onTray;
 
     return {
+      documentId,
       complete,
       went_out_to_eat,
       meals,

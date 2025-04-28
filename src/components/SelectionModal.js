@@ -5,8 +5,11 @@ import { Modal } from "./Modal";
 import { useMealBar } from "@/hooks/useMealBar";
 import { useSelectionModal } from "@/hooks/useSelectionModal";
 import { MEAL_OPTIONS } from "@/constants/mealOption";
+import { useChangeBreakfast } from "@/hooks/useChangeBreakfast";
+import { useDayBreakfastStore } from "@/store/useDayBreakfastStore";
 
-export function SelectionModal({ resident }) {
+
+export function SelectionModal({ resident, preferences }) {
   const [options, setOptions] = useState(MEAL_OPTIONS[0]);
   // to open or close the modal
   const SelectionModal = useSelectionModal();
@@ -15,13 +18,12 @@ export function SelectionModal({ resident }) {
   const [meals, setMeals] = useState([]);
   const mealNumber = useMealBar((state) => state.mealNumber);
 
-  // Set the meals state when the resident or mealNumber changes
+  const breakFast = useDayBreakfastStore ((state) => state.dayBreakfast);
+
+  // Set the meals state when selection changes
   useEffect(() => {
-    if (resident.meals && resident.meals[mealNumber]) {
-      setOptions(MEAL_OPTIONS[mealNumber]);
-      setMeals(resident.meals[mealNumber]);
-    }
-  }, [mealNumber, resident.meals]);
+    setMeals(preferences)
+  }, [preferences]);
 
   // Close modal when the SelectionModal state changes
   useEffect(() => {
@@ -44,12 +46,35 @@ export function SelectionModal({ resident }) {
     }));
   };
 
+  // Handle save action
+  const handleSave = async () => {
+    const { documentId } = resident;
+    if (!documentId) {
+      console.error("No documentId found for resident:", resident);
+      return;
+    }
+    console.log("resident:", resident);
+    // NO ES EL DOCUMENT ID DEL BREAKFAST
+    console.log("documentId:", documentId);
+    try {
+      await useChangeBreakfast({
+        documentId,
+        change: meals
+      });
+      console.log("Meal selection saved successfully:", meals); 
+      SelectionModal.onClose();
+    } catch (error) {
+      console.error("Error saving meal selection:", error);
+    }
+  };
+
   return (
     <Modal
       isOpen={open}
       close={SelectionModal.onClose}
       title={resident.full_name}
-      button="Change Selection"
+      button="Save"
+      buttonAction={handleSave}
     >
       <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
         Complete

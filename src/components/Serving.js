@@ -13,21 +13,36 @@ import { useResidentsStore } from "@/store/useResidentsStore";
 export function Serving({ residents, date, breakFast }) {
   const [residentsOnSeating, setResidentsOnSeating] = useState([]);
 
-  // SET STORE RESIDENTS AND BREAKFAST
+  // SET STORE RESIDENTS
   const setResidents = useResidentsStore((state) => state.setResidents);
 
+  // useEffect to set the residents on the store every time the date changes
+  // and the residents are updated
   useEffect(() => {
     async function storeData() {
       try {
-        console.log("residents on serving", residents);
+        // console.log("residents on serving", residents);
         setResidents(residents);
-        // TODO ACTUALIZAR BREAKFAST EN EL STORE: useDayBreakfastStore
       } catch (error) {
         console.error("Error", error);
       }
     }
     storeData();
   }, [date, residents, setResidents]);
+
+  // SET STORE BREAKFAST
+  const setDayBreakfast = useDayBreakfastStore((state) => state.setDayBreakfast);
+  // UseEffect to update the breakfast on the store
+  useEffect(() => {
+    async function storeData() {
+      try {
+        setDayBreakfast(breakFast);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    }
+    storeData();
+  }, [breakFast, setDayBreakfast]);
 
   const observations = ["The chair positions may not be correct"];
 
@@ -40,8 +55,9 @@ export function Serving({ residents, date, breakFast }) {
   // filter the residents by seating
   const storeResidents = useResidentsStore((state) => state.residents)
 
-  console.log(storeResidents, "storeResidents");
+  // console.log(storeResidents, "storeResidents");
 
+  // to get the residents on the selected seating, with the meal number
   useEffect(() => {
     // to get the residents on the selected seating
     const result = useSortedResidents(storeResidents, onSeating, mealNumber);
@@ -49,7 +65,7 @@ export function Serving({ residents, date, breakFast }) {
   }, [onSeating, mealNumber, storeResidents]);
 
 
-  console.log(residentsOnSeating, "residentsOnSeating");
+  // console.log(residentsOnSeating, "residentsOnSeating");
 
   return (
     <>

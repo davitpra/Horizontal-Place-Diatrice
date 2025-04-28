@@ -5,12 +5,10 @@ import { useMoreInfoModal } from "@/hooks/useMoreInfoModal";
 import { Modal } from "./Modal";
 import { useMealBar } from "@/hooks/useMealBar";
 
-export function MoreInfoModal({ resident }) {
+export function MoreInfoModal({ resident, preferences }) {
   // to open or close the modal
   const InfoModal = useMoreInfoModal();
   const [open, setOpen] = useState(InfoModal.isOpen);
-
-  const mealNumber = useMealBar((state) => state.mealNumber);
 
   // Close modal when the InfoModal state changes
   useEffect(() => {
@@ -55,19 +53,23 @@ export function MoreInfoModal({ resident }) {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
-                {resident && resident.meals && resident.meals[mealNumber] ? (
-                  Object.entries(resident.meals[mealNumber]).map(
-                    ([key, value]) => (
-                      <tr key={key}>
-                        <td className="py-3.5 pl-4 pr-3 text-left text-sm text-gray-900 sm:pl-0">
-                          {key}
-                        </td>
-                        <td className="px-3 py-3.5 pr-3 text-left text-sm text-gray-900 sm:pl-0">
-                          {value}
-                        </td>
-                      </tr>
-                    )
-                  )
+                {resident && preferences ? (
+                  Object.entries(preferences).map(([key, value]) => (
+                    <tr key={key}>
+                      <td className="py-3.5 pl-4 pr-3 text-left text-sm text-gray-900 sm:pl-0">
+                        {key}
+                      </td>
+                      <td className="px-3 py-3.5 pr-3 text-left text-sm text-gray-900 sm:pl-0">
+                        {Array.isArray(value)
+                          ? value.map((item, idx) => (
+                              <span key={idx} className="block">
+                                {item}
+                              </span>
+                            ))
+                          : value}
+                      </td>
+                    </tr>
+                  ))
                 ) : (
                   <tr>
                     <td className="py-3.5 pl-4 pr-3 text-left text-sm text-gray-900 sm:pl-0">
