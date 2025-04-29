@@ -60,13 +60,7 @@ export function MoreInfoModal({ resident, preferences }) {
                         {key}
                       </td>
                       <td className="px-3 py-3.5 pr-3 text-left text-sm text-gray-900 sm:pl-0">
-                        {Array.isArray(value)
-                          ? value.map((item, idx) => (
-                              <span key={idx} className="block">
-                                {item}
-                              </span>
-                            ))
-                          : value}
+                      {typeof value === "boolean" ? (value ? "Add" : "none") : value}
                       </td>
                     </tr>
                   ))

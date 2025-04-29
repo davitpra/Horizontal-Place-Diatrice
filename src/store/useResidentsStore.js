@@ -22,18 +22,6 @@ function changeFormat(residents) {
     let today = new Date();
     const dayOfWeek = today.getDay();
 
-    // Helper function to get the text from the comentaries
-    function getComentariesText(meal_preferences) {
-      const comentaries = meal_preferences?.Comentaries || [];
-      const texts = [];
-      comentaries.forEach((comentary) => {
-        comentary.children.forEach((child) => {
-          texts.push(child.text);
-        });
-      });
-      return texts;
-    }
-
     // Helper function to filter the valid properties
     function filterValidProperties(obj) {
       return Object.fromEntries(
@@ -63,7 +51,7 @@ function changeFormat(residents) {
         Muffing: Breakfast_preferences?.Muffing ? "Add" : "none",
         onTray: Breakfast_preferences?.onTray,
         Additionals: Breakfast_preferences?.additionals,
-        Observation: getComentariesText(Breakfast_preferences),
+        Observation: Breakfast_preferences?.comentaries,
       }),
       filterValidProperties({
         Water: Lunch_preferences?.Lunch_drink_preference?.water,
@@ -72,7 +60,7 @@ function changeFormat(residents) {
         Milk: Lunch_preferences?.Lunch_drink_preference?.Milk,
         onTray: Lunch_preferences?.onTray,
         Additionals: Lunch_preferences?.additionals,
-        Observation: getComentariesText(Lunch_preferences),
+        Observation: Lunch_preferences?.comentaries,
       }),
       filterValidProperties({
         Water: Supper_preferences?.Lunch_drink_preference?.water,
@@ -81,7 +69,7 @@ function changeFormat(residents) {
         Milk: Supper_preferences?.Lunch_drink_preference?.Milk,
         onTray: Supper_preferences?.onTray,
         Additionals: Supper_preferences?.additionals,
-        Observation: getComentariesText(Supper_preferences),
+        Observation: Supper_preferences?.comentaries,
       }),
     ];
 

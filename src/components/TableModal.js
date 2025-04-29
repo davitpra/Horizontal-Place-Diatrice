@@ -18,6 +18,7 @@ export function TableModal(residentsOnSeating) {
 
   const [residentInfo, setResidentInfo] = useState({});
   const [preferences, setPreferences] = useState([]);
+  const [documentId, setDocumentId] = useState("");
 
   // Función para abrir el modal
   const InfoModal = useMoreInfoModal();
@@ -35,7 +36,10 @@ export function TableModal(residentsOnSeating) {
 
   // Función para encontrar el desayuno de los residentes
   function BreakfastPreference(slug) {
-    return dayBreakfast.find((breakfast) => breakfast.slug.includes(slug));
+    return dayBreakfast.find((breakfast) => {
+      setDocumentId(breakfast.documentId)
+      return breakfast.slug.includes(slug)
+    });
   }
 
   // Inicializar las preferencias de desayuno
@@ -58,7 +62,7 @@ export function TableModal(residentsOnSeating) {
   }
 
   // Claves a quitar
-  const keyForDrinks = ["Water", "Hotdrink", "Juice", "Milk"];
+  const keyForDrinks = ["water", "Hotdrink", "Juice", "Cereals"];
 
   // Array resultante sin las claves de bebidas
   const mealWithoutDrinks =
@@ -137,13 +141,7 @@ export function TableModal(residentsOnSeating) {
                               {key}
                             </dt>
                             <dd className="text-sm/6 text-gray-700 mt-0 overflow-hidden text-ellipsis whitespace-nowrap text-left">
-                              {Array.isArray(value)
-                                ? value.map((item, idx) => (
-                                    <span key={idx} className="block">
-                                      {item}
-                                    </span>
-                                  ))
-                                : value}
+                            {typeof value === "boolean" ? (value ? "Add" : "none") : value}
                             </dd>
                           </div>
                         )
@@ -188,7 +186,7 @@ export function TableModal(residentsOnSeating) {
         </div>
       </div>
       <MoreInfoModal resident={residentInfo} preferences={preferences} />
-      <SelectionModal resident={residentInfo} preferences={preferences} />
+      <SelectionModal resident={residentInfo} preferences={preferences} setPreferences={setPreferences} documentId ={documentId} />
     </>
   );
 }

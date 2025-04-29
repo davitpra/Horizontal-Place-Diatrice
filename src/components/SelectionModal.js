@@ -2,27 +2,41 @@
 
 import { useState, useEffect } from "react";
 import { Modal } from "./Modal";
-import { useMealBar } from "@/hooks/useMealBar";
 import { useSelectionModal } from "@/hooks/useSelectionModal";
 import { MEAL_OPTIONS } from "@/constants/mealOption";
-import { useChangeBreakfast } from "@/hooks/useChangeBreakfast";
-import { useDayBreakfastStore } from "@/store/useDayBreakfastStore";
+import { changeBreakfast } from "@/lib/changeBreakfast";
 
+export function SelectionModal({
+  resident,
+  preferences,
+  setPreferences,
+  documentId,
+}) {
+  const ADD = "Add";
+  const NONE = "none";
 
-export function SelectionModal({ resident, preferences }) {
   const [options, setOptions] = useState(MEAL_OPTIONS[0]);
   // to open or close the modal
   const SelectionModal = useSelectionModal();
   const [open, setOpen] = useState(SelectionModal.isOpen);
+  const [meals, setMeals] = useState({});
 
-  const [meals, setMeals] = useState([]);
-  const mealNumber = useMealBar((state) => state.mealNumber);
-
-  const breakFast = useDayBreakfastStore ((state) => state.dayBreakfast);
+  // Transform preferences into a format suitable for the UI
+  function transformPreferences(preferences) {
+    if (!preferences || typeof preferences !== "object") {
+      console.error("Invalid preferences object");
+      return {};
+    }
+    return Object.entries(preferences).reduce((acc, [key, value]) => {
+      acc[key] = typeof value === "boolean" ? (value ? ADD : NONE) : value;
+      return acc;
+    }, {});
+  }
 
   // Set the meals state when selection changes
   useEffect(() => {
-    setMeals(preferences)
+    const updatedPreferences = transformPreferences(preferences);
+    setMeals(updatedPreferences);
   }, [preferences]);
 
   // Close modal when the SelectionModal state changes
@@ -40,34 +54,35 @@ export function SelectionModal({ resident, preferences }) {
   // Handle change of the meal selection
   const handleChange = (event, key) => {
     const newValue = event.target.value;
+
     setMeals((prevMeals) => ({
       ...prevMeals,
       [key]: newValue,
+    }));
+
+    setPreferences((prevPreferences) => ({
+      ...prevPreferences,
+      [key]: newValue === NONE ? false : newValue === ADD ? true : newValue,
     }));
   };
 
   // Handle save action
   const handleSave = async () => {
-    const { documentId } = resident;
     if (!documentId) {
       console.error("No documentId found for resident:", resident);
       return;
     }
-    console.log("resident:", resident);
-    // NO ES EL DOCUMENT ID DEL BREAKFAST
-    console.log("documentId:", documentId);
     try {
-      await useChangeBreakfast({
+      await changeBreakfast({
         documentId,
-        change: meals
+        options: preferences,
       });
-      console.log("Meal selection saved successfully:", meals); 
+      console.log("Meal selection saved successfully:", meals);
       SelectionModal.onClose();
     } catch (error) {
       console.error("Error saving meal selection:", error);
     }
   };
-
   return (
     <Modal
       isOpen={open}
@@ -92,7 +107,7 @@ export function SelectionModal({ resident, preferences }) {
                       </td>
                       <td className="px-3 py-3.5 pr-3 text-left text-sm text-gray-900 sm:pl-0">
                         <div className="mt-2 grid grid-cols-1">
-                          {key === "Observation" || key === "Additionals" ? (
+                          {key === "comentaries" || key === "additionals" ? (
                             <textarea
                               value={meals?.[key] || ""}
                               onChange={(event) => handleChange(event, key)}

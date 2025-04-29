@@ -1,5 +1,5 @@
 const BREAKFAST = [
-  { key: "Water", options: ["none", "with ice", "no ice"] },
+  { key: "water", options: ["none", "with ice", "no ice"] },
   { key: "Hotdrink", options: ["none", "Coffee", "Tea"] },
   {
     key: "Cereals",
@@ -8,15 +8,15 @@ const BREAKFAST = [
   { key: "Juice", options: ["none", "Tomato", "Orange", "Cramberry", "Apple"] },
   { key: "Milk", options: ["none", "regular", "lactose free"] },
   {
-    key: "Eggs",
+    key: "eggs",
     options: ["none", "over easy", "scramble", "pouched", "boiled"],
   },
-  { key: "Toast", options: ["none", "brown", "white", "raisen", "rye"] },
+  { key: "toast", options: ["none", "brown", "white", "raisen", "rye"] },
   { key: "FruitPlate", options: ["none", "Add"] },
   { key: "Yogurt", options: ["none", "Add"] },
   { key: "Muffing", options: ["none", "Add"] },
-  { key: "Additionals", options: [""] },
-  { key: "Observation", options: [""] },
+  { key: "additionals", options: [""] },
+  { key: "comentaries", options: [""] },
 ];
 //GET DAY OF WEEK
 let today = new Date();
@@ -33,21 +33,21 @@ if (dayOfWeek === 0 || dayOfWeek === 3) {
 }
 
 const LUNCH = [
-  { key: "Water", options: ["none", "with ice", "no ice"] },
+  { key: "water", options: ["none", "with ice", "no ice"] },
   { key: "Hotdrink", options: ["none", "Coffee", "Tea"] },
   { key: "Juice", options: ["none", "Tomato", "Orange", "Cramberry", "Apple"] },
   { key: "Milk", options: ["none", "regular", "lactose free"] },
-  { key: "Additionals", options: [""] },
-  { key: "Observation", options: [""] },
+  { key: "additionals", options: [""] },
+  { key: "comentaries", options: [""] },
 ];
 
 const SUPPER = [
-  { key: "Water", options: ["none", "with ice", "no ice"] },
+  { key: "water", options: ["none", "with ice", "no ice"] },
   { key: "Hotdrink", options: ["none", "Coffee", "Tea"] },
   { key: "Juice", options: ["none", "Tomato", "Orange", "Cramberry", "Apple"] },
   { key: "Milk", options: ["none", "regular", "lactose free"] },
-  { key: "Additionals", options: [""] },
-  { key: "Observation", options: [""] },
+  { key: "additionals", options: [""] },
+  { key: "comentaries", options: [""] },
 ];
 
 export const MEAL_OPTIONS = [BREAKFAST, LUNCH, SUPPER];
