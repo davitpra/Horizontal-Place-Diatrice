@@ -2,29 +2,48 @@ import { createMenus } from "@/lib/createMenus";
 import { getDayMenus } from "@/lib/getDayMenus";
 
 export const useCreateMenus = async (residents, date) => {
-  const dayMenus = await getDayMenus(date);
-  const Menus = dayMenus.data.map(({ slug, documentId }) => ({
-    slug,
-    documentId,
-  }));
-
-  // Check if the menus for the day have been created for each resident and create them if they don't exist
-  for (const resident of residents) {
-    const menuExists = dayMenus.data.some((menu) =>
-      menu.slug.includes(resident.slug)
-    );
-    if (!menuExists) {
-      const { slug, documentId } = await createMenus({
-        date,
-        full_name: resident.full_name,
-        documentId: resident.documentId,
-      });
-      console.log(`Menus created for ${resident.full_name}`);
-
-      // Agrega el objeto con slug y documentId al array Menus
-      Menus.push({ slug, documentId });
-    }
+  if (!residents || !Array.isArray(residents)) {
+    throw new Error("Invalid residents array");
   }
 
-  return Menus;
+  if (!date) {
+    throw new Error("Date is required");
+  }
+
+  try {
+    let dayMenus = await getDayMenus(date);
+
+    // Filtrar los residentes que no tienen menús creados
+    const residentsWithoutMenus = residents.filter(
+      (resident) =>
+        !dayMenus.some((menu) => menu.resident.documentId === resident.documentId)
+    );
+
+    if (residentsWithoutMenus.length === 0) {
+      return dayMenus;
+    }
+
+    // Crear menús para los residentes que no tienen
+    if (residentsWithoutMenus.length > 0) {
+      await Promise.all(
+        residentsWithoutMenus.map(async (resident) => {
+          await createMenus({
+            date,
+            full_name: resident.full_name,
+            documentId: resident.documentId,
+          });
+          console.log(`Menus created for ${resident.full_name}`);
+        })
+      );
+
+      // Llamar nuevamente a getDayMenus para obtener la lista actualizada
+      dayMenus = await getDayMenus(date);
+    }
+
+    return dayMenus;
+
+  } catch (error) {
+    console.error("Error in useCreateMenus:", error);
+    throw error;
+  }
 };

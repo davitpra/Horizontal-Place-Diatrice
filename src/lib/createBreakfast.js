@@ -1,7 +1,8 @@
+import { ComputerDesktopIcon } from "@heroicons/react/24/outline";
 import { query } from "./strapi";
 
 
-export async function createBreakfast({date, full_name, documentId=null, breakFast}) {
+export async function createBreakfast({date, full_name, documentId, breakFast}) {
 
   const slug =full_name.toLowerCase().replace(/\s+/g, '-')
 
@@ -13,14 +14,13 @@ export async function createBreakfast({date, full_name, documentId=null, breakFa
       "complete": false,
       "went_out_to_eat": false,
       "Breakfast": breakFast,
+      "menu": documentId,
   }}
-
-  if (documentId) {
-    body.data.menu = `${documentId}`;
-  }
 
   try {
     const response = await query("breakfasts", 'POST', body);
+    console.log("body", body);
+    console.log("Breakfast created:", response);
     return response;
   } catch (error) {
     console.error("Error creating breakfast:", error);

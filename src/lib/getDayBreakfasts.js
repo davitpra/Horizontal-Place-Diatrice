@@ -43,7 +43,7 @@ export async function getDayBreakfasts(date) {
           Muffing: Breakfast?.Muffing,
           onTray: Breakfast?.onTray,
           additionals: Breakfast?.additionals,
-          comentaries: Breakfast?.comentaries,
+          Comment: Breakfast?.Comment,
         }),
       ];
 

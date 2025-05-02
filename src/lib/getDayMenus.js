@@ -2,17 +2,10 @@ import { query } from "./strapi";
 
 export async function getDayMenus(date) {
   return query(
-    `Menus?filters[Date][$eq]=${date}`
+    `menus?filters[Date][$eq]=${date}&populate[breakfast][fields][0]=documentId&populate[lunch][fields][0]=documentId&populate[supper][fields][0]=documentId&populate[resident][fields][0]=full_name`
   )  
-  // .then((menu) => {
-  //   const { id, Date,documentId, Breakfast, Lunch, Supper } = menu.data[0];
-  //   return {
-  //     id,
-  //     Date,
-  //     documentId,
-  //     Breakfast,
-  //     Lunch,
-  //     Supper,
-  //   };
-  // });
+  .then((res) => {
+    const menus = res.data
+    return menus
+  });;
 }

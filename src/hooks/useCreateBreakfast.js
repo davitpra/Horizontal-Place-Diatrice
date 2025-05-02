@@ -1,33 +1,61 @@
 import { createBreakfast } from "@/lib/createBreakfast";
 import { getDayBreakfasts } from "@/lib/getDayBreakfasts";
 
-export const useCreateBreakfast = async (residents,date, menus) => {
+export const useCreateBreakfast = async (residents, date, menus) => {
+  if (!residents || !Array.isArray(residents)) {
+    throw new Error("Invalid residents array");
+  }
 
+  if (!date) {
+    throw new Error("Date is required");
+  }
+
+  if (!menus || !Array.isArray(menus)) {
+    throw new Error("Invalid menus array");
+  }
+
+  try {
+    // Obtener los desayunos existentes para la fecha
     let dayBreakfast = await getDayBreakfasts(date);
 
-    // Check if the breakfast for the day have been created for each resident and create them if they don't exist
-    for (const resident of residents) {
+    // Filtrar los menús que no tienen un desayuno asociado
+    const menusWithoutBreakfast = menus.filter((menu) => menu.breakfast === null);
 
-        const { full_name, Breakfast_preferences } = resident;
+    if (menusWithoutBreakfast.length > 0) {
+      console.log(`Creating breakfasts for ${menusWithoutBreakfast.length} menus...`);
 
-        const breakfastExits = dayBreakfast.some((breakFast) =>
-        breakFast.slug.includes(resident.slug)
-        );
+      // Crear desayunos para los menús que no tienen
+      await Promise.all(
+        menusWithoutBreakfast.map(async (menu) => {
+          const resident = residents.find(
+            (resident) => resident.documentId === menu.resident.documentId
+          );
 
-        if (!breakfastExits) {
-        
-        let documentId = menus.find((menu) => menu.slug.includes(resident.slug)).documentId
+          if (!resident) {
+            console.warn(`Resident not found for menu with documentId: ${menu.documentId}`);
+            return;
+          }
 
-        await createBreakfast({
-              date,
-              full_name,
-              breakFast: Breakfast_preferences,
-              documentId,
-            });
-        console.log(`Breakfast created for ${resident.full_name}`);
-        }
-    }
-  // get the last version of the day breakfast
-  dayBreakfast = await getDayBreakfasts(date);
-  return dayBreakfast;
-}
+          // Excluir el atributo id de Breakfast_preferences
+          const { id, ...BreakfastPreference } = resident.Breakfast_preferences || {};
+
+          await createBreakfast({
+            date,
+            full_name: menu.resident.full_name,
+            breakFast: BreakfastPreference,
+            documentId: menu.documentId,
+          });
+
+          console.log(`Breakfast created for ${menu.resident.full_name}`);
+        })
+      );
+
+      // Obtener la lista actualizada de desayunos
+      dayBreakfast = await getDayBreakfasts(date);
+    } 
+    return dayBreakfast;
+  } catch (error) {
+    console.error("Error in useCreateBreakfast:", error);
+    throw error;
+  }
+};
