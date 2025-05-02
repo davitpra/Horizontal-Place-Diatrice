@@ -34,7 +34,7 @@ export function TableModal(residentsOnSeating) {
     SelecModal.onOpen();
   }
 
-  // Función para encontrar el desayuno de los residentes
+  // Función para encontrar el desayuno de los residentes //----------> aqui se esta encontrando con el slug?
   function BreakfastPreference(slug) {
     return dayBreakfast.find((breakfast) => {
       setDocumentId(breakfast.documentId)
@@ -62,7 +62,7 @@ export function TableModal(residentsOnSeating) {
   }
 
   // Claves a quitar
-  const keyForDrinks = ["water", "Hotdrink", "Juice", "Cereals"];
+  const keyForDrinks = ["water", "Hotdrink", "Juice", "Cereals", "Comment"];
 
   // Array resultante sin las claves de bebidas
   const mealWithoutDrinks =

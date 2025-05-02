@@ -16,7 +16,7 @@ const BREAKFAST = [
   { key: "Yogurt", options: ["none", "Add"] },
   { key: "Muffing", options: ["none", "Add"] },
   { key: "additionals", options: [""] },
-  { key: "comentaries", options: [""] },
+  { key: "Comment", options: [""] },
 ];
 //GET DAY OF WEEK
 let today = new Date();
@@ -38,7 +38,7 @@ const LUNCH = [
   { key: "Juice", options: ["none", "Tomato", "Orange", "Cramberry", "Apple"] },
   { key: "Milk", options: ["none", "regular", "lactose free"] },
   { key: "additionals", options: [""] },
-  { key: "comentaries", options: [""] },
+  { key: "Comment", options: [""] },
 ];
 
 const SUPPER = [
@@ -47,7 +47,7 @@ const SUPPER = [
   { key: "Juice", options: ["none", "Tomato", "Orange", "Cramberry", "Apple"] },
   { key: "Milk", options: ["none", "regular", "lactose free"] },
   { key: "additionals", options: [""] },
-  { key: "comentaries", options: [""] },
+  { key: "Comment", options: [""] },
 ];
 
 export const MEAL_OPTIONS = [BREAKFAST, LUNCH, SUPPER];

@@ -107,7 +107,7 @@ export function SelectionModal({
                       </td>
                       <td className="px-3 py-3.5 pr-3 text-left text-sm text-gray-900 sm:pl-0">
                         <div className="mt-2 grid grid-cols-1">
-                          {key === "comentaries" || key === "additionals" ? (
+                          {key === "Comment" || key === "additionals" ? (
                             <textarea
                               value={meals?.[key] || ""}
                               onChange={(event) => handleChange(event, key)}
