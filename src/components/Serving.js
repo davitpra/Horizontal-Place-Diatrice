@@ -9,8 +9,9 @@ import { useSeatingConfigure } from "@/hooks/useSeatingConfigure";
 import { useMealBar } from "@/hooks/useMealBar";
 import { useSortedResidents } from "@/hooks/useSortedResidents";
 import { useResidentsStore } from "@/store/useResidentsStore";
+import { useDayMenusStore } from "@/store/useDayMenusStore";
 
-export function Serving({ residents, date, breakFast }) {
+export function Serving({ residents, date, breakFast, menus }) {
   const [residentsOnSeating, setResidentsOnSeating] = useState([]);
 
   // SET STORE RESIDENTS
@@ -43,6 +44,21 @@ export function Serving({ residents, date, breakFast }) {
     }
     storeData();
   }, [breakFast, setDayBreakfast]);
+
+  // SET STORE MENUS
+  const setDayMenus = useDayMenusStore((state) => state.setDayMenus);
+
+  // UseEffect to update the menus on the store
+  useEffect(() => {
+    async function storeData() {
+      try {
+        setDayMenus(menus);
+      } catch (error) {
+        console.error("Error", error);
+      }
+    }
+    storeData();
+  }, [menus, setDayMenus]);
 
   const observations = ["The chair positions may not be correct"];
 

@@ -7,13 +7,14 @@ import { Serving } from "@/components/Serving";
 export default async function Home() {
   let residents = [];
   let breakFast = [];
+  let menus = [];
 
     // let date = useGetFormattedDate();
   let date = "2025-02-15";
 
   try {
     residents = await getAllResidents();
-    const menus = await useCreateMenus(residents, date);
+    menus = await useCreateMenus(residents, date);
     breakFast = await useCreateBreakfast(residents, date, menus);
   } catch (error) {
     residents = rawData;
@@ -21,5 +22,5 @@ export default async function Home() {
     console.log("Error", error);
   }
 
-  return <Serving residents={residents} date ={date} breakFast={breakFast}/>
+  return <Serving residents={residents} date ={date} breakFast={breakFast} menus={menus}/>
 }

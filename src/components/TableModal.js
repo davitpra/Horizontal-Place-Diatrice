@@ -10,11 +10,13 @@ import { MoreInfoModal } from "./MoreInfoModal";
 import { useSelectionModal } from "@/hooks/useSelectionModal";
 import { SelectionModal } from "./SelectionModal";
 import { useDayBreakfastStore } from "@/store/useDayBreakfastStore";
+import { useDayMenusStore } from "@/store/useDayMenusStore";
 
 export function TableModal(residentsOnSeating) {
   const host = process.env.NEXT_PUBLIC_STRAPI_HOST;
   const mealNumber = useMealBar((state) => state.mealNumber);
   const dayBreakfast = useDayBreakfastStore((state) => state.dayBreakfast);
+  const dayMenus = useDayMenusStore((state) => state.dayMenus);
 
   const [residentInfo, setResidentInfo] = useState({});
   const [preferences, setPreferences] = useState([]);
