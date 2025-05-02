@@ -1,16 +1,16 @@
 import { useMealBar } from "@/hooks/useMealBar";
 import { useMoreInfoModal } from "@/hooks/useMoreInfoModal";
+import { useSelectionModal } from "@/hooks/useSelectionModal";
+import { useDayBreakfastStore } from "@/store/useDayBreakfastStore";
+import { useDayMenusStore } from "@/store/useDayMenusStore";
 import {
   FolderOpenIcon,
   FolderPlusIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
 import { MoreInfoModal } from "./MoreInfoModal";
-import { useSelectionModal } from "@/hooks/useSelectionModal";
 import { SelectionModal } from "./SelectionModal";
-import { useDayBreakfastStore } from "@/store/useDayBreakfastStore";
-import { useDayMenusStore } from "@/store/useDayMenusStore";
+import { useMemo, useEffect, useState } from "react";
 
 export function TableModal(residentsOnSeating) {
   const host = process.env.NEXT_PUBLIC_STRAPI_HOST;
@@ -22,7 +22,6 @@ export function TableModal(residentsOnSeating) {
   const [preferences, setPreferences] = useState([]);
   const [documentId, setDocumentId] = useState("");
 
-  // Función para abrir el modal
   const InfoModal = useMoreInfoModal();
   const SelecModal = useSelectionModal();
 
@@ -36,41 +35,46 @@ export function TableModal(residentsOnSeating) {
     SelecModal.onOpen();
   }
 
-  // Función para encontrar el desayuno de los residentes //----------> aqui se esta encontrando con el slug?
-  function BreakfastPreference(slug) {
-    return dayBreakfast.find((breakfast) => {
-      setDocumentId(breakfast.documentId)
-      return breakfast.slug.includes(slug)
-    });
-  }
+  // Memoizar menusOnSeating para evitar cálculos innecesarios
+  const menusOnSeating = useMemo(() => {
+    return dayMenus.filter((menu) =>
+      residentsOnSeating.residents.some(
+        (resident) => resident.documentId === menu.resident.documentId
+      )
+    );
+  }, [dayMenus, residentsOnSeating]);
 
-  // Inicializar las preferencias de desayuno
   useEffect(() => {
-    if (residentsOnSeating?.residents && dayBreakfast) {
-      const updatedPreferences = residentsOnSeating.residents.map((resident) =>
-        BreakfastPreference(resident.slug)
+    if (mealNumber === 0) {
+      const breakfastOnSeating = dayBreakfast.filter((breakfast) =>
+        menusOnSeating.some(
+          (menu) => menu.breakfast.documentId === breakfast.documentId
+        )
       );
-      setPreferences(updatedPreferences[mealNumber]?.meals[0] || []);
+
+      const newPreferences = breakfastOnSeating.map(
+        (breakfast) => breakfast.meals[0]
+      );
+      console.log("newPreferences", newPreferences);
+
+      setPreferences(newPreferences);
     }
-  }, [residentsOnSeating, dayBreakfast, mealNumber]);
+  }, [mealNumber, dayBreakfast, menusOnSeating]);
 
-  // Función para quitar elementos con ciertas claves
-  function removeKeysFromObject(obj, keysToRemove) {
-    const newObj = { ...obj };
-    keysToRemove.forEach((key) => {
-      delete newObj[key];
-    });
-    return newObj;
-  }
-
-  // Claves a quitar
   const keyForDrinks = ["water", "Hotdrink", "Juice", "Cereals", "Comment"];
 
-  // Array resultante sin las claves de bebidas
-  const mealWithoutDrinks =
-    residentsOnSeating?.residents?.map(() =>
-      removeKeysFromObject(preferences, keyForDrinks)
-    ) || [];
+  ///----> arreglar esto */
+  const preferencesWithoutDrinks = useMemo(() => {
+    return preferences.map((preference) => {
+      const newPreference = { ...preference };
+      keyForDrinks.forEach((key) => {
+        delete newPreference[key];
+      });
+      return newPreference;
+    });
+  }
+  , [preferences]);
+
 
   return (
     <>
@@ -133,7 +137,7 @@ export function TableModal(residentsOnSeating) {
                       </div>
                     </td>
                     <td className="hidden sm:block whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                      {Object.entries(mealWithoutDrinks[index] || {}).map(
+                      {Object.entries(preferences[index] || {}).map(
                         ([key, value]) => (
                           <div
                             key={key}
@@ -187,8 +191,8 @@ export function TableModal(residentsOnSeating) {
           </div>
         </div>
       </div>
-      <MoreInfoModal resident={residentInfo} preferences={preferences} />
-      <SelectionModal resident={residentInfo} preferences={preferences} setPreferences={setPreferences} documentId ={documentId} />
+      {/* <MoreInfoModal resident={residentInfo} />
+      <SelectionModal resident={residentInfo} /> */}
     </>
   );
 }
