@@ -122,6 +122,8 @@ export function TableModal(residentsOnSeating) {
     }
   }, [preferences]);
 
+  console.log("preferencesWithoutDrinks", preferencesWithoutDrinks);
+
   return (
     <>
       <div className="mt-8 flow-root">
@@ -257,6 +259,8 @@ export function TableModal(residentsOnSeating) {
         resident={residentInfo}
         preferences={preferences}
         index={index}
+        mealNumber={mealNumber}
+        setPreferences={setPreferences}
       />
       <SelectionModal
         resident={residentInfo}

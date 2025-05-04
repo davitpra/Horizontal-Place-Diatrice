@@ -3,26 +3,28 @@ export default async function handler(req, res) {
       return res.status(405).json({ error: "Method not allowed" });
     }
   
-    const { documentId, options } = req.body;
+    const { documentId, options, complete} = req.body;
   
-    if (!documentId || !options) {
-      return res.status(400).json({ error: "Missing required fields: documentId or options" });
+    if (!documentId) {
+      return res.status(400).json({ error: "Missing required field: documentId" });
     }
   
     const { NEXT_PUBLIC_STRAPI_HOST, STRAPI_TOKEN } = process.env;
   
     try {
+      const requestBody = {
+        data: {
+          ...(options && { Breakfast: options }), // Incluir `Breakfast` solo si `options` está definido
+          ...(complete !== undefined && { complete }), // Incluir `complete` solo si está definido
+        },
+      };
       const response = await fetch(`${NEXT_PUBLIC_STRAPI_HOST}/api/breakfasts/${documentId}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${STRAPI_TOKEN}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          data: {
-            Breakfast: options,
-          },
-        }),
+        body: JSON.stringify(requestBody),
       });
   
       if (!response.ok) {

@@ -1,4 +1,4 @@
-export async function changeBreakfast({ documentId, options }) {
+export async function changeBreakfast({ documentId, options, complete = undefined }) {
 
   try {
     const response = await fetch("/api/strapi", {
@@ -6,7 +6,7 @@ export async function changeBreakfast({ documentId, options }) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ documentId, options }),
+      body: JSON.stringify({ documentId, options, complete }),
     });
 
     if (!response.ok) {
