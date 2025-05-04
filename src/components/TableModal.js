@@ -11,6 +11,7 @@ import {
 import { MoreInfoModal } from "./MoreInfoModal";
 import { SelectionModal } from "./SelectionModal";
 import { useMemo, useEffect, useState } from "react";
+import { changeBreakfast } from "@/lib/changeBreakfast";
 
 export function TableModal(residentsOnSeating) {
   const host = process.env.NEXT_PUBLIC_STRAPI_HOST;
@@ -27,6 +28,9 @@ export function TableModal(residentsOnSeating) {
 
   const InfoModal = useMoreInfoModal();
   const SelecModal = useSelectionModal();
+
+  // Estado adicional para rastrear los cambios en preferencesWithoutDrinks
+  const [updatedPreferences, setUpdatedPreferences] = useState([]);
 
   function handleOpenMoreInfo(resident) {
     setResidentInfo(resident);
@@ -104,7 +108,7 @@ export function TableModal(residentsOnSeating) {
         return [];
       }
 
-      return preferences.map((preference, index) => {
+      return preferences.map((preference) => {
         if (
           !preference ||
           !Array.isArray(preference.meals) ||
@@ -114,7 +118,13 @@ export function TableModal(residentsOnSeating) {
           return {};
         }
         // Filtrar las bebidas y otros campos no deseados
-        return filterDrinks(preference.meals[0]);
+        const filteredMeals = filterDrinks(preference.meals[0]);
+        // Incluir el valor de `complete` en el resultado
+        return {
+          filterDrinks: filteredMeals,
+          complete: preference.complete,
+          documentId: preference.documentId,
+        };
       });
     } catch (error) {
       console.error("An error occurred while filtering preferences:", error);
@@ -122,7 +132,37 @@ export function TableModal(residentsOnSeating) {
     }
   }, [preferences]);
 
-  console.log("preferencesWithoutDrinks", preferencesWithoutDrinks);
+  // Sincronizar updatedPreferences con preferencesWithoutDrinks
+  useEffect(() => {
+    setUpdatedPreferences(preferencesWithoutDrinks);
+  }, [preferencesWithoutDrinks]);
+
+  const handleComplete = async (preference, index) => {
+    try {
+      const documentId = preference.documentId;
+      if (!documentId) {
+        console.error("No documentId found for the selected preference.");
+        return;
+      }
+      // Actualizar el estado en el backend si es necesario
+      if (mealNumber === 0) {
+        await changeBreakfast({
+          documentId,
+          complete: !preference?.complete, // Enviar el nuevo estado de `complete`
+        });
+      }
+
+      // Actualizar el estado local
+      setUpdatedPreferences((prev) =>
+        prev.map((item, i) =>
+          i === index ? { ...item, complete: !item.complete } : item
+        )
+      );
+      console.log("Meal selection saved successfully.");
+    } catch (error) {
+      console.error("Error saving meal selection:", error);
+    }
+  };
 
   return (
     <>
@@ -186,7 +226,7 @@ export function TableModal(residentsOnSeating) {
                     </td>
                     <td className="hidden sm:block whitespace-nowrap px-3 py-5 text-sm text-gray-500">
                       {Object.entries(
-                        preferencesWithoutDrinks[index] || {}
+                        updatedPreferences[index]?.filterDrinks || {}
                       ).map(([key, value]) => (
                         <div
                           key={key}
@@ -224,9 +264,20 @@ export function TableModal(residentsOnSeating) {
                       />
                     </td>
                     <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                      <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                        Complete
-                      </span>
+                      <button
+                        onClick={() => {
+                          handleComplete(updatedPreferences[index], index);
+                        }}
+                        className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${
+                          updatedPreferences[index]?.complete
+                            ? "bg-green-50 text-green-700 ring-green-600/20"
+                            : "bg-gray-50 text-gray-700 ring-gray-600/20"
+                        }`}
+                      >
+                        {updatedPreferences[index]?.complete
+                          ? "Complete"
+                          : "No Complete"}
+                      </button>
                     </td>
                     <td className="relative whitespace-nowrap py-5 pl-3 pr-2 text-right text-sm font-medium sm:pr-0">
                       <button
@@ -261,6 +312,7 @@ export function TableModal(residentsOnSeating) {
         index={index}
         mealNumber={mealNumber}
         setPreferences={setPreferences}
+        complete={updatedPreferences[index]?.complete}
       />
       <SelectionModal
         resident={residentInfo}

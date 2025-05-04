@@ -11,12 +11,19 @@ export function MoreInfoModal({
   index = 0,
   mealNumber = 0,
   setPreferences,
+  complete
 }) {
   // to open or close the modal
   const InfoModal = useMoreInfoModal();
   const [open, setOpen] = useState(InfoModal.isOpen);
 
-  const pref = preferences[index];
+  const [localComplete, setLocalComplete] = useState(complete);
+
+    // Sincronizar el estado local con el valor de la prop `complete` cuando cambie
+    useEffect(() => {
+      setLocalComplete(complete);
+    }, [complete]);
+
   // Close modal when the InfoModal state changes
   useEffect(() => {
     setOpen(InfoModal.isOpen);
@@ -40,7 +47,7 @@ export function MoreInfoModal({
       if (mealNumber === 0) {
         await changeBreakfast({
           documentId,
-          complete: !pref?.complete, // Enviar el nuevo estado de `complete`
+          complete: !localComplete, // Enviar el nuevo estado de `complete`
         });
       }
       // Actualizar el estado local de las preferencias
@@ -49,13 +56,14 @@ export function MoreInfoModal({
           i === index
             ? {
                 ...preference,
-                complete: !pref?.complete, // Cambiar el estado local
+                complete: !localComplete, // Cambiar el estado local
               }
             : preference
         )
       );
 
-      InfoModal.onClose();
+      // Actualizar el estado local de `complete`
+      setLocalComplete(!localComplete);
       console.log("Meal selection saved successfully.");
     } catch (error) {
       console.error("Error saving meal selection:", error);
@@ -72,12 +80,12 @@ export function MoreInfoModal({
     >
       <span
         className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${
-          pref?.complete
+          localComplete
             ? "bg-green-50 text-green-700 ring-green-600/20"
             : "bg-gray-50 text-gray-700 ring-gray-600/20"
         }`}
       >
-        {pref?.complete ? "Complete" : "Not Complete"}
+        {localComplete ? "Complete" : "Not Complete"}
       </span>
       <div className="mt-8 flow-root">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
