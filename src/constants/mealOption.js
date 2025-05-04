@@ -38,6 +38,10 @@ const LUNCH = [
   { key: "Juice", options: ["none", "Tomato", "Orange", "Cramberry", "Apple"] },
   { key: "Milk", options: ["none", "regular", "lactose free"] },
   { key: "additionals", options: [""] },
+  { key: "Soup", options: ["none", "Add"] },
+  { key: "Salad", options: ["none", "Add"] },
+  { key: "Lunch", options: ["option 1", "option 2"] },
+  { key: "Dessert", options: ["Ice Cream", "Peaches", "Rice Pudding", "Jelly"] },
   { key: "Comment", options: [""] },
 ];
 

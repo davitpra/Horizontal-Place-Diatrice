@@ -18,9 +18,12 @@ export function TableModal(residentsOnSeating) {
   const dayBreakfast = useDayBreakfastStore((state) => state.dayBreakfast);
   const dayMenus = useDayMenusStore((state) => state.dayMenus);
 
+  const [ResidentsOntable, setResidentsOnTable] = useState([]);
+  // State to hold the resident information
   const [residentInfo, setResidentInfo] = useState({});
+  // State to hold the preferences and index of the selected resident
   const [preferences, setPreferences] = useState([]);
-  const [documentId, setDocumentId] = useState("");
+  const [index, setIndex] = useState(0);
 
   const InfoModal = useMoreInfoModal();
   const SelecModal = useSelectionModal();
@@ -46,35 +49,78 @@ export function TableModal(residentsOnSeating) {
 
   useEffect(() => {
     if (mealNumber === 0) {
+      // Filtrar los desayunos que coinciden con los menús
       const breakfastOnSeating = dayBreakfast.filter((breakfast) =>
         menusOnSeating.some(
           (menu) => menu.breakfast.documentId === breakfast.documentId
         )
       );
 
-      const newPreferences = breakfastOnSeating.map(
-        (breakfast) => breakfast.meals[0]
-      );
-      console.log("newPreferences", newPreferences);
-
-      setPreferences(newPreferences);
-    }
-  }, [mealNumber, dayBreakfast, menusOnSeating]);
-
-  const keyForDrinks = ["water", "Hotdrink", "Juice", "Cereals", "Comment"];
-
-  ///----> arreglar esto */
-  const preferencesWithoutDrinks = useMemo(() => {
-    return preferences.map((preference) => {
-      const newPreference = { ...preference };
-      keyForDrinks.forEach((key) => {
-        delete newPreference[key];
+      // Ordenar residentes y desayunos según el orden de menusOnSeating
+      const sortedResidents = [...residentsOnSeating.residents].sort((a, b) => {
+        const indexA = menusOnSeating.findIndex(
+          (menu) => menu.resident.documentId === a.documentId
+        );
+        const indexB = menusOnSeating.findIndex(
+          (menu) => menu.resident.documentId === b.documentId
+        );
+        return indexA - indexB;
       });
-      return newPreference;
-    });
-  }
-  , [preferences]);
 
+      const sortedBreakfasts = [...breakfastOnSeating].sort((a, b) => {
+        const indexA = menusOnSeating.findIndex(
+          (menu) => menu.breakfast.documentId === a.documentId
+        );
+        const indexB = menusOnSeating.findIndex(
+          (menu) => menu.breakfast.documentId === b.documentId
+        );
+        return indexA - indexB;
+      });
+
+      // Actualizar el estado con los arrays ordenados
+      setPreferences(sortedBreakfasts);
+      setResidentsOnTable(sortedResidents);
+    }
+  }, [mealNumber, dayBreakfast, menusOnSeating, residentsOnSeating]);
+
+  // Función para transformar las preferencias en un formato adecuado para la UI
+  const preferencesWithoutDrinks = useMemo(() => {
+    // Función auxiliar para filtrar las preferencias
+    const filterDrinks = (meals) => {
+      const {
+        water,
+        Hotdrink,
+        Juice,
+        Cereals,
+        Comment,
+        ...filteredPreference
+      } = meals;
+      return filteredPreference;
+    };
+
+    try {
+      if (!Array.isArray(preferences)) {
+        console.error("Preferences is not an array:", preferences);
+        return [];
+      }
+
+      return preferences.map((preference, index) => {
+        if (
+          !preference ||
+          !Array.isArray(preference.meals) ||
+          !preference.meals[0]
+        ) {
+          console.error("Invalid preference object:", preference);
+          return {};
+        }
+        // Filtrar las bebidas y otros campos no deseados
+        return filterDrinks(preference.meals[0]);
+      });
+    } catch (error) {
+      console.error("An error occurred while filtering preferences:", error);
+      return [];
+    }
+  }, [preferences]);
 
   return (
     <>
@@ -108,8 +154,8 @@ export function TableModal(residentsOnSeating) {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
-                {residentsOnSeating.residents.map((resident, index) => (
-                  <tr key={resident.id}>
+                {ResidentsOntable.map((resident, index) => (
+                  <tr key={resident.documentId}>
                     <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
                       <div className="flex items-center">
                         <div className="size-11 shrink-0">
@@ -137,23 +183,30 @@ export function TableModal(residentsOnSeating) {
                       </div>
                     </td>
                     <td className="hidden sm:block whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                      {Object.entries(preferences[index] || {}).map(
-                        ([key, value]) => (
-                          <div
-                            key={key}
-                            className="py-0 grid grid-cols-2 gap-0 px-0"
-                          >
-                            <dt className="text-sm/6 font-medium text-gray-900 block">
-                              {key}
-                            </dt>
-                            <dd className="text-sm/6 text-gray-700 mt-0 overflow-hidden text-ellipsis whitespace-nowrap text-left">
-                            {typeof value === "boolean" ? (value ? "Add" : "none") : value}
-                            </dd>
-                          </div>
-                        )
-                      )}
+                      {Object.entries(
+                        preferencesWithoutDrinks[index] || {}
+                      ).map(([key, value]) => (
+                        <div
+                          key={key}
+                          className="py-0 grid grid-cols-2 gap-0 px-0"
+                        >
+                          <dt className="text-sm/6 font-medium text-gray-900 block">
+                            {key}
+                          </dt>
+                          <dd className="text-sm/6 text-gray-700 mt-0 overflow-hidden text-ellipsis whitespace-nowrap text-left">
+                            {typeof value === "boolean"
+                              ? value
+                                ? "Add"
+                                : "none"
+                              : value}
+                          </dd>
+                        </div>
+                      ))}
                       <button
-                        onClick={() => handleOpenMoreInfo(resident)}
+                        onClick={() => {
+                          handleOpenMoreInfo(resident);
+                          setIndex(index);
+                        }}
                         className="hidden sm:block text-indigo-600 hover:text-indigo-900"
                       >
                         View all..
@@ -162,7 +215,10 @@ export function TableModal(residentsOnSeating) {
                     <td className="sm:hidden whitespace-nowrap px-3 py-5 text-sm text-gray-500">
                       <FolderOpenIcon
                         className="sm:hidden h-6 w-6"
-                        onClick={() => handleOpenMoreInfo(resident)}
+                        onClick={() => {
+                          handleOpenMoreInfo(resident);
+                          setIndex(index);
+                        }}
                       />
                     </td>
                     <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
@@ -174,14 +230,20 @@ export function TableModal(residentsOnSeating) {
                       <button
                         href="#"
                         className="hidden sm:block text-indigo-600 hover:text-indigo-900"
-                        onClick={() => handleSelectionModal(resident)}
+                        onClick={() => {
+                          handleSelectionModal(resident);
+                          setIndex(index);
+                        }}
                       >
                         Change Selection
                         <span className="sr-only">, {resident.full_name}</span>
                       </button>
                       <FolderPlusIcon
                         className="sm:hidden h-6 w-6"
-                        onClick={() => handleSelectionModal(resident)}
+                        onClick={() => {
+                          handleSelectionModal(resident);
+                          setIndex(index);
+                        }}
                       />
                     </td>
                   </tr>
@@ -191,8 +253,18 @@ export function TableModal(residentsOnSeating) {
           </div>
         </div>
       </div>
-      {/* <MoreInfoModal resident={residentInfo} />
-      <SelectionModal resident={residentInfo} /> */}
+      <MoreInfoModal
+        resident={residentInfo}
+        preferences={preferences}
+        index={index}
+      />
+      <SelectionModal
+        resident={residentInfo}
+        preferences={preferences}
+        index={index}
+        setPreferences={setPreferences}
+        mealNumber={mealNumber}
+      />
     </>
   );
 }

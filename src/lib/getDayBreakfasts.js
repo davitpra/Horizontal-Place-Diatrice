@@ -41,7 +41,6 @@ export async function getDayBreakfasts(date) {
           FruitPlate: Breakfast?.FruitPlate ,
           Yogurt: Breakfast?.Yogurt,
           Muffing: Breakfast?.Muffing,
-          onTray: Breakfast?.onTray,
           additionals: Breakfast?.additionals,
           Comment: Breakfast?.Comment,
         }),

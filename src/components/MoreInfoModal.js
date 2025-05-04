@@ -3,9 +3,8 @@
 import { useState, useEffect } from "react";
 import { useMoreInfoModal } from "@/hooks/useMoreInfoModal";
 import { Modal } from "./Modal";
-import { useMealBar } from "@/hooks/useMealBar";
 
-export function MoreInfoModal({ resident, preferences }) {
+export function MoreInfoModal({ resident, preferences = [], index = 0 }) {
   // to open or close the modal
   const InfoModal = useMoreInfoModal();
   const [open, setOpen] = useState(InfoModal.isOpen);
@@ -53,17 +52,26 @@ export function MoreInfoModal({ resident, preferences }) {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
-                {resident && preferences ? (
-                  Object.entries(preferences).map(([key, value]) => (
-                    <tr key={key}>
-                      <td className="py-3.5 pl-4 pr-3 text-left text-sm text-gray-900 sm:pl-0">
-                        {key}
-                      </td>
-                      <td className="px-3 py-3.5 pr-3 text-left text-sm text-gray-900 sm:pl-0">
-                      {typeof value === "boolean" ? (value ? "Add" : "none") : value}
-                      </td>
-                    </tr>
-                  ))
+                {resident &&
+                preferences[index] &&
+                Array.isArray(preferences[index].meals) &&
+                preferences[index].meals[0] ? (
+                  Object.entries(preferences[index].meals[0] || {}).map(
+                    ([key, value]) => (
+                      <tr key={key}>
+                        <td className="py-3.5 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-0">
+                          {key}
+                        </td>
+                        <td className="px-3 py-3.5 text-left text-sm text-gray-700">
+                          {typeof value === "boolean"
+                            ? value
+                              ? "Add"
+                              : "none"
+                            : value}
+                        </td>
+                      </tr>
+                    )
+                  )
                 ) : (
                   <tr>
                     <td className="py-3.5 pl-4 pr-3 text-left text-sm text-gray-900 sm:pl-0">

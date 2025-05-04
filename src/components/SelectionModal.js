@@ -8,36 +8,70 @@ import { changeBreakfast } from "@/lib/changeBreakfast";
 
 export function SelectionModal({
   resident,
-  preferences,
   setPreferences,
-  documentId,
+  preferences = [{}],
+  index = 0,
+  mealNumber = 0,
 }) {
   const ADD = "Add";
   const NONE = "none";
 
   const [options, setOptions] = useState(MEAL_OPTIONS[0]);
+
+  // Set the options based on the meal number
+  useEffect(() => {
+    setOptions(MEAL_OPTIONS[mealNumber]);
+  }, [mealNumber]);
+
   // to open or close the modal
   const SelectionModal = useSelectionModal();
   const [open, setOpen] = useState(SelectionModal.isOpen);
+
+  // state to hold the meal selection
   const [meals, setMeals] = useState({});
 
   // Transform preferences into a format suitable for the UI
-  function transformPreferences(preferences) {
-    if (!preferences || typeof preferences !== "object") {
-      console.error("Invalid preferences object");
+  function transformPreferences(preference) {
+    if (!preference || typeof preference !== "object") {
+      console.error("Invalid preference object");
       return {};
     }
-    return Object.entries(preferences).reduce((acc, [key, value]) => {
+    return Object.entries(preference).reduce((acc, [key, value]) => {
       acc[key] = typeof value === "boolean" ? (value ? ADD : NONE) : value;
+      return acc;
+    }, {});
+  }
+
+  function reverseTransformPreferences(meals) {
+    if (!meals || typeof meals !== "object") {
+      console.error("Invalid meals object");
+      return {};
+    }
+    return Object.entries(meals).reduce((acc, [key, value]) => {
+      if (key === "FruitPlate" || key === "Yogurt" || key === "Muffing" || key === "Bacon" || key === "Pancake") {
+        acc[key] = value === "Add" ? true : value === "none" ? false : value;
+      }else {
+        acc[key] = value; 
+      }
       return acc;
     }, {});
   }
 
   // Set the meals state when selection changes
   useEffect(() => {
-    const updatedPreferences = transformPreferences(preferences);
-    setMeals(updatedPreferences);
-  }, [preferences]);
+    if (
+      preferences[index] &&
+      Array.isArray(preferences[index].meals) &&
+      preferences[index].meals[0]
+    ) {
+      const updatedPreferences = transformPreferences(
+        preferences[index].meals[0]
+      );
+      setMeals(updatedPreferences);
+    } else {
+      setMeals({}); // Establecer un estado vacío si no hay preferencias
+    }
+  }, [preferences, index, open]);
 
   // Close modal when the SelectionModal state changes
   useEffect(() => {
@@ -54,35 +88,43 @@ export function SelectionModal({
   // Handle change of the meal selection
   const handleChange = (event, key) => {
     const newValue = event.target.value;
-
     setMeals((prevMeals) => ({
       ...prevMeals,
       [key]: newValue,
-    }));
-
-    setPreferences((prevPreferences) => ({
-      ...prevPreferences,
-      [key]: newValue === NONE ? false : newValue === ADD ? true : newValue,
     }));
   };
 
   // Handle save action
   const handleSave = async () => {
+    const documentId = preferences[index].documentId;
     if (!documentId) {
-      console.error("No documentId found for resident:", resident);
+      console.error("No documentId found for resident:", resident.full_name);
       return;
     }
     try {
+      const savedMeals = reverseTransformPreferences(meals);
+
+      const newPreferences = preferences.map((preference, i) =>
+        i === index 
+      ? {
+        ...preference, 
+        meals: [savedMeals],
+      }
+      : preference
+      );
+
+      setPreferences(newPreferences);
       await changeBreakfast({
         documentId,
-        options: preferences,
+        options: savedMeals,
       });
-      console.log("Meal selection saved successfully:", meals);
+      console.log("Meal selection saved successfully");
       SelectionModal.onClose();
     } catch (error) {
       console.error("Error saving meal selection:", error);
     }
   };
+
   return (
     <Modal
       isOpen={open}

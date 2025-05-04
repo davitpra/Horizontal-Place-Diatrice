@@ -1,6 +1,5 @@
 export async function changeBreakfast({ documentId, options }) {
 
-  console.log("options", options);
   try {
     const response = await fetch("/api/strapi", {
       method: "PUT",
