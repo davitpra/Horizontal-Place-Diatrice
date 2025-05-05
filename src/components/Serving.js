@@ -123,7 +123,7 @@ export function Serving({ residents, date, breakFast, menus }) {
         dayBreakfast={filteredBreakfasts}
       />
       <MealBar />
-      <TableMap residentsOnSeating={filteredResidents} />
+      <TableMap residentsOnSeating={filteredResidents} meal={filteredBreakfasts} />
       <Title observations={observations} className="mb-4" />
     </>
   );
