@@ -12,7 +12,6 @@ export async function createBreakfast({date, full_name, documentId, breakFast}) 
       "slug": `${slug}-${date}`,
       "Date": `${date}`,
       "complete": false,
-      "went_out_to_eat": false,
       "Breakfast": breakFast,
       "menu": documentId,
   }}

@@ -22,8 +22,6 @@ export const useCreateBreakfast = async (residents, date, menus) => {
     const menusWithoutBreakfast = menus.filter((menu) => menu.breakfast === null);
 
     if (menusWithoutBreakfast.length > 0) {
-      console.log(`Creating breakfasts for ${menusWithoutBreakfast.length} menus...`);
-
       // Crear desayunos para los menús que no tienen
       await Promise.all(
         menusWithoutBreakfast.map(async (menu) => {
@@ -32,7 +30,9 @@ export const useCreateBreakfast = async (residents, date, menus) => {
           );
 
           if (!resident) {
-            console.warn(`Resident not found for menu with documentId: ${menu.documentId}`);
+            console.log(
+              `Resident not found for menu: ${menu.resident.full_name}`
+            );
             return;
           }
 

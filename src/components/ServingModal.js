@@ -17,84 +17,78 @@ import {
 import { changeBreakfast } from "@/lib/changeBreakfast";
 
 export function ServingModal({ residentsOnSeating, dayMenus, dayBreakfast }) {
-  // to get url for the image
+  // URL base para las imágenes
   const host = process.env.NEXT_PUBLIC_STRAPI_HOST;
 
-  // to open or close the modals
-  const tableModal = useTableModal();
-  const InfoModal = useMoreInfoModal();
-  const SelecModal = useSelectionModal();
+  // Hooks para manejar los modales
+  const tableModal = useTableModal(); // Modal principal para la tabla
+  const InfoModal = useMoreInfoModal(); // Modal para mostrar más información
+  const SelecModal = useSelectionModal(); // Modal para cambiar selecciones
 
-  // to open or cloe the table modal
-  const [open, setOpen] = useState(tableModal.isOpen);
-  // state to show the resident info on the table
-  const [residentsOntable, setResidentsOnTable] = useState(residentsOnSeating);
-  // State to hold the resident information for MoreInfoModal and SelectionModal
-  const [residentInfo, setResidentInfo] = useState({});
-  // State to hold the order on table
-  const [order, setOrder] = useState([]);
-  // State to hold the index of the selected resident
-  const [index, setIndex] = useState(0);
-  // Estado adicional para rastrear los cambios en ordersWithoutDrinks
-  const [updatedOrder, setUpdatedOrders] = useState([]);
+  // Estados locales
+  const [open, setOpen] = useState(tableModal.isOpen); // Estado para abrir/cerrar el modal principal
+  const [residentsOntable, setResidentsOnTable] = useState(residentsOnSeating || []); // Residentes filtrados por mesa
+  const [residentInfo, setResidentInfo] = useState({}); // Información del residente seleccionado
+  const [order, setOrder] = useState([]); // Pedidos filtrados por mesa
+  const [index, setIndex] = useState(0); // Índice del residente seleccionado
+  const [updatedOrder, setUpdatedOrders] = useState([]); // Pedidos actualizados sin bebidas
 
-  // to select a table number
+  // Hooks para obtener el número de mesa y el número de comida
   const selectTable = useTableNumber((state) => state.tableNumber);
-  // to change the meal number by the mealbar
   const mealNumber = useMealBar((state) => state.mealNumber);
 
-  // Close modal when the TableModal state changes
+  // Sincronizar el estado `open` con el estado del modal principal
   useEffect(() => {
     setOpen(tableModal.isOpen);
   }, [tableModal.isOpen]);
 
-  // Close modal when pick out of the modal
+  // Cerrar el modal principal si se clickea afuera de él modal
   useEffect(() => {
     if (!open) {
       tableModal.onClose();
     }
   }, [open]);
 
-  // to get the order of the selected resident and pass it to MoreInfoModal
+  // Abrir el modal de más información para un residente específico
   function handleOpenMoreInfo(resident) {
     setResidentInfo(resident);
     InfoModal.onOpen();
   }
 
-  // to get the order of the selected resident and pass it to SelectionModal
+  // Abrir el modal de selección para un residente específico
   function handleSelectionModal(resident) {
     setResidentInfo(resident);
     SelecModal.onOpen();
   }
 
-  // to obtain the orders of the resident on table
+  // Filtrar residentes, menús y desayunos según la mesa seleccionada
   useEffect(() => {
-    // Filtrar los residentes por la mesa seleccionada
-    const filterResidentsByTable = residentsOnSeating.filter(
+    // Filtrar residentes por la mesa seleccionada
+    const filterResidentsByTable = residentsOnSeating?.filter(
       (resident) => resident.table === selectTable
-    );
+    ) || [];
     setResidentsOnTable(filterResidentsByTable);
-  
-    // Filtrar los menús para la mesa
-    const menusOnTable = dayMenus.filter((menu) =>
+
+    // Filtrar menús que correspondan a los residentes de la mesa
+    const menusOnTable = dayMenus?.filter((menu) =>
       filterResidentsByTable.some(
-        (resident) => resident.documentId === menu.resident.documentId
+        (resident) => resident.documentId === menu.resident?.documentId
       )
-    );
-  
-    // Filtrar los desayunos para la mesa
-    const breakFastOnTable = dayBreakfast.filter((breakfast) =>
+    ) || [];
+
+    // Filtrar desayunos que correspondan a los menús de la mesa
+    const breakFastOnTable = dayBreakfast?.filter((breakfast) =>
       menusOnTable.some(
-        (menu) => menu.breakfast.documentId === breakfast.documentId
+        (menu) => menu.breakfast?.documentId === breakfast?.documentId
       )
-    );
-  
+    ) || [];
+
+    // Actualizar el estado con los desayunos filtrados
     setOrder(breakFastOnTable);
   }, [residentsOnSeating, selectTable, dayMenus, dayBreakfast]);
 
-  // Función para transformar las preferencias en un formato adecuado para la UI
+  // Filtrar las bebidas de los pedidos
   const ordersWithoutDrinks = useMemo(() => {
-    // Función auxiliar para filtrar las preferencias
     const filterDrinks = (meals) => {
       const {
         water,
@@ -113,6 +107,7 @@ export function ServingModal({ residentsOnSeating, dayMenus, dayBreakfast }) {
         return [];
       }
 
+      // Filtrar las bebidas de cada pedido
       return order.map((preference) => {
         if (
           !preference ||
@@ -122,9 +117,7 @@ export function ServingModal({ residentsOnSeating, dayMenus, dayBreakfast }) {
           console.error("Invalid preference object:", preference);
           return {};
         }
-        // Filtrar las bebidas y otros campos no deseados
         const filteredMeals = filterDrinks(preference.meals[0]);
-        // Incluir el valor de `complete` en el resultado
         return {
           filterDrinks: filteredMeals,
           complete: preference.complete,
@@ -137,27 +130,27 @@ export function ServingModal({ residentsOnSeating, dayMenus, dayBreakfast }) {
     }
   }, [order]);
 
-  // Sincronizar updatedOrder con ordersWithoutDrinks
+  // Actualizar el estado con los pedidos sin bebidas
   useEffect(() => {
     setUpdatedOrders(ordersWithoutDrinks);
   }, [ordersWithoutDrinks]);
 
+  // Manejar la acción de completar un pedido
   const handleComplete = async (preference, index) => {
     try {
-      const documentId = preference.documentId;
+      const documentId = preference?.documentId;
       if (!documentId) {
         console.error("No documentId found for the selected preference.");
         return;
       }
-      // Actualizar el estado en el backend si es necesario
       if (mealNumber === 0) {
         await changeBreakfast({
           documentId,
-          complete: !preference?.complete, // Enviar el nuevo estado de `complete`
+          complete: !preference?.complete,
         });
       }
 
-      // Actualizar el estado local
+      // Actualizar el estado local con el nuevo estado de `complete`
       setUpdatedOrders((prev) =>
         prev.map((item, i) =>
           i === index ? { ...item, complete: !item.complete } : item
@@ -169,14 +162,15 @@ export function ServingModal({ residentsOnSeating, dayMenus, dayBreakfast }) {
     }
   };
 
+  // Manejar la acción de completar todos los pedidos
   const handleCompleteAll = async () => {
     try {
       const updatedOrdersWithComplete = updatedOrder.map((item) => ({
         ...item,
-        complete: true, // Cambia el estado a "completo"
+        complete: true,
       }));
 
-      // Aquí puedes agregar la lógica para enviar los datos al backend
+      // Actualizar todos los pedidos en el backend
       await Promise.all(
         updatedOrdersWithComplete.map((preference) =>
           changeBreakfast({
@@ -186,23 +180,22 @@ export function ServingModal({ residentsOnSeating, dayMenus, dayBreakfast }) {
         )
       );
 
-      // Actualiza el estado local
+      // Actualizar el estado local con todos los pedidos completados
       setUpdatedOrders(updatedOrdersWithComplete);
       console.log("All meal selections saved successfully.");
     } catch (error) {
       console.error("Error saving all meal selections:", error);
     }
-  }
+  };
+
+  // Renderizar el modal principal con la tabla de residentes y pedidos
   return (
     <Modal
       isOpen={open}
       close={tableModal.onClose}
       title={`Table ${selectTable}`}
       button="Complete All"
-      buttonAction={() => {
-        handleCompleteAll();
-      }
-      }
+      buttonAction={handleCompleteAll}
     >
       <div className="mt-8 flow-root">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -210,25 +203,16 @@ export function ServingModal({ residentsOnSeating, dayMenus, dayBreakfast }) {
             <table className="min-w-full divide-y divide-gray-300">
               <thead>
                 <tr>
-                  <th
-                    scope="col"
-                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
-                  >
+                  <th className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
                     Name
                   </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                  >
+                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                     To Serve
                   </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                  >
+                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                     Status
                   </th>
-                  <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-0">
+                  <th className="relative py-3.5 pl-3 pr-4 sm:pr-0">
                     <span className="sr-only">Edit</span>
                   </th>
                 </tr>
@@ -266,10 +250,7 @@ export function ServingModal({ residentsOnSeating, dayMenus, dayBreakfast }) {
                       {Object.entries(
                         updatedOrder[index]?.filterDrinks || {}
                       ).map(([key, value]) => (
-                        <div
-                          key={key}
-                          className="py-0 grid grid-cols-2 gap-0 px-0"
-                        >
+                        <div key={key} className="py-0 grid grid-cols-2 gap-0 px-0">
                           <dt className="text-sm/6 font-medium text-gray-900 block">
                             {key}
                           </dt>

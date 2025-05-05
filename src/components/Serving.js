@@ -15,7 +15,6 @@ export function Serving({ residents, date, breakFast, menus }) {
   const [residentsOnSeating, setResidentsOnSeating] = useState([]);
   const observations = ["The chair positions may not be correct"];
 
-
   // SET STORE RESIDENTS
   const setResidents = useResidentsStore((state) => state.setResidents);
 
@@ -64,8 +63,6 @@ export function Serving({ residents, date, breakFast, menus }) {
     storeData();
   }, [menus, setDayMenus]);
 
-
-
   // to get the seating number
   const onSeating = useSeatingConfigure((state) => state.seating);
   // to get the meal number of the meal bar
@@ -77,7 +74,6 @@ export function Serving({ residents, date, breakFast, menus }) {
   // to get the breakfast on the store
   const dayBreakfast = useDayBreakfastStore((state) => state.dayBreakfast);
 
-
   // SORT RESIDENTS BY SEATING AND MEALS
   // to get the residents on the selected seating, with the meal number
   useEffect(() => {
@@ -86,35 +82,48 @@ export function Serving({ residents, date, breakFast, menus }) {
     setResidentsOnSeating(result);
   }, [onSeating, mealNumber, storeResidents]);
 
-
-  // to sort the residents on the seating by menu order
   const sortedResidents = [...residentsOnSeating].sort((a, b) => {
     const indexA = dayMenus.findIndex(
-      (menu) => menu.resident.documentId === a.documentId
+      (menu) => menu.resident?.documentId === a?.documentId 
     );
     const indexB = dayMenus.findIndex(
-      (menu) => menu.resident.documentId === b.documentId
+      (menu) => menu.resident?.documentId === b?.documentId 
     );
     return indexA - indexB;
   });
 
-  // to sort the breakfasts on the seating by menu order
   const sortedBreakfasts = [...dayBreakfast].sort((a, b) => {
     const indexA = dayMenus.findIndex(
-      (menu) => menu.breakfast.documentId === a.documentId
+      (menu) => menu.breakfast?.documentId === a?.documentId 
     );
     const indexB = dayMenus.findIndex(
-      (menu) => menu.breakfast.documentId === b.documentId
+      (menu) => menu.breakfast?.documentId === b?.documentId 
     );
     return indexA - indexB;
   });
 
+  // Filter out residents who went out to eat
+  const filteredData = sortedResidents.reduce((acc, resident, index) => {
+    const correspondingBreakfast = sortedBreakfasts[index];
+    if (!correspondingBreakfast?.went_out_to_eat) {
+      acc.residents.push(resident);
+      acc.breakfasts.push(correspondingBreakfast);
+    }
+    return acc;
+  }, { residents: [], breakfasts: [] });
+  
+  const filteredResidents = filteredData.residents;
+  const filteredBreakfasts = filteredData.breakfasts;
 
   return (
     <>
-      <ServingModal residentsOnSeating={sortedResidents} dayMenus = {dayMenus} dayBreakfast={sortedBreakfasts}/>
+      <ServingModal
+        residentsOnSeating={filteredResidents}
+        dayMenus={dayMenus}
+        dayBreakfast={filteredBreakfasts}
+      />
       <MealBar />
-      <TableMap residentsOnSeating={sortedResidents} />
+      <TableMap residentsOnSeating={filteredResidents} />
       <Title observations={observations} className="mb-4" />
     </>
   );

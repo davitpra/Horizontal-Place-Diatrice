@@ -1,15 +1,12 @@
-
-
 import { query } from "./strapi";
 
 export async function getDayBreakfasts(date) {
   return query(
     `breakfasts?filters[Date][$eq]=${date}-16&populate[Breakfast][populate]=*`
-  )  
-  .then((res) => {
+  ).then((res) => {
     return res.data.map((breakFast) => {
-    const { Breakfast, complete, went_out_to_eat, slug, documentId} = breakFast;
-
+      const { Breakfast, complete, slug, documentId } = breakFast;
+      const went_out_to_eat = Breakfast?.went_out_to_eat;
       //GET DAY OF WEEK
       let today = new Date();
       let dayOfWeek = today.getDay();
@@ -38,7 +35,7 @@ export async function getDayBreakfasts(date) {
           Milk: Breakfast?.Milk,
           eggs: Breakfast?.eggs,
           toast: Breakfast?.toast,
-          FruitPlate: Breakfast?.FruitPlate ,
+          FruitPlate: Breakfast?.FruitPlate,
           Yogurt: Breakfast?.Yogurt,
           Muffing: Breakfast?.Muffing,
           additionals: Breakfast?.additionals,
@@ -66,13 +63,14 @@ export async function getDayBreakfasts(date) {
 
       const onTray = Breakfast?.onTray;
 
-    return {
-      documentId,
-      complete,
-      went_out_to_eat,
-      meals,
-      onTray,
-      slug
-    };
-  })});
+      return {
+        documentId,
+        complete,
+        went_out_to_eat,
+        meals,
+        onTray,
+        slug,
+      };
+    });
+  });
 }
