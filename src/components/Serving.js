@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ServingModal } from "./ServingModal";
 import { MealBar } from "./MealBar";
 import { TableMap } from "./TableMap";
@@ -13,6 +13,8 @@ import { useDayMenusStore } from "@/store/useDayMenusStore";
 
 export function Serving({ residents, date, breakFast, menus }) {
   const [residentsOnSeating, setResidentsOnSeating] = useState([]);
+  const observations = ["The chair positions may not be correct"];
+
 
   // SET STORE RESIDENTS
   const setResidents = useResidentsStore((state) => state.setResidents);
@@ -32,7 +34,9 @@ export function Serving({ residents, date, breakFast, menus }) {
   }, [date, residents, setResidents]);
 
   // SET STORE BREAKFAST
-  const setDayBreakfast = useDayBreakfastStore((state) => state.setDayBreakfast);
+  const setDayBreakfast = useDayBreakfastStore(
+    (state) => state.setDayBreakfast
+  );
   // UseEffect to update the breakfast on the store
   useEffect(() => {
     async function storeData() {
@@ -60,34 +64,57 @@ export function Serving({ residents, date, breakFast, menus }) {
     storeData();
   }, [menus, setDayMenus]);
 
-  const observations = ["The chair positions may not be correct"];
 
-  // SORT RESIDENTS BY SEATING AND MEALS
 
   // to get the seating number
   const onSeating = useSeatingConfigure((state) => state.seating);
   // to get the meal number of the meal bar
   const mealNumber = useMealBar((state) => state.mealNumber);
-  // filter the residents by seating
-  const storeResidents = useResidentsStore((state) => state.residents)
+  // to get the residents on the store
+  const storeResidents = useResidentsStore((state) => state.residents);
+  // to get the menus on the store
+  const dayMenus = useDayMenusStore((state) => state.dayMenus);
+  // to get the breakfast on the store
+  const dayBreakfast = useDayBreakfastStore((state) => state.dayBreakfast);
 
-  // console.log(storeResidents, "storeResidents");
 
+  // SORT RESIDENTS BY SEATING AND MEALS
   // to get the residents on the selected seating, with the meal number
   useEffect(() => {
-    // to get the residents on the selected seating
+    // to get the residents on the selected seating and meal number
     const result = useSortedResidents(storeResidents, onSeating, mealNumber);
     setResidentsOnSeating(result);
   }, [onSeating, mealNumber, storeResidents]);
 
 
-  // console.log(residentsOnSeating, "residentsOnSeating");
+  // to sort the residents on the seating by menu order
+  const sortedResidents = [...residentsOnSeating].sort((a, b) => {
+    const indexA = dayMenus.findIndex(
+      (menu) => menu.resident.documentId === a.documentId
+    );
+    const indexB = dayMenus.findIndex(
+      (menu) => menu.resident.documentId === b.documentId
+    );
+    return indexA - indexB;
+  });
+
+  // to sort the breakfasts on the seating by menu order
+  const sortedBreakfasts = [...dayBreakfast].sort((a, b) => {
+    const indexA = dayMenus.findIndex(
+      (menu) => menu.breakfast.documentId === a.documentId
+    );
+    const indexB = dayMenus.findIndex(
+      (menu) => menu.breakfast.documentId === b.documentId
+    );
+    return indexA - indexB;
+  });
+
 
   return (
     <>
-      <ServingModal residentsOnSeating={residentsOnSeating} />
+      <ServingModal residentsOnSeating={sortedResidents} dayMenus = {dayMenus} dayBreakfast={sortedBreakfasts}/>
       <MealBar />
-      <TableMap residentsOnSeating={residentsOnSeating} />
+      <TableMap residentsOnSeating={sortedResidents} />
       <Title observations={observations} className="mb-4" />
     </>
   );

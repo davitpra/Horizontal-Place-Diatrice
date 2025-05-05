@@ -8,8 +8,8 @@ import { changeBreakfast } from "@/lib/changeBreakfast";
 
 export function SelectionModal({
   resident,
-  setPreferences,
-  preferences = [{}],
+  setOrder,
+  order = [{}],
   index = 0,
   mealNumber = 0,
 }) {
@@ -30,8 +30,8 @@ export function SelectionModal({
   // state to hold the meal selection
   const [meals, setMeals] = useState({});
 
-  // Transform preferences into a format suitable for the UI
-  function transformPreferences(preference) {
+  // Transform order into a format suitable for the UI
+  function transformorder(preference) {
     if (!preference || typeof preference !== "object") {
       console.error("Invalid preference object");
       return {};
@@ -42,7 +42,7 @@ export function SelectionModal({
     }, {});
   }
 
-  function reverseTransformPreferences(meals) {
+  function reverseTransformorder(meals) {
     if (!meals || typeof meals !== "object") {
       console.error("Invalid meals object");
       return {};
@@ -60,18 +60,18 @@ export function SelectionModal({
   // Set the meals state when selection changes
   useEffect(() => {
     if (
-      preferences[index] &&
-      Array.isArray(preferences[index].meals) &&
-      preferences[index].meals[0]
+      order[index] &&
+      Array.isArray(order[index].meals) &&
+      order[index].meals[0]
     ) {
-      const updatedPreferences = transformPreferences(
-        preferences[index].meals[0]
+      const updatedorder = transformorder(
+        order[index].meals[0]
       );
-      setMeals(updatedPreferences);
+      setMeals(updatedorder);
     } else {
       setMeals({}); // Establecer un estado vacío si no hay preferencias
     }
-  }, [preferences, index, open]);
+  }, [order, index, open]);
 
   // Close modal when the SelectionModal state changes
   useEffect(() => {
@@ -96,15 +96,15 @@ export function SelectionModal({
 
   // Handle save action
   const handleSave = async () => {
-    const documentId = preferences[index].documentId;
+    const documentId = order[index].documentId;
     if (!documentId) {
       console.error("No documentId found for resident:", resident.full_name);
       return;
     }
     try {
-      const savedMeals = reverseTransformPreferences(meals);
+      const savedMeals = reverseTransformorder(meals);
 
-      const newPreferences = preferences.map((preference, i) =>
+      const neworder = order.map((preference, i) =>
         i === index 
       ? {
         ...preference, 
@@ -113,7 +113,7 @@ export function SelectionModal({
       : preference
       );
 
-      setPreferences(newPreferences);
+      setOrder(neworder);
       await changeBreakfast({
         documentId,
         options: savedMeals,

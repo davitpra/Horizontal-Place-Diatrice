@@ -7,10 +7,10 @@ import { changeBreakfast } from "@/lib/changeBreakfast";
 
 export function MoreInfoModal({
   resident,
-  preferences = [],
+  order = [],
   index = 0,
   mealNumber = 0,
-  setPreferences,
+  setOrder,
   complete
 }) {
   // to open or close the modal
@@ -38,7 +38,7 @@ export function MoreInfoModal({
 
   const handleComplete = async () => {
     try {
-      const documentId = preferences[index]?.documentId;
+      const documentId = order[index]?.documentId;
       if (!documentId) {
         console.error("No documentId found for the selected preference.");
         return;
@@ -51,8 +51,8 @@ export function MoreInfoModal({
         });
       }
       // Actualizar el estado local de las preferencias
-      setPreferences((prevPreferences) =>
-        prevPreferences.map((preference, i) =>
+      setOrder((prevorder) =>
+        prevorder.map((preference, i) =>
           i === index
             ? {
                 ...preference,
@@ -109,10 +109,10 @@ export function MoreInfoModal({
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
                 {resident &&
-                preferences[index] &&
-                Array.isArray(preferences[index].meals) &&
-                preferences[index].meals[0] ? (
-                  Object.entries(preferences[index].meals[0] || {}).map(
+                order[index] &&
+                Array.isArray(order[index].meals) &&
+                order[index].meals[0] ? (
+                  Object.entries(order[index].meals[0] || {}).map(
                     ([key, value]) => (
                       <tr key={key}>
                         <td className="py-3.5 pl-4 pr-3 text-left text-sm font-medium text-gray-900 sm:pl-0">
