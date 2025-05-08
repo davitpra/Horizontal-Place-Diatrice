@@ -15,6 +15,7 @@ import {
   UserIcon,
 } from "@heroicons/react/24/outline";
 import { changeBreakfast } from "@/lib/changeBreakfast";
+import { useDayBreakfastStore } from "@/store/useDayBreakfastStore";
 
 export function ServingModal({ residentsOnSeating, dayMenus, dayBreakfast }) {
   // URL base para las imágenes
@@ -24,10 +25,13 @@ export function ServingModal({ residentsOnSeating, dayMenus, dayBreakfast }) {
   const tableModal = useTableModal(); // Modal principal para la tabla
   const InfoModal = useMoreInfoModal(); // Modal para mostrar más información
   const SelecModal = useSelectionModal(); // Modal para cambiar selecciones
+  const setDayBreakfast = useDayBreakfastStore(
+    (state) => state.setDayBreakfast
+  );
 
   // Estados locales
   const [open, setOpen] = useState(tableModal.isOpen); // Estado para abrir/cerrar el modal principal
-  const [residentsOntable, setResidentsOnTable] = useState(residentsOnSeating || []); // Residentes filtrados por mesa
+  const [residentsOntable, setResidentsOnTable] = useState([]); // Residentes filtrados por mesa
   const [residentInfo, setResidentInfo] = useState({}); // Información del residente seleccionado
   const [order, setOrder] = useState([]); // Pedidos filtrados por mesa
   const [index, setIndex] = useState(0); // Índice del residente seleccionado
@@ -61,31 +65,46 @@ export function ServingModal({ residentsOnSeating, dayMenus, dayBreakfast }) {
     SelecModal.onOpen();
   }
 
+  useEffect(() => {
+    const filterResidentsByTable =
+      residentsOnSeating?.filter(
+        (resident) => resident.table === selectTable
+      ) || [];
+    setResidentsOnTable((prev) => {
+      const isEqual =
+        JSON.stringify(prev) === JSON.stringify(filterResidentsByTable);
+      return isEqual ? prev : filterResidentsByTable;
+    });
+  }, [residentsOnSeating, selectTable]);
+
   // Filtrar residentes, menús y desayunos según la mesa seleccionada
   useEffect(() => {
-    // Filtrar residentes por la mesa seleccionada
-    const filterResidentsByTable = residentsOnSeating?.filter(
-      (resident) => resident.table === selectTable
-    ) || [];
-    setResidentsOnTable(filterResidentsByTable);
-
+    const filterResidentsByTable =
+      residentsOnSeating?.filter(
+        (resident) => resident.table === selectTable
+      ) || [];
+    setResidentsOnTable((prev) => {
+      const isEqual =
+        JSON.stringify(prev) === JSON.stringify(filterResidentsByTable);
+      return isEqual ? prev : filterResidentsByTable;
+    });
     // Filtrar menús que correspondan a los residentes de la mesa
-    const menusOnTable = dayMenus?.filter((menu) =>
-      filterResidentsByTable.some(
-        (resident) => resident.documentId === menu.resident?.documentId
-      )
-    ) || [];
-
-    // Filtrar desayunos que correspondan a los menús de la mesa
-    const breakFastOnTable = dayBreakfast?.filter((breakfast) =>
-      menusOnTable.some(
-        (menu) => menu.breakfast?.documentId === breakfast?.documentId
-      )
-    ) || [];
+    const menusOnTable =
+      dayMenus?.filter((menu) =>
+        filterResidentsByTable.some(
+          (resident) => resident.documentId === menu.resident?.documentId
+        )
+      ) || []; // Filtrar desayunos que correspondan a los menús de la mesa
+    const breakFastOnTable =
+      dayBreakfast?.filter((breakfast) =>
+        menusOnTable.some(
+          (menu) => menu.breakfast?.documentId === breakfast?.documentId
+        )
+      ) || [];
 
     // Actualizar el estado con los desayunos filtrados
     setOrder(breakFastOnTable);
-  }, [residentsOnSeating, selectTable, dayMenus, dayBreakfast]);
+  }, [dayMenus, dayBreakfast, residentsOnSeating, selectTable]);
 
   // Filtrar las bebidas de los pedidos
   const ordersWithoutDrinks = useMemo(() => {
@@ -156,6 +175,16 @@ export function ServingModal({ residentsOnSeating, dayMenus, dayBreakfast }) {
           i === index ? { ...item, complete: !item.complete } : item
         )
       );
+
+      // Actualizar el estado de `dayBreakfast` en el store
+      setDayBreakfast ((prev) =>
+        prev.map((item) =>
+          item.documentId === documentId
+            ? { ...item, complete: !preference?.complete }
+            : item
+        )
+      );
+
       console.log("Meal selection saved successfully.");
     } catch (error) {
       console.error("Error saving meal selection:", error);
@@ -250,7 +279,10 @@ export function ServingModal({ residentsOnSeating, dayMenus, dayBreakfast }) {
                       {Object.entries(
                         updatedOrder[index]?.filterDrinks || {}
                       ).map(([key, value]) => (
-                        <div key={key} className="py-0 grid grid-cols-2 gap-0 px-0">
+                        <div
+                          key={key}
+                          className="py-0 grid grid-cols-2 gap-0 px-0"
+                        >
                           <dt className="text-sm/6 font-medium text-gray-900 block">
                             {key}
                           </dt>

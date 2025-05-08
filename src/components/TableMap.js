@@ -1,12 +1,13 @@
-"use client"
-import { useCallback, useEffect, useState, useMemo} from "react";
+"use client";
+import { useCallback, useEffect, useState, useMemo, use } from "react";
 import { useTableModal } from "../hooks/useTableModal";
 import { useTableNumber } from "../hooks/useTableNumber";
+import { useDayBreakfastStore } from "@/store/useDayBreakfastStore";
 
 // function to count the people by table
 function countPeopleByTable(residentsOnSeating) {
   if (!Array.isArray(residentsOnSeating)) {
-    return {}; 
+    return {};
   }
 
   return residentsOnSeating.reduce((acc, persona) => {
@@ -15,40 +16,70 @@ function countPeopleByTable(residentsOnSeating) {
   }, {});
 }
 
-export function TableMap({ residentsOnSeating , meal}) {
+function calculateCompletedByTable(residentsOnSeating, meal) {
+  if (!Array.isArray(meal) || !Array.isArray(residentsOnSeating)) {
+    console.warn("meal or residentsOnSeating is not an array");
+    return {};
+  }
+
+  // Calcular los residentes que han completado su comida
+  const residentsCompleted = residentsOnSeating.reduce((acc, resident, index) => {
+    const correspondingMeal = meal[index];
+    if (correspondingMeal?.complete) {
+      acc.push(resident);
+    }
+    return acc;
+  }, []);
+
+  // Contar los residentes completados por mesa
+  return countPeopleByTable(residentsCompleted);
+}
+
+export function TableMap({ residentsOnSeating, meal }) {
+
+  const [residentsByTable, setResidentsByTable] = useState(countPeopleByTable(residentsOnSeating));
   const [completedByTable, setCompletedByTable] = useState({});
+  const [updateCompleteByTable, setUpdateCompleteByTable] = useState({});
   // to open or close the modal
   const tableModal = useTableModal();
   // to select a table
   const onSelect = useTableNumber((state) => state.onSelect);
 
-  // to get the number of tables from 1 to 17
-  const tablesNumbers = Array.from({ length: 17 }, (_, i) => i + 1);
-  
-  // to count the people by table and by prioritary
-  const peopleByTable = countPeopleByTable(residentsOnSeating);
+  const dayBreakfast = useDayBreakfastStore((state) => state.dayBreakfast);
 
   useEffect(() => {
-    if (!Array.isArray(meal) || !Array.isArray(residentsOnSeating)) {
-      console.warn("meal or residentsOnSeating is not an array");
-      setCompletedByTable({});
-      return;
-    }
-  
-    const residentsCompleted = residentsOnSeating.reduce((acc, resident, index) => {
-      const correspondingBreakfast = meal[index];
-      if (correspondingBreakfast?.complete) {
-        acc.push(resident);
-      }
-      return acc;
-    }, []);
+    console.log("meal has changed")
+    const newCompletedByTable = calculateCompletedByTable(residentsOnSeating, meal);
 
-    console.log("residentsCompleted", residentsCompleted);
+    setCompletedByTable((prev) => {
+      const isEqual = JSON.stringify(prev) === JSON.stringify(newCompletedByTable);
+      return isEqual ? prev : newCompletedByTable;
+    });
+
+    console.log("updateCompleteByTable", completedByTable);
+    // console.log("updateCompleteByTable", updateCompleteByTable);
+  }, [dayBreakfast]);
+
   
-    const newCompletedByTable = countPeopleByTable(residentsCompleted);
-  
-    setCompletedByTable(newCompletedByTable);
-  }, [residentsOnSeating, meal]);
+  // to get the number of tables from 1 to 17
+  const tablesNumbers = Array.from({ length: 17 }, (_, i) => i + 1);
+
+  useEffect(() => {
+    const peopleByTable = countPeopleByTable(residentsOnSeating);
+    setResidentsByTable((prev) => {
+      const isEqual = JSON.stringify(prev) === JSON.stringify(peopleByTable);
+      return isEqual ? prev : peopleByTable;
+    });
+  }, [residentsOnSeating]);
+
+  useEffect(() => {
+    const newCompletedByTable = calculateCompletedByTable(residentsOnSeating, meal);
+    // Actualizar el estado solo si el valor cambia
+    setCompletedByTable((prev) => {
+      const isEqual = JSON.stringify(prev) === JSON.stringify(newCompletedByTable);
+      return isEqual ? prev : newCompletedByTable;
+    });
+  }, [residentsOnSeating]);
 
   // function to toggle the modal
   const toggleModal = useCallback(() => {
@@ -73,12 +104,12 @@ export function TableMap({ residentsOnSeating , meal}) {
           }}
         >
           {tableNumber}
-          {peopleByTable[tableNumber] - (completedByTable[tableNumber] || 0) > 0 && (
+          {residentsByTable[tableNumber] - (completedByTable[tableNumber] || 0) > 0 && (
             <>
-              <div className={`chair top ${peopleByTable[tableNumber] >= 4 ? 'border border-indigo-600' : 'hidden'}`}></div>
-              <div className={`chair bottom ${peopleByTable[tableNumber] >= 3 ? 'border border-indigo-600' : 'hidden'}`}></div>
-              <div className={`chair left ${peopleByTable[tableNumber] >= 2 ? 'border border-indigo-600' : 'hidden'}`}></div>
-              <div className={`chair right ${peopleByTable[tableNumber] >= 1 ? 'border border-indigo-600' : 'hidden'}`}></div>
+              <div className={`chair top ${residentsByTable[tableNumber] >= 4 ? 'border border-indigo-600' : 'hidden'}`}></div>
+              <div className={`chair bottom ${residentsByTable[tableNumber] >= 3 ? 'border border-indigo-600' : 'hidden'}`}></div>
+              <div className={`chair left ${residentsByTable[tableNumber] >= 2 ? 'border border-indigo-600' : 'hidden'}`}></div>
+              <div className={`chair right ${residentsByTable[tableNumber] >= 1 ? 'border border-indigo-600' : 'hidden'}`}></div>
             </>
           )}
           {(completedByTable[tableNumber] || 0) > 0 && (
