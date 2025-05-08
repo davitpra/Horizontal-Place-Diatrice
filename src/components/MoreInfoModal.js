@@ -4,25 +4,29 @@ import { useState, useEffect } from "react";
 import { useMoreInfoModal } from "@/hooks/useMoreInfoModal";
 import { Modal } from "./Modal";
 import { changeBreakfast } from "@/lib/changeBreakfast";
+import { useDayBreakfastStore } from "@/store/useDayBreakfastStore";
 
 export function MoreInfoModal({
   resident,
   order = [],
   index = 0,
-  mealNumber = 0,
-  setOrder,
-  complete
+  complete,
 }) {
   // to open or close the modal
   const InfoModal = useMoreInfoModal();
   const [open, setOpen] = useState(InfoModal.isOpen);
 
+  //store the complete state
+  const setDayBreakfast = useDayBreakfastStore(
+    (state) => state.setDayBreakfast
+  );
+
   const [localComplete, setLocalComplete] = useState(complete);
 
-    // Sincronizar el estado local con el valor de la prop `complete` cuando cambie
-    useEffect(() => {
-      setLocalComplete(complete);
-    }, [complete]);
+  // Sincronizar el estado local con el valor de la prop `complete` cuando cambie
+  useEffect(() => {
+    setLocalComplete(complete);
+  }, [complete]);
 
   // Close modal when the InfoModal state changes
   useEffect(() => {
@@ -43,26 +47,26 @@ export function MoreInfoModal({
         console.error("No documentId found for the selected preference.");
         return;
       }
-      // Actualizar el estado en el backend si es necesario
-      if (mealNumber === 0) {
-        await changeBreakfast({
-          documentId,
-          complete: !localComplete, // Enviar el nuevo estado de `complete`
-        });
-      }
-      // Actualizar el estado local de las preferencias
-      setOrder((prevorder) =>
-        prevorder.map((preference, i) =>
-          i === index
+
+      // Actualizar el backend
+      await changeBreakfast({
+        documentId,
+        complete: !localComplete,
+      });
+
+      // Actualizar el estado en el store
+      setDayBreakfast((prevState) =>
+        prevState.map((preference) =>
+          preference.documentId === documentId
             ? {
                 ...preference,
-                complete: !localComplete, // Cambiar el estado local
+                complete: !localComplete,
               }
             : preference
         )
       );
 
-      // Actualizar el estado local de `complete`
+      // Actualizar el estado local
       setLocalComplete(!localComplete);
       console.log("Meal selection saved successfully.");
     } catch (error) {

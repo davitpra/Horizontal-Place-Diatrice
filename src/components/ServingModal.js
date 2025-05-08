@@ -177,7 +177,7 @@ export function ServingModal({ residentsOnSeating, dayMenus, dayBreakfast }) {
       );
 
       // Actualizar el estado de `dayBreakfast` en el store
-      setDayBreakfast ((prev) =>
+      setDayBreakfast((prev) =>
         prev.map((item) =>
           item.documentId === documentId
             ? { ...item, complete: !preference?.complete }
@@ -211,6 +211,18 @@ export function ServingModal({ residentsOnSeating, dayMenus, dayBreakfast }) {
 
       // Actualizar el estado local con todos los pedidos completados
       setUpdatedOrders(updatedOrdersWithComplete);
+      // Actualizar el estado global (store) de dayBreakfast
+      setDayBreakfast((prev) =>
+        prev.map((item) => ({
+          ...item,
+          complete: updatedOrdersWithComplete.some(
+            (order) => order.documentId === item.documentId
+          )
+            ? true
+            : item.complete,
+        }))
+      );
+
       console.log("All meal selections saved successfully.");
     } catch (error) {
       console.error("Error saving all meal selections:", error);

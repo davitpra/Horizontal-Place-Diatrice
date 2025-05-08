@@ -1,8 +1,7 @@
 "use client";
-import { useCallback, useEffect, useState, useMemo, use } from "react";
+import { useCallback, useEffect, useState} from "react";
 import { useTableModal } from "../hooks/useTableModal";
 import { useTableNumber } from "../hooks/useTableNumber";
-import { useDayBreakfastStore } from "@/store/useDayBreakfastStore";
 
 // function to count the people by table
 function countPeopleByTable(residentsOnSeating) {
@@ -39,28 +38,11 @@ export function TableMap({ residentsOnSeating, meal }) {
 
   const [residentsByTable, setResidentsByTable] = useState(countPeopleByTable(residentsOnSeating));
   const [completedByTable, setCompletedByTable] = useState({});
-  const [updateCompleteByTable, setUpdateCompleteByTable] = useState({});
   // to open or close the modal
   const tableModal = useTableModal();
   // to select a table
   const onSelect = useTableNumber((state) => state.onSelect);
 
-  const dayBreakfast = useDayBreakfastStore((state) => state.dayBreakfast);
-
-  useEffect(() => {
-    console.log("meal has changed")
-    const newCompletedByTable = calculateCompletedByTable(residentsOnSeating, meal);
-
-    setCompletedByTable((prev) => {
-      const isEqual = JSON.stringify(prev) === JSON.stringify(newCompletedByTable);
-      return isEqual ? prev : newCompletedByTable;
-    });
-
-    console.log("updateCompleteByTable", completedByTable);
-    // console.log("updateCompleteByTable", updateCompleteByTable);
-  }, [dayBreakfast]);
-
-  
   // to get the number of tables from 1 to 17
   const tablesNumbers = Array.from({ length: 17 }, (_, i) => i + 1);
 

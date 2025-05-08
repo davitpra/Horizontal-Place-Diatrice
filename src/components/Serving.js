@@ -158,6 +158,7 @@ export function Serving({ residents, date, breakFast, menus }) {
         residentsOnSeating={filteredResidents}
         dayMenus={dayMenus}
         dayBreakfast={filteredMeals}
+        condition={condition}
       />
       <MealBar />
       <TableMap residentsOnSeating={filteredResidents} meal={filteredMeals} />
