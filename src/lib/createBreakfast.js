@@ -1,4 +1,3 @@
-import { ComputerDesktopIcon } from "@heroicons/react/24/outline";
 import { query } from "./strapi";
 
 

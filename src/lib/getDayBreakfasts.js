@@ -2,7 +2,7 @@ import { query } from "./strapi";
 
 export async function getDayBreakfasts(date) {
   return query(
-    `breakfasts?filters[Date][$eq]=${date}-16&populate[Breakfast][populate]=*`
+    `breakfasts?filters[Date][$eq]=${date}&populate[Breakfast][populate]=*`
   ).then((res) => {
     return res.data.map((breakFast) => {
       const { Breakfast, complete, slug, documentId } = breakFast;
