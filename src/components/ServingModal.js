@@ -17,7 +17,7 @@ import {
 import { changeBreakfast } from "@/lib/changeBreakfast";
 import { useDayBreakfastStore } from "@/store/useDayBreakfastStore";
 
-export function ServingModal({ residentsOnSeating, dayMenus, dayBreakfast }) {
+export function ServingModal({ residentsOnSeating, dayMenus, meals }) {
   // URL base para las imágenes
   const host = process.env.NEXT_PUBLIC_STRAPI_HOST;
 
@@ -25,7 +25,7 @@ export function ServingModal({ residentsOnSeating, dayMenus, dayBreakfast }) {
   const tableModal = useTableModal(); // Modal principal para la tabla
   const InfoModal = useMoreInfoModal(); // Modal para mostrar más información
   const SelecModal = useSelectionModal(); // Modal para cambiar selecciones
-  const setDayBreakfast = useDayBreakfastStore(
+  const setDayBreakfast = useDayBreakfastStore( // function to set the day breakfast
     (state) => state.setDayBreakfast
   );
 
@@ -65,6 +65,7 @@ export function ServingModal({ residentsOnSeating, dayMenus, dayBreakfast }) {
     SelecModal.onOpen();
   }
 
+  // Filtrar residentes por mesa
   useEffect(() => {
     const filterResidentsByTable =
       residentsOnSeating?.filter(
@@ -95,16 +96,32 @@ export function ServingModal({ residentsOnSeating, dayMenus, dayBreakfast }) {
           (resident) => resident.documentId === menu.resident?.documentId
         )
       ) || []; // Filtrar desayunos que correspondan a los menús de la mesa
+    
+    if (mealNumber === 0) {
     const breakFastOnTable =
-      dayBreakfast?.filter((breakfast) =>
+      meals?.filter((breakfast) =>
         menusOnTable.some(
           (menu) => menu.breakfast?.documentId === breakfast?.documentId
         )
       ) || [];
 
-    // Actualizar el estado con los desayunos filtrados
-    setOrder(breakFastOnTable);
-  }, [dayMenus, dayBreakfast, residentsOnSeating, selectTable]);
+      // Actualizar el estado con los desayunos filtrados
+      setOrder(breakFastOnTable);
+
+    } else if (mealNumber === 1) {
+      const lunchOnTable =
+      meals?.filter((lunch) =>
+          menusOnTable.some(
+            (menu) => menu.lunch?.documentId === lunch?.documentId
+          )
+        ) || [];
+
+      // Actualizar el estado con los almuerzos filtrados
+      setOrder(lunchOnTable);
+    }
+
+
+  }, [dayMenus, meals, residentsOnSeating, selectTable, mealNumber]);
 
   // Filtrar las bebidas de los pedidos
   const ordersWithoutDrinks = useMemo(() => {

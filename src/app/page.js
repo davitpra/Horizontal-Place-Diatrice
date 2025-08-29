@@ -4,6 +4,7 @@ import { useCreateMenus } from "@/hooks/useCreateMenus";
 import { useCreateBreakfast } from "@/hooks/useCreateBreakfast";
 import { Serving } from "@/components/Serving";
 import { useCreateLunch } from "@/hooks/useCreateLunch";
+import { getMenuSchedule } from "@/lib/getMenuSchedule";
 
 export default async function Home() {
   let residents = [];

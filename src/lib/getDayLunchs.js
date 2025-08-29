@@ -1,6 +1,9 @@
+import { getMenuSchedule } from "./getMenuSchedule";
 import { query } from "./strapi";
 
 export async function getDayLunchs(date) {
+  let [lunchMenu] = await getMenuSchedule(date) 
+  console.log(lunchMenu.data)
   return query(
     `lunches?filters[Date][$eq]=${date}&populate=*`
   ).then((res) => {
@@ -29,12 +32,14 @@ export async function getDayLunchs(date) {
           Juice: lunch?.Juice,
           Milk: lunch?.Milk,
           additionals: lunch?.additionals,
-          soup: lunch?.soup,
-          salad: lunch?.salad,
-          option_1: lunch?.option_1,
-          option_2: lunch?.option_2,
+          soup: lunch?.soup ? lunchMenu?.data.soup : lunch?.soup,
+          salad: lunch?.salad? lunchMenu?.data.salad : lunch?.soup,
+          option_1: lunch?.option_1? lunchMenu?.data.option_1 : lunch?.option_1,
+          // description_option_1: lunch?.option_1? lunchMenu?.data.description_option_1 : lunch?.option_1,
+          option_2: lunch?.option_2? lunchMenu?.data.option_2 : lunch?.option_2,
+          // description_option_2: lunch?.option_2? lunchMenu?.data.description_option_2 : lunch?.option_2,
           half_half: lunch?.half_half,
-          dessert: lunch?.dessert,
+          dessert: lunch?.dessert? lunchMenu?.data.dessert : lunch?.dessert,
           Comment: lunch?.Comment,
         }),
       ];
