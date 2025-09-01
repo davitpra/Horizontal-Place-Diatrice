@@ -1,13 +1,14 @@
 import { query } from "./strapi";
 
 
-export async function createBreakfast({date, full_name, documentId, breakFast}) {
+export async function createBreakfast({date, table, full_name, documentId, breakFast}) {
 
   const slug =full_name.toLowerCase().replace(/\s+/g, '-')
 
   const body ={
   "data":{
       "title": `${full_name}-${date}`,
+      "table": table,
       "slug": `${slug}-${date}`,
       "Date": `${date}`,
       "complete": false,

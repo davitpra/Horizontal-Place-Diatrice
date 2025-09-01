@@ -41,6 +41,7 @@ export const useCreateBreakfast = async (residents, date, menus) => {
 
           await createBreakfast({
             date,
+            table: resident.table,
             full_name: menu.resident.full_name,
             breakFast: BreakfastPreference,
             documentId: menu.documentId,

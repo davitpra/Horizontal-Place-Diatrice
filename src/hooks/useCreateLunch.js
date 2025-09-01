@@ -38,6 +38,7 @@ export const useCreateLunch = async (residents, date, menus) => {
 
           await createLunch({
             date,
+            table: resident.table,
             full_name: menu.resident.full_name,
             lunch_preferences: resident.Lunch_preferences,
             documentId: menu.documentId,

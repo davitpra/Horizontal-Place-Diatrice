@@ -15,28 +15,24 @@ function countPeopleByTable(residentsOnSeating) {
   }, {});
 }
 
-function calculateCompletedByTable(residentsOnSeating, meal) {
-  if (!Array.isArray(meal) || !Array.isArray(residentsOnSeating)) {
+function calculateCompletedByTable(meal) {
+  if (!Array.isArray(meal)) {
     console.warn("meal or residentsOnSeating is not an array");
     return {};
   }
 
-  // Calcular los residentes que han completado su comida
-  const residentsCompleted = residentsOnSeating.reduce((acc, resident, index) => {
-    const correspondingMeal = meal[index];
-    if (correspondingMeal?.complete) {
-      acc.push(resident);
-    }
-    return acc;
-  }, []);
+  const residentsCompleted = meal.filter((resident) => resident.complete);
 
   // Contar los residentes completados por mesa
   return countPeopleByTable(residentsCompleted);
 }
 
-export function TableMap({ residentsOnSeating, meal }) {
+export function TableMap({ meal }) {
 
-  const [residentsByTable, setResidentsByTable] = useState(countPeopleByTable(residentsOnSeating));
+  console.log( "residentsOnSeating ------------>", meal);
+
+  const [residentsByTable, setResidentsByTable] = useState(countPeopleByTable(meal));
+  console.log("residentsByTable", residentsByTable);
   const [completedByTable, setCompletedByTable] = useState({});
   // to open or close the modal
   const tableModal = useTableModal();
@@ -47,21 +43,21 @@ export function TableMap({ residentsOnSeating, meal }) {
   const tablesNumbers = Array.from({ length: 17 }, (_, i) => i + 1);
 
   useEffect(() => {
-    const peopleByTable = countPeopleByTable(residentsOnSeating);
+    const peopleByTable = countPeopleByTable(meal);
     setResidentsByTable((prev) => {
       const isEqual = JSON.stringify(prev) === JSON.stringify(peopleByTable);
       return isEqual ? prev : peopleByTable;
     });
-  }, [residentsOnSeating]);
+  }, [meal]);
 
   useEffect(() => {
-    const newCompletedByTable = calculateCompletedByTable(residentsOnSeating, meal);
+    const newCompletedByTable = calculateCompletedByTable(meal);
     // Actualizar el estado solo si el valor cambia
     setCompletedByTable((prev) => {
       const isEqual = JSON.stringify(prev) === JSON.stringify(newCompletedByTable);
       return isEqual ? prev : newCompletedByTable;
     });
-  }, [residentsOnSeating]);
+  }, [meal]);
 
   // function to toggle the modal
   const toggleModal = useCallback(() => {

@@ -3,12 +3,11 @@ import { query } from "./strapi";
 
 export async function getDayLunchs(date) {
   let [lunchMenu] = await getMenuSchedule(date) 
-  console.log(lunchMenu.data)
   return query(
     `lunches?filters[Date][$eq]=${date}&populate=*`
   ).then((res) => {
     return res.data.map((lunch) => {
-      const { onTray, complete, Slug, documentId, went_out_to_eat} = lunch;
+      const { onTray, complete, Slug, documentId, went_out_to_eat, table} = lunch;
 
       // Helper function to filter the valid properties
       function filterValidProperties(obj) {
@@ -47,6 +46,7 @@ export async function getDayLunchs(date) {
 
       return {
         documentId,
+        table,
         complete,
         went_out_to_eat,
         meals,

@@ -5,7 +5,7 @@ export async function getDayBreakfasts(date) {
     `breakfasts?filters[Date][$eq]=${date}&populate[Breakfast][populate]=*`
   ).then((res) => {
     return res.data.map((breakFast) => {
-      const { Breakfast, complete, slug, documentId } = breakFast;
+      const { Breakfast, complete, slug, documentId, table} = breakFast;
       const went_out_to_eat = Breakfast?.went_out_to_eat;
       //GET DAY OF WEEK
       let today = new Date();
@@ -65,6 +65,7 @@ export async function getDayBreakfasts(date) {
 
       return {
         documentId,
+        table,
         complete,
         went_out_to_eat,
         meals,

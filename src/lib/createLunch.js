@@ -1,7 +1,7 @@
 import { query } from "./strapi";
 
 
-export async function createLunch({date, full_name, documentId, lunch_preferences}) {
+export async function createLunch({date, table, full_name, documentId, lunch_preferences}) {
   //if lunch_preferences is not provided, use default values
   const preferences = lunch_preferences ?? {
         went_out_to_eat: false,
@@ -17,6 +17,7 @@ export async function createLunch({date, full_name, documentId, lunch_preference
   const body ={
   "data":{
       "Title": `${full_name}-${date}`,
+      "table": table,
       "Slug": `${slug}-${date}`,
       "Date": `${date}`,
       "complete": false,
