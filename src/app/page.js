@@ -4,7 +4,7 @@ import { useCreateMenus } from "@/hooks/useCreateMenus";
 import { useCreateBreakfast } from "@/hooks/useCreateBreakfast";
 import { Serving } from "@/components/Serving";
 import { useCreateLunch } from "@/hooks/useCreateLunch";
-import { getMenuSchedule } from "@/lib/getMenuSchedule";
+import { useCreateSupper } from "@/hooks/useCreateSupper";
 
 export default async function Home() {
   let residents = [];
@@ -21,11 +21,12 @@ export default async function Home() {
     menus = await useCreateMenus(residents, date);
     breakFast = await useCreateBreakfast(residents, date, menus);
     lunch = await useCreateLunch(residents, date, menus);
+    supper = await useCreateSupper(residents, date, menus);
   } catch (error) {
     residents = rawData;
     breakFast = [];
     console.log("Error", error);
   }
 
-  return <Serving residents={residents} date ={date} breakFast={breakFast} menus={menus} lunch={lunch}/>
+  return <Serving residents={residents} date ={date} breakFast={breakFast} menus={menus} lunch={lunch} supper={supper}/>
 }

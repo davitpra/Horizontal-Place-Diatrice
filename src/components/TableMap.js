@@ -29,10 +29,9 @@ function calculateCompletedByTable(meal) {
 
 export function TableMap({ meal }) {
 
-  console.log( "residentsOnSeating ------------>", meal);
+  console.log("Meal in TableMap", meal);
 
   const [residentsByTable, setResidentsByTable] = useState(countPeopleByTable(meal));
-  console.log("residentsByTable", residentsByTable);
   const [completedByTable, setCompletedByTable] = useState({});
   // to open or close the modal
   const tableModal = useTableModal();

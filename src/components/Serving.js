@@ -11,8 +11,9 @@ import { useResidentsStore } from "@/store/useResidentsStore";
 import { useDayMenusStore } from "@/store/useDayMenusStore";
 import { useFilterResidents } from "@/hooks/useFilterResidents";
 import { useDayLunchStore } from "@/store/useDayLunchStore";
+import { useDaySupperStore } from "@/store/useDaySupperStore";
 
-export function Serving({ residents, date, breakFast, menus, lunch }) {
+export function Serving({ residents, date, breakFast, menus, lunch, supper }) {
   const [residentsOnSeating, setResidentsOnSeating] = useState(residents);
   const [meals, setMeals] = useState(breakFast);
   const [condition, setCondition] = useState("breakfast");
@@ -26,7 +27,6 @@ export function Serving({ residents, date, breakFast, menus, lunch }) {
   useEffect(() => {
     async function storeData() {
       try {
-        // console.log("residents on serving", residents);
         setResidents(residents);
       } catch (error) {
         console.error("Error", error);
@@ -36,12 +36,11 @@ export function Serving({ residents, date, breakFast, menus, lunch }) {
   }, [date, residents, setResidents]);
 
   // FUNCTION TO SET STORE BREAKFAST
-  const setDayBreakfast = useDayBreakfastStore(
-    (state) => state.setDayBreakfast
-  );
-
+  const setDayBreakfast = useDayBreakfastStore((state) => state.setDayBreakfast);
   // FUNCTION TO SET STORE LUNCH
   const setDayLunch = useDayLunchStore((state) => state.setDayLunch);
+  // FUNCTION TO SET STORE SUPPER
+  const setDaySupper = useDaySupperStore((state) => state.setDayLunch);
 
   // UseEffect to update the breakfast on the store
   useEffect(() => {
@@ -60,6 +59,15 @@ export function Serving({ residents, date, breakFast, menus, lunch }) {
       console.error("Error", error);
     }
   }, [lunch]);
+
+  // UseEffect to update the supper on the store
+  useEffect(() => {
+    try {
+      setDaySupper(supper);
+    } catch (error) {
+      console.error("Error", error);
+    }
+  }, [supper]);
 
   // SET STORE MENUS
   const setDayMenus = useDayMenusStore((state) => state.setDayMenus);
@@ -85,6 +93,8 @@ export function Serving({ residents, date, breakFast, menus, lunch }) {
   const dayBreakfast = useDayBreakfastStore((state) => state.dayBreakfast);
   // to get the lunch on the store
   const dayLunch = useDayLunchStore((state) => state.dayLunch);
+  // to get the supper on the store
+  const daySupper = useDaySupperStore((state) => state.daySupper);
 
   // SORT RESIDENTS BY SEATING AND MEALS
   // to get the residents on the selected seating, with the meal number
@@ -130,8 +140,8 @@ export function Serving({ residents, date, breakFast, menus, lunch }) {
       setCondition("lunch");
       setMeals(dayLunch);
     } else if (mealNumber === 2) {
-      setCondition("dinner");
-      setMeals((prevMeals) => (prevMeals.length !== 0 ? [] : prevMeals));
+      setCondition("supper");
+      setMeals(daySupper);
     } else {
       setCondition("breakfast");
       setMeals((prevMeals) =>
@@ -140,7 +150,7 @@ export function Serving({ residents, date, breakFast, menus, lunch }) {
           : prevMeals
       );
     }
-  }, [mealNumber, dayBreakfast, dayLunch]);
+  }, [mealNumber, dayBreakfast, dayLunch, daySupper]);
 
   // Filtrar y ordenar datos
   function filterAndSortData(primaryArray, secondaryArray, filterCondition) {
