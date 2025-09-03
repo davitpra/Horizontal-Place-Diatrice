@@ -22,7 +22,6 @@ export function ServingModal({ residentsOnSeating, dayMenus, meals }) {
   // URL base para las imágenes
   const host = process.env.NEXT_PUBLIC_STRAPI_HOST;
 
-  console.log("dayMenus in ServingModal:", dayMenus);
   // Hooks para manejar los modales
   const tableModal = useTableModal(); // Modal principal para la tabla
   const InfoModal = useMoreInfoModal(); // Modal para mostrar más información
@@ -77,7 +76,6 @@ export function ServingModal({ residentsOnSeating, dayMenus, meals }) {
         meal.table === selectTable
       ) || [];
     
-    console.log("Meals filtered by table:", filterMealsByTable);
 
     const filterResidentsByTable =
       residentsOnSeating?.filter(
