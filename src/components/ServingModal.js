@@ -16,11 +16,13 @@ import {
 } from "@heroicons/react/24/outline";
 import { changeBreakfast } from "@/lib/changeBreakfast";
 import { useDayBreakfastStore } from "@/store/useDayBreakfastStore";
+import { useResidentsStore } from "@/store/useResidentsStore";
 
 export function ServingModal({ residentsOnSeating, dayMenus, meals }) {
   // URL base para las imágenes
   const host = process.env.NEXT_PUBLIC_STRAPI_HOST;
 
+  console.log("dayMenus in ServingModal:", dayMenus);
   // Hooks para manejar los modales
   const tableModal = useTableModal(); // Modal principal para la tabla
   const InfoModal = useMoreInfoModal(); // Modal para mostrar más información
@@ -40,6 +42,8 @@ export function ServingModal({ residentsOnSeating, dayMenus, meals }) {
   // Hooks para obtener el número de mesa y el número de comida
   const selectTable = useTableNumber((state) => state.tableNumber);
   const mealNumber = useMealBar((state) => state.mealNumber);
+
+  const residentsStore = useResidentsStore((state) => state.residents);
 
   // Sincronizar el estado `open` con el estado del modal principal
   useEffect(() => {
@@ -65,30 +69,29 @@ export function ServingModal({ residentsOnSeating, dayMenus, meals }) {
     SelecModal.onOpen();
   }
 
-  // Filtrar residentes por mesa
-  useEffect(() => {
-    const filterResidentsByTable =
-      residentsOnSeating?.filter(
-        (resident) => resident.table === selectTable
-      ) || [];
-    setResidentsOnTable((prev) => {
-      const isEqual =
-        JSON.stringify(prev) === JSON.stringify(filterResidentsByTable);
-      return isEqual ? prev : filterResidentsByTable;
-    });
-  }, [residentsOnSeating, selectTable]);
-
   // Filtrar residentes, menús y desayunos según la mesa seleccionada
   useEffect(() => {
+
+    const filterMealsByTable =
+      meals?.filter((meal) =>
+        meal.table === selectTable
+      ) || [];
+    
+    console.log("Meals filtered by table:", filterMealsByTable);
+
     const filterResidentsByTable =
       residentsOnSeating?.filter(
         (resident) => resident.table === selectTable
       ) || [];
+
+
+      
     setResidentsOnTable((prev) => {
       const isEqual =
         JSON.stringify(prev) === JSON.stringify(filterResidentsByTable);
       return isEqual ? prev : filterResidentsByTable;
     });
+    
     // Filtrar menús que correspondan a los residentes de la mesa
     const menusOnTable =
       dayMenus?.filter((menu) =>

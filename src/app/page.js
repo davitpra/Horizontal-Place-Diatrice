@@ -22,6 +22,9 @@ export default async function Home() {
     breakFast = await useCreateBreakfast(residents, date, menus);
     lunch = await useCreateLunch(residents, date, menus);
     supper = await useCreateSupper(residents, date, menus);
+
+    // actualizar el menu para que tenga los desayunos, almuerzos y cenas creados
+    menus = await useCreateMenus(residents, date);
   } catch (error) {
     residents = rawData;
     breakFast = [];

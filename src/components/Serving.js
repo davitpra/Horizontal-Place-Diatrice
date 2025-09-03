@@ -19,8 +19,17 @@ export function Serving({ residents, date, breakFast, menus, lunch, supper }) {
   const [condition, setCondition] = useState("breakfast");
   const observations = ["The chair positions may not be correct"];
 
-  // SET STORE RESIDENTS
+  // FUNCTION TO SET STORE RESIDENTS
   const setResidents = useResidentsStore((state) => state.setResidents);
+  // FUCTION TO SET STORE MENUS
+  const setDayMenus = useDayMenusStore((state) => state.setDayMenus)
+  // FUNCTION TO SET STORE BREAKFAST
+  const setDayBreakfast = useDayBreakfastStore((state) => state.setDayBreakfast);
+  // FUNCTION TO SET STORE LUNCH
+  const setDayLunch = useDayLunchStore((state) => state.setDayLunch);
+  // FUNCTION TO SET STORE SUPPER
+  const setDaySupper = useDaySupperStore((state) => state.setDayLunch);
+;
 
   // useEffect to set the residents on the store every time the date changes
   // and the residents are updated
@@ -35,12 +44,14 @@ export function Serving({ residents, date, breakFast, menus, lunch, supper }) {
     storeData();
   }, [date, residents, setResidents]);
 
-  // FUNCTION TO SET STORE BREAKFAST
-  const setDayBreakfast = useDayBreakfastStore((state) => state.setDayBreakfast);
-  // FUNCTION TO SET STORE LUNCH
-  const setDayLunch = useDayLunchStore((state) => state.setDayLunch);
-  // FUNCTION TO SET STORE SUPPER
-  const setDaySupper = useDaySupperStore((state) => state.setDayLunch);
+    // UseEffect to update the menus on the store
+  useEffect(() => {
+    try {
+      setDayMenus(menus);
+    } catch (error) {
+      console.error("Error", error);
+    }
+  }, [menus, setDayMenus]);
 
   // UseEffect to update the breakfast on the store
   useEffect(() => {
@@ -69,17 +80,7 @@ export function Serving({ residents, date, breakFast, menus, lunch, supper }) {
     }
   }, [supper]);
 
-  // SET STORE MENUS
-  const setDayMenus = useDayMenusStore((state) => state.setDayMenus);
 
-  // UseEffect to update the menus on the store
-  useEffect(() => {
-    try {
-      setDayMenus(menus);
-    } catch (error) {
-      console.error("Error", error);
-    }
-  }, [menus, setDayMenus]);
 
   // to get the seating number
   const onSeating = useSeatingConfigure((state) => state.seating);
@@ -185,10 +186,9 @@ export function Serving({ residents, date, breakFast, menus, lunch, supper }) {
         residentsOnSeating={filteredResidents}
         dayMenus={dayMenus}
         meals={filteredMeals}
-        condition={condition}
       />
       <MealBar />
-      <TableMap residentsOnSeating={filteredResidents} meal={filteredMeals} />
+      <TableMap meal={filteredMeals} />
       <Title observations={observations} className="mb-4" />
     </>
   );
