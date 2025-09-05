@@ -14,11 +14,17 @@ import {
   FolderPlusIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
-import { changeBreakfast } from "@/lib/changeBreakfast";
+import { changeComplete } from "@/lib/changeComplete";
 import { useDayBreakfastStore } from "@/store/useDayBreakfastStore";
-import { useResidentsStore } from "@/store/useResidentsStore";
+import { useDayLunchStore } from "@/store/useDayLunchStore";
+import { useDaySupperStore } from "@/store/useDaySupperStore";
 
-export function ServingModal({ residentsOnSeating, dayMenus, meals }) {
+export function ServingModal({
+  residentsOnSeating,
+  menusOnSeating,
+  mealsOnSeating,
+  condition,
+}) {
   // URL base para las imágenes
   const host = process.env.NEXT_PUBLIC_STRAPI_HOST;
 
@@ -26,23 +32,33 @@ export function ServingModal({ residentsOnSeating, dayMenus, meals }) {
   const tableModal = useTableModal(); // Modal principal para la tabla
   const InfoModal = useMoreInfoModal(); // Modal para mostrar más información
   const SelecModal = useSelectionModal(); // Modal para cambiar selecciones
-  const setDayBreakfast = useDayBreakfastStore( // function to set the day breakfast
+
+  const setDayBreakfast = useDayBreakfastStore(
+    // function to set the day breakfast
     (state) => state.setDayBreakfast
+  );
+
+  const setLDayLunch = useDayLunchStore(
+    // function to set the day lunch
+    (state) => state.setDayLunch
+  );
+
+  const setDaySupper = useDaySupperStore(
+    // function to set the day supper
+    (state) => state.setDayLunch
   );
 
   // Estados locales
   const [open, setOpen] = useState(tableModal.isOpen); // Estado para abrir/cerrar el modal principal
   const [residentsOntable, setResidentsOnTable] = useState([]); // Residentes filtrados por mesa
   const [residentInfo, setResidentInfo] = useState({}); // Información del residente seleccionado
-  const [order, setOrder] = useState([]); // Pedidos filtrados por mesa
+  const [mealOnTable, setMealOnTable] = useState([]); // Pedidos filtrados por mesa
   const [index, setIndex] = useState(0); // Índice del residente seleccionado
-  const [updatedOrder, setUpdatedOrders] = useState([]); // Pedidos actualizados sin bebidas
+  const [updateMealOnTable, setUpdatedMealOnTable] = useState([]); // Pedidos actualizados sin bebidas
 
   // Hooks para obtener el número de mesa y el número de comida
   const selectTable = useTableNumber((state) => state.tableNumber);
   const mealNumber = useMealBar((state) => state.mealNumber);
-
-  const residentsStore = useResidentsStore((state) => state.residents);
 
   // Sincronizar el estado `open` con el estado del modal principal
   useEffect(() => {
@@ -68,61 +84,34 @@ export function ServingModal({ residentsOnSeating, dayMenus, meals }) {
     SelecModal.onOpen();
   }
 
-  // Filtrar residentes, menús y desayunos según la mesa seleccionada
+  // Filtrar desayunos, menus y residente por mesa seleccionada
   useEffect(() => {
+    const mealsByTable =
+      mealsOnSeating?.filter((meal) => meal.table === selectTable) || [];
 
-    const filterMealsByTable =
-      meals?.filter((meal) =>
-        meal.table === selectTable
-      ) || [];
-    
+    setMealOnTable(mealsByTable);
 
-    const filterResidentsByTable =
-      residentsOnSeating?.filter(
-        (resident) => resident.table === selectTable
-      ) || [];
-
-
-      
-    setResidentsOnTable((prev) => {
-      const isEqual =
-        JSON.stringify(prev) === JSON.stringify(filterResidentsByTable);
-      return isEqual ? prev : filterResidentsByTable;
-    });
-    
-    // Filtrar menús que correspondan a los residentes de la mesa
-    const menusOnTable =
-      dayMenus?.filter((menu) =>
-        filterResidentsByTable.some(
-          (resident) => resident.documentId === menu.resident?.documentId
-        )
-      ) || []; // Filtrar desayunos que correspondan a los menús de la mesa
-    
-    if (mealNumber === 0) {
-    const breakFastOnTable =
-      meals?.filter((breakfast) =>
-        menusOnTable.some(
-          (menu) => menu.breakfast?.documentId === breakfast?.documentId
+    const menusByTable =
+      menusOnSeating?.filter((menu) =>
+        mealsByTable.some(
+          (meal) => meal?.documentId === menu?.[condition]?.documentId
         )
       ) || [];
 
-      // Actualizar el estado con los desayunos filtrados
-      setOrder(breakFastOnTable);
+    const filterResidentsByTable2 = residentsOnSeating?.filter((resident) =>
+      menusByTable.some(
+        (menu) => menu.resident.documentId === resident.documentId
+      )
+    );
 
-    } else if (mealNumber === 1) {
-      const lunchOnTable =
-      meals?.filter((lunch) =>
-          menusOnTable.some(
-            (menu) => menu.lunch?.documentId === lunch?.documentId
-          )
-        ) || [];
-
-      // Actualizar el estado con los almuerzos filtrados
-      setOrder(lunchOnTable);
-    }
-
-
-  }, [dayMenus, meals, residentsOnSeating, selectTable, mealNumber]);
+    setResidentsOnTable(filterResidentsByTable2);
+  }, [
+    selectTable,
+    residentsOnSeating,
+    mealsOnSeating,
+    menusOnSeating,
+    condition,
+  ]);
 
   // Filtrar las bebidas de los pedidos
   const ordersWithoutDrinks = useMemo(() => {
@@ -139,13 +128,13 @@ export function ServingModal({ residentsOnSeating, dayMenus, meals }) {
     };
 
     try {
-      if (!Array.isArray(order)) {
-        console.error("order is not an array:", order);
+      if (!Array.isArray(mealOnTable)) {
+        console.error("order is not an array:", mealOnTable);
         return [];
       }
 
       // Filtrar las bebidas de cada pedido
-      return order.map((preference) => {
+      return mealOnTable.map((preference) => {
         if (
           !preference ||
           !Array.isArray(preference.meals) ||
@@ -165,11 +154,11 @@ export function ServingModal({ residentsOnSeating, dayMenus, meals }) {
       console.error("An error occurred while filtering order:", error);
       return [];
     }
-  }, [order]);
+  }, [mealOnTable]);
 
   // Actualizar el estado con los pedidos sin bebidas
   useEffect(() => {
-    setUpdatedOrders(ordersWithoutDrinks);
+    setUpdatedMealOnTable(ordersWithoutDrinks);
   }, [ordersWithoutDrinks]);
 
   // Manejar la acción de completar un pedido
@@ -180,47 +169,83 @@ export function ServingModal({ residentsOnSeating, dayMenus, meals }) {
         console.error("No documentId found for the selected preference.");
         return;
       }
+
+      await changeComplete({
+        documentId,
+        complete: !preference?.complete,
+        endPoint: condition // Pasar el endpoint correcto
+      });
+
       if (mealNumber === 0) {
-        await changeBreakfast({
-          documentId,
-          complete: !preference?.complete,
-        });
-      }
+        // Actualizar el estado de `dayBreakfast` en el store
+        setDayBreakfast((prev) =>
+          prev.map((item) =>
+            item.documentId === documentId
+              ? { ...item, complete: !preference?.complete }
+              : item
+          )
+        );
+        // Actualizar el estado local con el nuevo estado de `complete`
+        setUpdatedMealOnTable((prev) =>
+          prev.map((item, i) =>
+            i === index ? { ...item, complete: !item.complete } : item
+          )
+        );
+        console.log("Meal selection saved successfully.");
+      } else if (mealNumber === 1) {
+        // Lógica para lunch (almuerzo) si es necesario
+        setLDayLunch((prev) =>
+          prev.map((item) =>
+            item.documentId === documentId
+              ? { ...item, complete: !preference?.complete }
+              : item
+          )
+        );
+        // Actualizar el estado local con el nuevo estado de `complete`
+        setUpdatedMealOnTable((prev) =>
+          prev.map((item, i) =>
+            i === index ? { ...item, complete: !item.complete } : item
+          )
+        );
+        console.log("Meal selection saved successfully.");  
+      } else if (mealNumber === 2) {
+        // Lógica para dinner (cena) si es necesario
+        setDaySupper((prev) =>
+          prev.map((item) =>
+            item.documentId === documentId
+              ? { ...item, complete: !preference?.complete }
+              : item
+          )
+        );
+        // Actualizar el estado local con el nuevo estado de `complete`
+        setUpdatedMealOnTable((prev) =>
+          prev.map((item, i) =>
+            i === index ? { ...item, complete: !item.complete } : item
+          )
+        );
+        console.log("Meal selection saved successfully.");
+      } else {
+        console.error("Invalid meal number:", mealNumber);
+      }   
 
-      // Actualizar el estado local con el nuevo estado de `complete`
-      setUpdatedOrders((prev) =>
-        prev.map((item, i) =>
-          i === index ? { ...item, complete: !item.complete } : item
-        )
-      );
-
-      // Actualizar el estado de `dayBreakfast` en el store
-      setDayBreakfast((prev) =>
-        prev.map((item) =>
-          item.documentId === documentId
-            ? { ...item, complete: !preference?.complete }
-            : item
-        )
-      );
-
-      console.log("Meal selection saved successfully.");
     } catch (error) {
-      console.error("Error saving meal selection:", error);
+      const readable = error?.message || (typeof error === 'object' ? JSON.stringify(error) : String(error));
+      console.error("Error saving meal selection:", readable);
     }
   };
 
   // Manejar la acción de completar todos los pedidos
   const handleCompleteAll = async () => {
     try {
-      const updatedOrdersWithComplete = updatedOrder.map((item) => ({
+      const updatedComplete = updateMealOnTable.map((item) => ({
         ...item,
         complete: true,
       }));
 
       // Actualizar todos los pedidos en el backend
       await Promise.all(
-        updatedOrdersWithComplete.map((preference) =>
-          changeBreakfast({
+        updatedComplete.map((preference) =>
+          changeComplete({
             documentId: preference.documentId,
             complete: preference.complete,
           })
@@ -228,12 +253,12 @@ export function ServingModal({ residentsOnSeating, dayMenus, meals }) {
       );
 
       // Actualizar el estado local con todos los pedidos completados
-      setUpdatedOrders(updatedOrdersWithComplete);
+      setUpdatedMealOnTable(updatedComplete);
       // Actualizar el estado global (store) de dayBreakfast
       setDayBreakfast((prev) =>
         prev.map((item) => ({
           ...item,
-          complete: updatedOrdersWithComplete.some(
+          complete: updatedComplete.some(
             (order) => order.documentId === item.documentId
           )
             ? true
@@ -307,7 +332,7 @@ export function ServingModal({ residentsOnSeating, dayMenus, meals }) {
                     </td>
                     <td className="hidden sm:block whitespace-nowrap px-3 py-5 text-sm text-gray-500">
                       {Object.entries(
-                        updatedOrder[index]?.filterDrinks || {}
+                        updateMealOnTable[index]?.filterDrinks || {}
                       ).map(([key, value]) => (
                         <div
                           key={key}
@@ -347,15 +372,15 @@ export function ServingModal({ residentsOnSeating, dayMenus, meals }) {
                     <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
                       <button
                         onClick={() => {
-                          handleComplete(updatedOrder[index], index);
+                          handleComplete(updateMealOnTable[index], index);
                         }}
                         className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${
-                          updatedOrder[index]?.complete
+                          updateMealOnTable[index]?.complete
                             ? "bg-green-50 text-green-700 ring-green-600/20"
                             : "bg-gray-50 text-gray-700 ring-gray-600/20"
                         }`}
                       >
-                        {updatedOrder[index]?.complete
+                        {updateMealOnTable[index]?.complete
                           ? "Complete"
                           : "No Complete"}
                       </button>
@@ -389,17 +414,17 @@ export function ServingModal({ residentsOnSeating, dayMenus, meals }) {
       </div>
       <MoreInfoModal
         resident={residentInfo}
-        order={order}
+        order={mealOnTable}
         index={index}
         mealNumber={mealNumber}
-        setOrder={setOrder}
-        complete={updatedOrder[index]?.complete}
+        setMealOnTable={setMealOnTable}
+        complete={updateMealOnTable[index]?.complete}
       />
       <SelectionModal
         resident={residentInfo}
-        order={order}
+        order={mealOnTable}
         index={index}
-        setOrder={setOrder}
+        setMealOnTable={setMealOnTable}
         mealNumber={mealNumber}
       />
     </Modal>

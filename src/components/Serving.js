@@ -14,9 +14,10 @@ import { useDaySupperStore } from "@/store/useDaySupperStore";
 
 export function Serving({ residents, date, breakFast, menus, lunch, supper }) {
   // STATES
-  const [residentsOnSeating, setResidentsOnSeating] = useState(residents);
-  const [filteredMeals, setFilteredMeals] = useState([]);
   const [meals, setMeals] = useState(breakFast);
+  const [residentsOnSeating, setResidentsOnSeating] = useState(residents);
+  const [mealsOnSeating, setMealsOnSeating] = useState([]);
+  const [menusOnSeating, setMenusOnSeating] = useState([]);
   const [condition, setCondition] = useState("breakfast");
   const observations = ["The chair positions may not be correct"];
 
@@ -32,8 +33,8 @@ export function Serving({ residents, date, breakFast, menus, lunch, supper }) {
   const setDayLunch = useDayLunchStore((state) => state.setDayLunch);
   // FUNCTION TO SET STORE SUPPER
   const setDaySupper = useDaySupperStore((state) => state.setDayLunch);
-  // useEffect to set the residents on the store every time the date changes
-  // and the residents are updated
+
+  // useEffect to set the residents on the store 
   useEffect(() => {
     async function storeData() {
       try {
@@ -126,7 +127,7 @@ export function Serving({ residents, date, breakFast, menus, lunch, supper }) {
     }
   }, [mealNumber, dayBreakfast, dayLunch, daySupper]);
 
-  // SET RESIDENTS BY SEATING  // to get the residents on the selected seating
+  // FILTER RESIDENTS BY SEATING  
   useEffect(() => {
     const residentsBySeating = storeResidents.filter(
       (person) => person.Seating === onSeating
@@ -141,25 +142,28 @@ export function Serving({ residents, date, breakFast, menus, lunch, supper }) {
         (resident) => resident.documentId === menu.resident?.documentId
       )
     );
+
+    setMenusOnSeating(menusBySeating);
+
     const mealsBySeating = meals.filter((meal) =>
       menusBySeating.some(
         (menu) => menu?.[condition]?.documentId === meal.documentId
       )
     );
 
-    setFilteredMeals(mealsBySeating);
-    console.log("mealsBySeating", mealsBySeating);
+    setMealsOnSeating(mealsBySeating);
   }, [residentsOnSeating, dayMenus, meals, condition]);
 
   return (
     <>
       <ServingModal
         residentsOnSeating={residentsOnSeating}
-        dayMenus={dayMenus}
-        meals={filteredMeals}
+        menusOnSeating={menusOnSeating}
+        mealsOnSeating={mealsOnSeating}
+        condition={condition}
       />
       <MealBar />
-      <TableMap meal={filteredMeals} />
+      <TableMap meal={mealsOnSeating} />
       <Title observations={observations} className="mb-4" />
     </>
   );

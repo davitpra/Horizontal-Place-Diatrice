@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Modal } from "./Modal";
 import { useSelectionModal } from "@/hooks/useSelectionModal";
 import { MEAL_OPTIONS } from "@/constants/mealOption";
-import { changeBreakfast } from "@/lib/changeBreakfast";
+import { changeComplete } from "@/lib/changeComplete";
 
 export function SelectionModal({
   resident,
@@ -114,7 +114,7 @@ export function SelectionModal({
       );
 
       setOrder(neworder);
-      await changeBreakfast({
+      await changeComplete({
         documentId,
         options: savedMeals,
       });

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useMoreInfoModal } from "@/hooks/useMoreInfoModal";
 import { Modal } from "./Modal";
-import { changeBreakfast } from "@/lib/changeBreakfast";
+import { changeComplete } from "@/lib/changeComplete";
 import { useDayBreakfastStore } from "@/store/useDayBreakfastStore";
 
 export function MoreInfoModal({
@@ -49,7 +49,7 @@ export function MoreInfoModal({
       }
 
       // Actualizar el backend
-      await changeBreakfast({
+      await changeComplete({
         documentId,
         complete: !localComplete,
       });

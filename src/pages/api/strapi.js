@@ -18,6 +18,8 @@ export default async function handler(req, res) {
           ...(complete !== undefined && { complete }), // Incluir `complete` solo si está definido
         },
       };
+
+      /// Actualizar la ruta para que no solo apunte a los desayunos
       const response = await fetch(`${NEXT_PUBLIC_STRAPI_HOST}/api/breakfasts/${documentId}`, {
         method: "PUT",
         headers: {
