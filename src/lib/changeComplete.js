@@ -1,11 +1,14 @@
-export async function changeComplete({ documentId, options, complete = undefined }) {
+export async function changeComplete({ documentId, options, complete = undefined, condition }) {
+
+  console.log("changeComplete called with:", { documentId, options, complete, condition });
+
   try {
     const response = await fetch("/api/strapi", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ documentId, options, complete }),
+      body: JSON.stringify({ documentId, options, complete, condition}),
     });
 
     // Intentar parsear response JSON para dar mensajes útiles

@@ -98,13 +98,13 @@ export function ServingModal({
         )
       ) || [];
 
-    const filterResidentsByTable2 = residentsOnSeating?.filter((resident) =>
+    const filterResidentsByTable = residentsOnSeating?.filter((resident) =>
       menusByTable.some(
         (menu) => menu.resident.documentId === resident.documentId
       )
     );
 
-    setResidentsOnTable(filterResidentsByTable2);
+    setResidentsOnTable(filterResidentsByTable);
   }, [
     selectTable,
     residentsOnSeating,
@@ -173,7 +173,7 @@ export function ServingModal({
       await changeComplete({
         documentId,
         complete: !preference?.complete,
-        endPoint: condition // Pasar el endpoint correcto
+        condition: condition 
       });
 
       if (mealNumber === 0) {
