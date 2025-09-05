@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef, useLayoutEffect } from "react";
 import { useTableModal } from "../hooks/useTableModal";
 import { useTableNumber } from "../hooks/useTableNumber";
 import { Modal } from "./Modal";
@@ -59,6 +59,27 @@ export function ServingModal({
   // Hooks para obtener el número de mesa y el número de comida
   const selectTable = useTableNumber((state) => state.tableNumber);
   const mealNumber = useMealBar((state) => state.mealNumber);
+
+  // Estados para checkbox
+  const checkbox = useRef();
+  const [checked, setChecked] = useState(false);
+  const [indeterminate, setIndeterminate] = useState(false);
+  const [selectedPeople, setSelectedPeople] = useState([]);
+
+  // funcionalidad para checkbox
+  useLayoutEffect(() => {
+    const isIndeterminate =
+      selectedPeople.length > 0 &&
+      selectedPeople.length < residentsOntable.length;
+    setChecked(selectedPeople.length === residentsOntable.length);
+    setIndeterminate(isIndeterminate);
+    // Protege contra checkbox.current undefined
+    if (checkbox.current) {
+      checkbox.current.indeterminate = isIndeterminate;
+    }
+    console.log("Selected People:", selectedPeople);
+    console.log("Residents on Table:", residentsOntable);
+  }, [selectedPeople, residentsOntable]);
 
   // Sincronizar el estado `open` con el estado del modal principal
   useEffect(() => {
@@ -173,7 +194,7 @@ export function ServingModal({
       await changeComplete({
         documentId,
         complete: !preference?.complete,
-        condition: condition 
+        condition: condition,
       });
 
       if (mealNumber === 0) {
@@ -207,7 +228,7 @@ export function ServingModal({
             i === index ? { ...item, complete: !item.complete } : item
           )
         );
-        console.log("Meal selection saved successfully.");  
+        console.log("Meal selection saved successfully.");
       } else if (mealNumber === 2) {
         // Lógica para dinner (cena) si es necesario
         setDaySupper((prev) =>
@@ -226,10 +247,11 @@ export function ServingModal({
         console.log("Meal selection saved successfully.");
       } else {
         console.error("Invalid meal number:", mealNumber);
-      }   
-
+      }
     } catch (error) {
-      const readable = error?.message || (typeof error === 'object' ? JSON.stringify(error) : String(error));
+      const readable =
+        error?.message ||
+        (typeof error === "object" ? JSON.stringify(error) : String(error));
       console.error("Error saving meal selection:", readable);
     }
   };
@@ -248,23 +270,35 @@ export function ServingModal({
           changeComplete({
             documentId: preference.documentId,
             complete: preference.complete,
+            condition: condition,
           })
         )
       );
 
       // Actualizar el estado local con todos los pedidos completados
       setUpdatedMealOnTable(updatedComplete);
-      // Actualizar el estado global (store) de dayBreakfast
-      setDayBreakfast((prev) =>
-        prev.map((item) => ({
-          ...item,
-          complete: updatedComplete.some(
-            (order) => order.documentId === item.documentId
-          )
-            ? true
-            : item.complete,
-        }))
-      );
+      if (mealNumber === 0) {
+        setDayBreakfast((prev) =>
+          prev.map((item) => ({
+            ...item,
+            complete: true,
+          }))
+        );
+      } else if (mealNumber === 1) {
+        setLDayLunch((prev) =>
+          prev.map((item) => ({
+            ...item,
+            complete: true,
+          }))
+        );
+      } else if (mealNumber === 2) {
+        setDaySupper((prev) =>
+          prev.map((item) => ({
+            ...item,
+            complete: true,
+          }))
+        );
+      }
 
       console.log("All meal selections saved successfully.");
     } catch (error) {
@@ -287,6 +321,29 @@ export function ServingModal({
             <table className="min-w-full divide-y divide-gray-300">
               <thead>
                 <tr>
+                  <th scope="col" className="relative px-7 sm:w-12 sm:px-6">
+                    <div className="group absolute top-1/2 left-4 -mt-2 grid size-4 grid-cols-1">
+                      {/* Checkbox select-all en el header */}
+                      <input
+                        ref={checkbox}
+                        type="checkbox"
+                        className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
+                        checked={checked}
+                        onChange={() => {
+                          if (checked) {
+                            setSelectedPeople([]);
+                            setChecked(false);
+                          } else {
+                            setSelectedPeople(
+                              (residentsOntable || []).map((r) => r.documentId)
+                            );
+                            setChecked(true);
+                          }
+                        }}
+                        disabled={residentsOntable.length === 0}
+                      />
+                    </div>
+                  </th>
                   <th className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
                     Name
                   </th>
@@ -304,6 +361,51 @@ export function ServingModal({
               <tbody className="divide-y divide-gray-200 bg-white">
                 {residentsOntable.map((resident, index) => (
                   <tr key={resident.documentId}>
+                    <td className="relative px-7 sm:w-12 sm:px-6">
+                      <div className="absolute inset-y-0 left-0 hidden w-0.5 bg-indigo-600 group-has-checked:block" />
+
+                      <div className="absolute top-1/2 left-4 -mt-2 grid size-4 grid-cols-1">
+                        {/* Checkbox por fila: no usar la misma ref, calcular checked por id */}
+                        <input
+                          type="checkbox"
+                          className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
+                          checked={selectedPeople.includes(resident.documentId)}
+                          onChange={(e) => {
+                            const id = resident.documentId;
+                            setSelectedPeople((prev) => {
+                              if (e.target.checked) {
+                                // evitar duplicados
+                                if (prev.includes(id)) return prev;
+                                return [...prev, id];
+                              } else {
+                                return prev.filter((pid) => pid !== id);
+                              }
+                            });
+                          }}
+                          disabled={residentsOntable.length === 0}
+                        />
+                        <svg
+                          className="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25"
+                          viewBox="0 0 14 14"
+                          fill="none"
+                        >
+                          <path
+                            className="opacity-0 group-has-checked:opacity-100"
+                            d="M3 8L6 11L11 3.5"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                          <path
+                            className="opacity-0 group-has-indeterminate:opacity-100"
+                            d="M3 7H11"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </div>
+                    </td>
                     <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
                       <div className="flex items-center">
                         <div className="size-11 shrink-0">
