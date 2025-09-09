@@ -18,6 +18,7 @@ import { changeComplete } from "@/lib/changeComplete";
 import { useDayBreakfastStore } from "@/store/useDayBreakfastStore";
 import { useDayLunchStore } from "@/store/useDayLunchStore";
 import { useDaySupperStore } from "@/store/useDaySupperStore";
+import { changeTray } from "@/lib/changeTray";
 
 export function ServingModal({
   residentsOnSeating,
@@ -64,22 +65,22 @@ export function ServingModal({
   const checkbox = useRef();
   const [checked, setChecked] = useState(false);
   const [indeterminate, setIndeterminate] = useState(false);
-  const [selectedPeople, setSelectedPeople] = useState([]);
+  const [residentsToTray, setResidentsToTray] = useState([]);
 
   // funcionalidad para checkbox
   useLayoutEffect(() => {
     const isIndeterminate =
-      selectedPeople.length > 0 &&
-      selectedPeople.length < residentsOntable.length;
-    setChecked(selectedPeople.length === residentsOntable.length);
+      residentsToTray.length > 0 &&
+      residentsToTray.length < residentsOntable.length;
+    setChecked(residentsToTray.length === residentsOntable.length);
     setIndeterminate(isIndeterminate);
     // Protege contra checkbox.current undefined
     if (checkbox.current) {
       checkbox.current.indeterminate = isIndeterminate;
     }
-    console.log("Selected People:", selectedPeople);
+    console.log("Selected People:", residentsToTray);
     console.log("Residents on Table:", residentsOntable);
-  }, [selectedPeople, residentsOntable]);
+  }, [residentsToTray, residentsOntable]);
 
   // Sincronizar el estado `open` con el estado del modal principal
   useEffect(() => {
@@ -90,6 +91,12 @@ export function ServingModal({
   useEffect(() => {
     if (!open) {
       tableModal.onClose();
+      setResidentsToTray([]);
+      setChecked(false);
+      setIndeterminate(false);
+      if (checkbox.current) {
+        checkbox.current.indeterminate = false;
+      }
     }
   }, [open]);
 
@@ -257,50 +264,44 @@ export function ServingModal({
   };
 
   // Manejar la acción de completar todos los pedidos
-  const handleCompleteAll = async () => {
+  const handleChangeToTray = async () => {
+    console.log("Changing to tray for selected residents:", residentsToTray);
     try {
-      const updatedComplete = updateMealOnTable.map((item) => ({
-        ...item,
-        complete: true,
+      const updatedTray = residentsToTray.map((documentId) => ({
+        documentId,
+        onTray: true,
       }));
 
+      console.log("Updated Tray Preferences:", updatedTray);
       // Actualizar todos los pedidos en el backend
       await Promise.all(
-        updatedComplete.map((preference) =>
-          changeComplete({
+        updatedTray.map((preference) =>
+          changeTray({
             documentId: preference.documentId,
-            complete: preference.complete,
+            onTray: preference.onTray,
             condition: condition,
           })
         )
       );
 
-      // Actualizar el estado local con todos los pedidos completados
-      setUpdatedMealOnTable(updatedComplete);
-      if (mealNumber === 0) {
-        setDayBreakfast((prev) =>
-          prev.map((item) => ({
-            ...item,
-            complete: true,
-          }))
-        );
-      } else if (mealNumber === 1) {
-        setLDayLunch((prev) =>
-          prev.map((item) => ({
-            ...item,
-            complete: true,
-          }))
-        );
-      } else if (mealNumber === 2) {
-        setDaySupper((prev) =>
-          prev.map((item) => ({
-            ...item,
-            complete: true,
-          }))
-        );
+      // Actualizar el estado local: marcar onTray en los pedidos afectados
+      setUpdatedMealOnTable((prev) =>
+        prev.map((item) =>
+          residentsToTray.includes(item.documentId)
+            ? { ...item, onTray: true }
+            : item
+        )
+      );
+
+      // Limpiar la selección y estado del checkbox
+      setResidentsToTray([]);
+      setChecked(false);
+      setIndeterminate(false);
+      if (checkbox.current) {
+        checkbox.current.indeterminate = false;
       }
 
-      console.log("All meal selections saved successfully.");
+      console.log("Tray updated for selected residents.");
     } catch (error) {
       console.error("Error saving all meal selections:", error);
     }
@@ -312,8 +313,8 @@ export function ServingModal({
       isOpen={open}
       close={tableModal.onClose}
       title={`Table ${selectTable}`}
-      button="Complete All"
-      buttonAction={handleCompleteAll}
+      button="Change to Tray"
+      buttonAction={handleChangeToTray}
     >
       <div className="mt-8 flow-root">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -331,10 +332,10 @@ export function ServingModal({
                         checked={checked}
                         onChange={() => {
                           if (checked) {
-                            setSelectedPeople([]);
+                            setResidentsToTray([]);
                             setChecked(false);
                           } else {
-                            setSelectedPeople(
+                            setResidentsToTray(
                               (residentsOntable || []).map((r) => r.documentId)
                             );
                             setChecked(true);
@@ -369,10 +370,10 @@ export function ServingModal({
                         <input
                           type="checkbox"
                           className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
-                          checked={selectedPeople.includes(resident.documentId)}
+                          checked={residentsToTray.includes(resident.documentId)}
                           onChange={(e) => {
-                            const id = resident.documentId;
-                            setSelectedPeople((prev) => {
+                            const id = updateMealOnTable[index].documentId;
+                            setResidentsToTray((prev) => {
                               if (e.target.checked) {
                                 // evitar duplicados
                                 if (prev.includes(id)) return prev;

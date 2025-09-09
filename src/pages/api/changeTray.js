@@ -3,7 +3,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { documentId, options, complete, condition } = req.body;
+  const { documentId, options, onTray, condition } = req.body;
 
 
   // Validar condition y determinar el endpoint
@@ -39,17 +39,30 @@ export default async function handler(req, res) {
       requestBody = {
         data: {
           ...(options && { options }), // Incluir `options` solo si está definido
-          ...(complete !== undefined && { complete }), // Incluir `complete` solo si está definido
+          ...(onTray !== undefined && { onTray }), // Incluir `onTray` solo si está definido
         },
       };
     } else {
+      // Construir payload de Breakfast poniendo onTray dentro del objeto Breakfast
+      let breakfastPayload;
+      // Si options es un objeto, clonarlo; si no, usarlo tal cual
+      if (options !== undefined) {
+        // Si options es un objeto, combinar; si no, lo guardamos como valor bajo una clave genérica
+        breakfastPayload = typeof options === 'object' && options !== null ? { ...options } : { value: options };
+      }
+
+      if (onTray !== undefined) {
+        breakfastPayload = { ...(breakfastPayload || {}), onTray };
+      }
+
       requestBody = {
         data: {
-          ...(options && { Breakfast: options }), // Incluir `Breakfast` solo si `options` está definido
-          ...(complete !== undefined && { complete }), // Incluir `complete` solo si está definido
+          ...(breakfastPayload !== undefined && { Breakfast: breakfastPayload }),
         },
       };
     }
+
+    console.log("------>Request Body:", requestBody);
 
     // Realizar la solicitud a Strapi
     const response = await fetch(

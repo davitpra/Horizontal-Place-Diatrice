@@ -1,14 +1,12 @@
-export async function changeComplete({ documentId, options, complete = undefined, condition }) {
-
-  console.log("changeComplete called with:", { documentId, options, complete, condition });
+export async function changeTray({ documentId, options, onTray = undefined, condition }) {
 
   try {
-    const response = await fetch("/api/changeComplete", {
+    const response = await fetch("/api/changeTray", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ documentId, options, complete, condition}),
+      body: JSON.stringify({ documentId, options, onTray, condition}),
     });
 
     // Intentar parsear response JSON para dar mensajes útiles
@@ -31,7 +29,7 @@ export async function changeComplete({ documentId, options, complete = undefined
 
     return body;
   } catch (error) {
-    console.error("Error in changeComplete:", error);
+  console.error("Error in changeTray:", error);
     throw error;
   }
 }
