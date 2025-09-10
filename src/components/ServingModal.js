@@ -14,7 +14,7 @@ import {
   FolderPlusIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
-import { changeComplete } from "@/lib/changeComplete";
+import { useHandleComplete } from "@/hooks/useHandleComplete";
 import { useMealsStore } from "@/store/useMealsStore";
 import { changeTray } from "@/lib/changeTray";
 
@@ -200,44 +200,32 @@ export function ServingModal({
   }, [ordersWithoutDrinks]);
 
   // Manejar la acción de completar un pedido
+  const { handleComplete: handleCompleteAction } = useHandleComplete();
+  
   const handleComplete = async (preference, index) => {
-    try {
-      const documentId = preference[index]?.documentId;
-      if (!documentId) {
-        console.error("No documentId found for the selected preference.");
-        return;
-      }
+    const documentId = preference[index]?.documentId;
+    const mealTypes = ["breakfast", "lunch", "supper"];
+    const mealType = mealTypes[mealNumber];
 
-      await changeComplete({
-        documentId,
-        complete: !preference[index]?.complete,
-        condition: condition,
-      });
+    if (!mealType) {
+      console.error("Invalid meal number:", mealNumber);
+      return;
+    }
 
-      const mealTypes = ["breakfast", "lunch", "supper"];
-      const mealType = mealTypes[mealNumber];
+    const newCompleteState = await handleCompleteAction({
+      documentId,
+      condition,
+      mealType,
+      isComplete: preference[index]?.complete
+    });
 
-      if (!mealType) {
-        console.error("Invalid meal number:", mealNumber);
-        return;
-      }
-
-      updateMealItem(mealType, documentId, {
-        complete: !preference[index]?.complete,
-      });
-      console.log("Meal selection saved successfully.");
-
+    if (newCompleteState !== null) {
       // Actualizar el estado local con el nuevo estado de `complete`
       setUpdatedMealOnTable((prev) =>
         prev.map((item, i) =>
-          i === index ? { ...item, complete: !item.complete } : item
+          i === index ? { ...item, complete: newCompleteState } : item
         )
       );
-    } catch (error) {
-      const readable =
-        error?.message ||
-        (typeof error === "object" ? JSON.stringify(error) : String(error));
-      console.error("Error saving meal selection:", readable);
     }
   };
 

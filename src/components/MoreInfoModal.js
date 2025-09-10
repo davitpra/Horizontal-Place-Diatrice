@@ -3,9 +3,8 @@
 import { useState, useEffect } from "react";
 import { useMoreInfoModal } from "@/hooks/useMoreInfoModal";
 import { Modal } from "./Modal";
-import { changeComplete } from "@/lib/changeComplete";
-import { useMealsStore } from "@/store/useMealsStore";
 import { useMealBar } from "@/hooks/useMealBar";
+import { useHandleComplete } from "@/hooks/useHandleComplete";
 
 export function MoreInfoModal({
   resident,
@@ -17,9 +16,9 @@ export function MoreInfoModal({
   const InfoModal = useMoreInfoModal();
   const [open, setOpen] = useState(InfoModal.isOpen);
 
-  // Get store functions
-  const { updateMealItem } = useMealsStore();
+  // Get hooks
   const mealNumber = useMealBar((state) => state.mealNumber);
+  const { handleComplete: handleCompleteAction } = useHandleComplete();
   
   const [localComplete, setLocalComplete] = useState(complete);
 
@@ -41,29 +40,19 @@ export function MoreInfoModal({
   }, [open]);
 
   const handleComplete = async () => {
-    try {
-      const documentId = order[index]?.documentId;
-      if (!documentId) {
-        console.error("No documentId found for the selected preference.");
-        return;
-      }
+    const documentId = order[index]?.documentId;
+    const mealType = ['breakfast', 'lunch', 'supper'][mealNumber] || 'breakfast';
+    const condition = ['breakfast', 'lunch', 'supper'][mealNumber] || 'breakfast';
 
-      // Actualizar el backend
-      await changeComplete({
-        documentId,
-        complete: !localComplete,
-        condition: ['breakfast', 'lunch', 'supper'][mealNumber] || 'breakfast'
-      });
+    const newCompleteState = await handleCompleteAction({
+      documentId,
+      condition,
+      mealType,
+      isComplete: localComplete
+    });
 
-      // Actualizar el estado en el store
-      const mealType = ['breakfast', 'lunch', 'supper'][mealNumber] || 'breakfast';
-      updateMealItem(mealType, documentId, { complete: !localComplete });
-
-      // Actualizar el estado local
-      setLocalComplete(!localComplete);
-      console.log("Meal selection saved successfully.");
-    } catch (error) {
-      console.error("Error saving meal selection:", error);
+    if (newCompleteState !== null) {
+      setLocalComplete(newCompleteState);
     }
   };
 
@@ -72,7 +61,7 @@ export function MoreInfoModal({
       isOpen={open}
       close={InfoModal.onClose}
       title={resident.full_name}
-      button="Complete"
+      button={localComplete ? "Mark as Incomplete" : "Mark as Complete"}
       buttonAction={handleComplete}
     >
       <span
