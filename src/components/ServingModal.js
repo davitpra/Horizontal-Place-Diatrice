@@ -99,9 +99,12 @@ export function ServingModal({
 
   // Filtrar menús, residentes y comidas por mesa seleccionada
   useEffect(() => {
-    // 1. Primero filtramos las comidas por mesa
+    // 1. Primero filtramos las comidas por mesa y que no estén en bandeja
     const mealsByTable =
-      mealsOnSeating?.filter((meal) => meal.table === selectTable) || [];
+      mealsOnSeating?.filter((meal) => 
+        meal.table === selectTable && 
+        !meal.onTray // Filtramos las comidas que ya están en bandeja
+      ) || [];
 
     // 2. Luego filtramos los menús que tienen comidas en esta mesa
     const menusByTable =
@@ -129,9 +132,11 @@ export function ServingModal({
         const residentMenu = menusByTable.find(
           (menu) => menu.resident.documentId === resident.documentId
         );
-        return mealsByTable.find(
+        const meal = mealsByTable.find(
           (meal) => meal.documentId === residentMenu?.[condition]?.documentId
         );
+        // Solo incluimos la comida si no está en bandeja
+        return meal && !meal.onTray ? meal : null;
       })
       .filter(Boolean);
     
@@ -265,19 +270,28 @@ export function ServingModal({
         throw new Error("Invalid meal number");
       }
 
+      // Actualizar el store primero ya que filtrará automáticamente los items con onTray=true
       residentsToTray.forEach((documentId) => {
         updateMealItem(mealType, documentId, { onTray: true });
       });
-      console.log("Tray updated for selected residents.");
 
-      // Actualizar el estado local: marcar onTray en los pedidos afectados
-      setUpdatedMealOnTable((prev) =>
-        prev.map((item) =>
-          residentsToTray.includes(item.documentId)
-            ? { ...item, onTray: true }
-            : item
-        )
+      // Filtrar los items con onTray=true del estado local
+      const updatedMeals = mealOnTable.filter(
+        meal => !residentsToTray.includes(meal.documentId)
       );
+      setMealOnTable(updatedMeals);
+
+      // Actualizar el estado local de los pedidos sin bebidas
+      const updatedOrders = updateMealOnTable.filter(
+        item => !residentsToTray.includes(item.documentId)
+      );
+      setUpdatedMealOnTable(updatedOrders);
+
+      // Actualizar el estado local de los residentes
+      const updatedResidents = residentsOntable.filter(
+        resident => !residentsToTray.some(id => id === resident.documentId)
+      );
+      setResidentsOnTable(updatedResidents);
 
       // Limpiar la selección y estado del checkbox
       setResidentsToTray([]);
@@ -287,7 +301,7 @@ export function ServingModal({
         checkbox.current.indeterminate = false;
       }
 
-      console.log("Tray updated for selected residents.");
+      console.log("Tray updated and filtered from view.");
     } catch (error) {
       console.error("Error saving all meal selections:", error);
     }
