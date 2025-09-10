@@ -201,7 +201,7 @@ export function ServingModal({
 
   // Manejar la acción de completar un pedido
   const { handleComplete: handleCompleteAction } = useHandleComplete();
-  
+
   const handleComplete = async (preference, index) => {
     const documentId = preference[index]?.documentId;
     const mealTypes = ["breakfast", "lunch", "supper"];
@@ -221,7 +221,7 @@ export function ServingModal({
 
     if (newCompleteState !== null) {
       // Actualizar el estado local con el nuevo estado de `complete`
-      setUpdatedMealOnTable((prev) =>
+      setMealOnTable((prev) =>
         prev.map((item, i) =>
           i === index ? { ...item, complete: newCompleteState } : item
         )

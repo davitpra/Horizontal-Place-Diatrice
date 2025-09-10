@@ -32,7 +32,7 @@ export async function getDayLunchs(date) {
           Milk: lunch?.Milk,
           additionals: lunch?.additionals,
           soup: lunch?.soup ? lunchMenu?.data.soup : lunch?.soup,
-          salad: lunch?.salad? lunchMenu?.data.salad : lunch?.soup,
+          salad: lunch?.salad? lunchMenu?.data.salad : "",
           option_1: lunch?.option_1? lunchMenu?.data.option_1 : lunch?.option_1,
           // description_option_1: lunch?.option_1? lunchMenu?.data.description_option_1 : lunch?.option_1,
           option_2: lunch?.option_2? lunchMenu?.data.option_2 : lunch?.option_2,
