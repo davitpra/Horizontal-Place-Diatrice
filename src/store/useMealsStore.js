@@ -16,14 +16,20 @@ export const useMealsStore = create((set) => ({
       }
     })),
   updateMealItem: (type, documentId, updates) =>
-    set((state) => ({
-      meals: {
-        ...state.meals,
-        [type]: state.meals[type].map(meal =>
-          meal.documentId === documentId
-            ? { ...meal, ...updates }
-            : meal
-        )
-      }
-    }))
+    set((state) => {
+      const updatedMeals = state.meals[type].map(meal =>
+        meal.documentId === documentId
+          ? { ...meal, ...updates }
+          : meal
+      );
+      
+      return {
+        meals: {
+          ...state.meals,
+          [type]: updatedMeals.filter(meal => 
+            meal?.onTray !== true && meal?.went_out_to_eat !== true
+          )
+        }
+      };
+    })
 }))

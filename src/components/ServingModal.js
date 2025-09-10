@@ -270,28 +270,13 @@ export function ServingModal({
         throw new Error("Invalid meal number");
       }
 
-      // Actualizar el store primero ya que filtrará automáticamente los items con onTray=true
+      // Actualizar el store, esto automáticamente filtrará los items con onTray=true
       residentsToTray.forEach((documentId) => {
         updateMealItem(mealType, documentId, { onTray: true });
       });
 
-      // Filtrar los items con onTray=true del estado local
-      const updatedMeals = mealOnTable.filter(
-        meal => !residentsToTray.includes(meal.documentId)
-      );
-      setMealOnTable(updatedMeals);
-
-      // Actualizar el estado local de los pedidos sin bebidas
-      const updatedOrders = updateMealOnTable.filter(
-        item => !residentsToTray.includes(item.documentId)
-      );
-      setUpdatedMealOnTable(updatedOrders);
-
-      // Actualizar el estado local de los residentes
-      const updatedResidents = residentsOntable.filter(
-        resident => !residentsToTray.some(id => id === resident.documentId)
-      );
-      setResidentsOnTable(updatedResidents);
+      // Cerrar el modal después de actualizar
+      tableModal.onClose();
 
       // Limpiar la selección y estado del checkbox
       setResidentsToTray([]);
