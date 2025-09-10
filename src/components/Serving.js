@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { ServingModal } from "./ServingModal";
 import { MealBar } from "./MealBar";
 import { TableMap } from "./TableMap";
@@ -32,7 +32,7 @@ export function Serving({ residents, date, breakFast, menus, lunch, supper }) {
   // FUNCTION TO SET STORE LUNCH
   const setDayLunch = useDayLunchStore((state) => state.setDayLunch);
   // FUNCTION TO SET STORE SUPPER
-  const setDaySupper = useDaySupperStore((state) => state.setDayLunch);
+  const setDaySupper = useDaySupperStore((state) => state.setDaySupper);
 
   // useEffect to set the residents on the store 
   useEffect(() => {

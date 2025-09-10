@@ -213,12 +213,6 @@ export function ServingModal({
               : item
           )
         );
-        // Actualizar el estado local con el nuevo estado de `complete`
-        setUpdatedMealOnTable((prev) =>
-          prev.map((item, i) =>
-            i === index ? { ...item, complete: !item.complete } : item
-          )
-        );
         console.log("Meal selection saved successfully.");
       } else if (mealNumber === 1) {
         // Lógica para lunch (almuerzo) si es necesario
@@ -227,12 +221,6 @@ export function ServingModal({
             item.documentId === documentId
               ? { ...item, complete: !preference?.complete }
               : item
-          )
-        );
-        // Actualizar el estado local con el nuevo estado de `complete`
-        setUpdatedMealOnTable((prev) =>
-          prev.map((item, i) =>
-            i === index ? { ...item, complete: !item.complete } : item
           )
         );
         console.log("Meal selection saved successfully.");
@@ -245,16 +233,18 @@ export function ServingModal({
               : item
           )
         );
-        // Actualizar el estado local con el nuevo estado de `complete`
-        setUpdatedMealOnTable((prev) =>
-          prev.map((item, i) =>
-            i === index ? { ...item, complete: !item.complete } : item
-          )
-        );
         console.log("Meal selection saved successfully.");
       } else {
         console.error("Invalid meal number:", mealNumber);
+        throw new Error("Invalid meal number");
       }
+
+      // Actualizar el estado local con el nuevo estado de `complete`
+      setUpdatedMealOnTable((prev) =>
+        prev.map((item, i) =>
+          i === index ? { ...item, complete: !item.complete } : item
+        )
+      );
     } catch (error) {
       const readable =
         error?.message ||
@@ -283,6 +273,41 @@ export function ServingModal({
           })
         )
       );
+
+      if (mealNumber === 0) {
+        // Actualizar el estado de `dayBreakfast` en el store
+        setDayBreakfast((prev) =>
+          prev.map((item) =>
+            residentsToTray.includes(item.documentId)
+              ? { ...item, onTray: true }
+              : item
+          )
+        );
+        console.log("Tray updated for selected residents.");
+      } else if (mealNumber === 1) {
+        // Lógica para lunch (almuerzo) si es necesario
+        setLDayLunch((prev) =>
+          prev.map((item) =>
+            residentsToTray.includes(item.documentId)
+              ? { ...item, onTray: true }
+              : item
+          )
+        );
+        console.log("Tray updated for selected residents.");
+      } else if (mealNumber === 2) {
+        // Lógica para dinner (cena) si es necesario
+        setDaySupper((prev) =>
+          prev.map((item) =>
+            residentsToTray.includes(item.documentId) ?
+              { ...item, onTray: true }
+              : item
+          )
+        );
+        console.log("Tray updated for selected residents.");
+      } else {
+        console.error("Invalid meal number:", mealNumber);
+        throw new Error("Invalid meal number");
+      }
 
       // Actualizar el estado local: marcar onTray en los pedidos afectados
       setUpdatedMealOnTable((prev) =>
@@ -370,7 +395,9 @@ export function ServingModal({
                         <input
                           type="checkbox"
                           className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
-                          checked={residentsToTray.includes(updateMealOnTable[index]?.documentId)}
+                          checked={residentsToTray.includes(
+                            updateMealOnTable[index]?.documentId
+                          )}
                           onChange={(e) => {
                             const id = updateMealOnTable[index].documentId;
                             setResidentsToTray((prev) => {
