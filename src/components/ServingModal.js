@@ -15,9 +15,7 @@ import {
   UserIcon,
 } from "@heroicons/react/24/outline";
 import { changeComplete } from "@/lib/changeComplete";
-import { useDayBreakfastStore } from "@/store/useDayBreakfastStore";
-import { useDayLunchStore } from "@/store/useDayLunchStore";
-import { useDaySupperStore } from "@/store/useDaySupperStore";
+import { useMealsStore } from "@/store/useMealsStore";
 import { changeTray } from "@/lib/changeTray";
 
 export function ServingModal({
@@ -34,20 +32,7 @@ export function ServingModal({
   const InfoModal = useMoreInfoModal(); // Modal para mostrar más información
   const SelecModal = useSelectionModal(); // Modal para cambiar selecciones
 
-  const setDayBreakfast = useDayBreakfastStore(
-    // function to set the day breakfast
-    (state) => state.setDayBreakfast
-  );
-
-  const setLDayLunch = useDayLunchStore(
-    // function to set the day lunch
-    (state) => state.setDayLunch
-  );
-
-  const setDaySupper = useDaySupperStore(
-    // function to set the day supper
-    (state) => state.setDayLunch
-  );
+  const { updateMealItem } = useMealsStore();
 
   // Estados locales
   const [open, setOpen] = useState(tableModal.isOpen); // Estado para abrir/cerrar el modal principal
@@ -191,8 +176,9 @@ export function ServingModal({
 
   // Manejar la acción de completar un pedido
   const handleComplete = async (preference, index) => {
+
     try {
-      const documentId = preference?.documentId;
+      const documentId = preference[index]?.documentId;
       if (!documentId) {
         console.error("No documentId found for the selected preference.");
         return;
@@ -200,44 +186,20 @@ export function ServingModal({
 
       await changeComplete({
         documentId,
-        complete: !preference?.complete,
+        complete: !preference[index]?.complete,
         condition: condition,
       });
 
-      if (mealNumber === 0) {
-        // Actualizar el estado de `dayBreakfast` en el store
-        setDayBreakfast((prev) =>
-          prev.map((item) =>
-            item.documentId === documentId
-              ? { ...item, complete: !preference?.complete }
-              : item
-          )
-        );
-        console.log("Meal selection saved successfully.");
-      } else if (mealNumber === 1) {
-        // Lógica para lunch (almuerzo) si es necesario
-        setLDayLunch((prev) =>
-          prev.map((item) =>
-            item.documentId === documentId
-              ? { ...item, complete: !preference?.complete }
-              : item
-          )
-        );
-        console.log("Meal selection saved successfully.");
-      } else if (mealNumber === 2) {
-        // Lógica para dinner (cena) si es necesario
-        setDaySupper((prev) =>
-          prev.map((item) =>
-            item.documentId === documentId
-              ? { ...item, complete: !preference?.complete }
-              : item
-          )
-        );
-        console.log("Meal selection saved successfully.");
-      } else {
+      const mealTypes = ['breakfast', 'lunch', 'supper'];
+      const mealType = mealTypes[mealNumber];
+      
+      if (!mealType) {
         console.error("Invalid meal number:", mealNumber);
-        throw new Error("Invalid meal number");
+        return;
       }
+
+      updateMealItem(mealType, documentId, { complete: !preference[index]?.complete });
+      console.log("Meal selection saved successfully.");
 
       // Actualizar el estado local con el nuevo estado de `complete`
       setUpdatedMealOnTable((prev) =>
@@ -274,40 +236,18 @@ export function ServingModal({
         )
       );
 
-      if (mealNumber === 0) {
-        // Actualizar el estado de `dayBreakfast` en el store
-        setDayBreakfast((prev) =>
-          prev.map((item) =>
-            residentsToTray.includes(item.documentId)
-              ? { ...item, onTray: true }
-              : item
-          )
-        );
-        console.log("Tray updated for selected residents.");
-      } else if (mealNumber === 1) {
-        // Lógica para lunch (almuerzo) si es necesario
-        setLDayLunch((prev) =>
-          prev.map((item) =>
-            residentsToTray.includes(item.documentId)
-              ? { ...item, onTray: true }
-              : item
-          )
-        );
-        console.log("Tray updated for selected residents.");
-      } else if (mealNumber === 2) {
-        // Lógica para dinner (cena) si es necesario
-        setDaySupper((prev) =>
-          prev.map((item) =>
-            residentsToTray.includes(item.documentId) ?
-              { ...item, onTray: true }
-              : item
-          )
-        );
-        console.log("Tray updated for selected residents.");
-      } else {
+      const mealTypes = ['breakfast', 'lunch', 'supper'];
+      const mealType = mealTypes[mealNumber];
+      
+      if (!mealType) {
         console.error("Invalid meal number:", mealNumber);
         throw new Error("Invalid meal number");
       }
+
+      residentsToTray.forEach(documentId => {
+        updateMealItem(mealType, documentId, { onTray: true });
+      });
+      console.log("Tray updated for selected residents.");
 
       // Actualizar el estado local: marcar onTray en los pedidos afectados
       setUpdatedMealOnTable((prev) =>
@@ -502,7 +442,7 @@ export function ServingModal({
                     <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
                       <button
                         onClick={() => {
-                          handleComplete(updateMealOnTable[index], index);
+                          handleComplete(updateMealOnTable, index);
                         }}
                         className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${
                           updateMealOnTable[index]?.complete

@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { useMoreInfoModal } from "@/hooks/useMoreInfoModal";
 import { Modal } from "./Modal";
 import { changeComplete } from "@/lib/changeComplete";
-import { useDayBreakfastStore } from "@/store/useDayBreakfastStore";
+import { useMealsStore } from "@/store/useMealsStore";
+import { useMealBar } from "@/hooks/useMealBar";
 
 export function MoreInfoModal({
   resident,
@@ -16,11 +17,10 @@ export function MoreInfoModal({
   const InfoModal = useMoreInfoModal();
   const [open, setOpen] = useState(InfoModal.isOpen);
 
-  //store the complete state
-  const setDayBreakfast = useDayBreakfastStore(
-    (state) => state.setDayBreakfast
-  );
-
+  // Get store functions
+  const { updateMealItem } = useMealsStore();
+  const mealNumber = useMealBar((state) => state.mealNumber);
+  
   const [localComplete, setLocalComplete] = useState(complete);
 
   // Sincronizar el estado local con el valor de la prop `complete` cuando cambie
@@ -52,19 +52,12 @@ export function MoreInfoModal({
       await changeComplete({
         documentId,
         complete: !localComplete,
+        condition: ['breakfast', 'lunch', 'supper'][mealNumber] || 'breakfast'
       });
 
       // Actualizar el estado en el store
-      setDayBreakfast((prevState) =>
-        prevState.map((preference) =>
-          preference.documentId === documentId
-            ? {
-                ...preference,
-                complete: !localComplete,
-              }
-            : preference
-        )
-      );
+      const mealType = ['breakfast', 'lunch', 'supper'][mealNumber] || 'breakfast';
+      updateMealItem(mealType, documentId, { complete: !localComplete });
 
       // Actualizar el estado local
       setLocalComplete(!localComplete);
