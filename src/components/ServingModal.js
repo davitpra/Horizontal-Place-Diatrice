@@ -336,7 +336,7 @@ export function ServingModal({
                             setChecked(false);
                           } else {
                             setResidentsToTray(
-                              (residentsOntable || []).map((r) => r.documentId)
+                              (updateMealOnTable || []).map((r) => r.documentId)
                             );
                             setChecked(true);
                           }
@@ -370,7 +370,7 @@ export function ServingModal({
                         <input
                           type="checkbox"
                           className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
-                          checked={residentsToTray.includes(resident.documentId)}
+                          checked={residentsToTray.includes(updateMealOnTable[index]?.documentId)}
                           onChange={(e) => {
                             const id = updateMealOnTable[index].documentId;
                             setResidentsToTray((prev) => {
