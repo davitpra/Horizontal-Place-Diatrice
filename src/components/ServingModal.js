@@ -97,13 +97,13 @@ export function ServingModal({
     SelecModal.onOpen();
   }
 
-  // Filtrar desayunos, menus y residente por mesa seleccionada
+  // Filtrar menús, residentes y comidas por mesa seleccionada
   useEffect(() => {
+    // 1. Primero filtramos las comidas por mesa
     const mealsByTable =
       mealsOnSeating?.filter((meal) => meal.table === selectTable) || [];
 
-    setMealOnTable(mealsByTable);
-
+    // 2. Luego filtramos los menús que tienen comidas en esta mesa
     const menusByTable =
       menusOnSeating?.filter((menu) =>
         mealsByTable.some(
@@ -111,13 +111,33 @@ export function ServingModal({
         )
       ) || [];
 
-    const filterResidentsByTable = residentsOnSeating?.filter((resident) =>
-      menusByTable.some(
-        (menu) => menu.resident.documentId === resident.documentId
-      )
-    );
+    console.log("menus by Table:", menusByTable);
 
-    setResidentsOnTable(filterResidentsByTable);
+    // 3. Filtramos los residentes basados en los menús de la mesa
+    const residentsInTable =
+      residentsOnSeating?.filter((resident) =>
+        menusByTable.some(
+          (menu) => menu.resident.documentId === resident.documentId
+        )
+      ) || [];
+    
+    setResidentsOnTable(residentsInTable);
+
+    // 4. Aseguramos que las comidas estén en el mismo orden que los residentes
+    const orderedMealsByTable = residentsInTable
+      .map((resident) => {
+        const residentMenu = menusByTable.find(
+          (menu) => menu.resident.documentId === resident.documentId
+        );
+        return mealsByTable.find(
+          (meal) => meal.documentId === residentMenu?.[condition]?.documentId
+        );
+      })
+      .filter(Boolean);
+    
+    console.log("Ordered Meals by Table:", orderedMealsByTable);
+
+    setMealOnTable(orderedMealsByTable);
   }, [
     selectTable,
     residentsOnSeating,
@@ -176,7 +196,6 @@ export function ServingModal({
 
   // Manejar la acción de completar un pedido
   const handleComplete = async (preference, index) => {
-
     try {
       const documentId = preference[index]?.documentId;
       if (!documentId) {
@@ -190,15 +209,17 @@ export function ServingModal({
         condition: condition,
       });
 
-      const mealTypes = ['breakfast', 'lunch', 'supper'];
+      const mealTypes = ["breakfast", "lunch", "supper"];
       const mealType = mealTypes[mealNumber];
-      
+
       if (!mealType) {
         console.error("Invalid meal number:", mealNumber);
         return;
       }
 
-      updateMealItem(mealType, documentId, { complete: !preference[index]?.complete });
+      updateMealItem(mealType, documentId, {
+        complete: !preference[index]?.complete,
+      });
       console.log("Meal selection saved successfully.");
 
       // Actualizar el estado local con el nuevo estado de `complete`
@@ -236,15 +257,15 @@ export function ServingModal({
         )
       );
 
-      const mealTypes = ['breakfast', 'lunch', 'supper'];
+      const mealTypes = ["breakfast", "lunch", "supper"];
       const mealType = mealTypes[mealNumber];
-      
+
       if (!mealType) {
         console.error("Invalid meal number:", mealNumber);
         throw new Error("Invalid meal number");
       }
 
-      residentsToTray.forEach(documentId => {
+      residentsToTray.forEach((documentId) => {
         updateMealItem(mealType, documentId, { onTray: true });
       });
       console.log("Tray updated for selected residents.");
