@@ -63,8 +63,6 @@ export function ServingModal({
     if (checkbox.current) {
       checkbox.current.indeterminate = isIndeterminate;
     }
-    console.log("Selected People:", residentsToTray);
-    console.log("Residents on Table:", residentsOntable);
   }, [residentsToTray, residentsOntable]);
 
   // Sincronizar el estado `open` con el estado del modal principal
@@ -114,8 +112,6 @@ export function ServingModal({
         )
       ) || [];
 
-    console.log("menus by Table:", menusByTable);
-
     // 3. Filtramos los residentes basados en los menús de la mesa
     const residentsInTable =
       residentsOnSeating?.filter((resident) =>
@@ -140,8 +136,6 @@ export function ServingModal({
       })
       .filter(Boolean);
     
-    console.log("Ordered Meals by Table:", orderedMealsByTable);
-
     setMealOnTable(orderedMealsByTable);
   }, [
     selectTable,

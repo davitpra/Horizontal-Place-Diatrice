@@ -1,10 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { Modal } from "./Modal";
 import { useSelectionModal } from "@/hooks/useSelectionModal";
 import { MEAL_OPTIONS } from "@/constants/mealOption";
 import { changeComplete } from "@/lib/changeComplete";
+import { getDayLunchs } from "@/lib/getDayLunchs";
+import { getMenuSchedule } from "@/lib/getMenuSchedule";
+import { date } from "@/constants/date";
 
 export function SelectionModal({
   resident,
@@ -18,13 +21,59 @@ export function SelectionModal({
 
   const [options, setOptions] = useState(MEAL_OPTIONS[0]);
 
+  const [lunchOptions, setLunchOptions] = useState([]);
+  const [supperOptions, setSupperOptions] = useState([]);
+
+  useEffect(() => {
+    const fetchMenuData = async () => {
+      const [lunchMenu, supperMenu] = await getMenuSchedule(date)
+
+      console.log("------------> lunchMenu:", lunchMenu);
+      console.log("------------> supperMenu:", supperMenu);
+
+      setLunchOptions(getDayLunchs(lunchMenu.data));
+      setSupperOptions(getDayLunchs(supperMenu.data));
+    };
+    
+    fetchMenuData();
+  }, []);
+
+  // to open or close the modal
+  const SelectionModal = useSelectionModal();
+
+  // Update meal options with fetched data
+  useEffect(() => {
+    if (lunchOptions.length > 0) {
+      const updatedLunchOptions = MEAL_OPTIONS[1].map((item) => {
+        if (item.key === "MainCourse") {
+          return { ...item, options: lunchOptions };
+        }
+        return item;
+      });
+      MEAL_OPTIONS[0] = updatedLunchOptions;
+    }
+
+    if (supperOptions.length > 0) {
+      const updatedSupperOptions = MEAL_OPTIONS[2].map((item) => {
+        if (item.key === "MainCourse") {
+          return { ...item, options: supperOptions };
+        }
+        return item;
+      });
+      MEAL_OPTIONS[1] = updatedSupperOptions;
+    }
+    // If the modal is open, update the options state to reflect any changes  
+    if (SelectionModal.isOpen) {
+      setOptions(MEAL_OPTIONS[mealNumber]);
+    }
+  }, [lunchOptions, supperOptions, SelectionModal.isOpen, mealNumber]);
+      
+
   // Set the options based on the meal number
   useEffect(() => {
     setOptions(MEAL_OPTIONS[mealNumber]);
   }, [mealNumber]);
 
-  // to open or close the modal
-  const SelectionModal = useSelectionModal();
   const [open, setOpen] = useState(SelectionModal.isOpen);
 
   // state to hold the meal selection

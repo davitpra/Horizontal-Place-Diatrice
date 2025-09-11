@@ -5,6 +5,7 @@ import { useCreateBreakfast } from "@/hooks/useCreateBreakfast";
 import { Serving } from "@/components/Serving";
 import { useCreateLunch } from "@/hooks/useCreateLunch";
 import { useCreateSupper } from "@/hooks/useCreateSupper";
+import { date } from "@/constants/date";
 
 export default async function Home() {
   let residents = [];
@@ -14,7 +15,6 @@ export default async function Home() {
   let menus = [];
 
     // let date = useGetFormattedDate();
-  let date = "2025-02-15";
 
   try {
     residents = await getAllResidents();
