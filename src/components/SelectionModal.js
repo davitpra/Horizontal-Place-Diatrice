@@ -77,16 +77,16 @@ export function SelectionModal({
         if (item.key === "option_2") {
           return { ...item, options: ["none", supperMenu.data.option_2] };
         }
-        if (item.key === "side 1") {
+        if (item.key === "side_1") {
           return { ...item, options: ["none", supperMenu.data.side_1] };
         }
-        if (item.key === "side 2") {
+        if (item.key === "side_2") {
           return { ...item, options: ["none", supperMenu.data.side_2] };
         }
-        if (item.key === "side 3") {
+        if (item.key === "side_3") {
           return { ...item, options: ["none", supperMenu.data.side_3] };
         }
-        if (item.key === "side 4") {
+        if (item.key === "side_4") {
           return { ...item, options: ["none", supperMenu.data.side_4] };
         }
         if (item.key === "dessert") {
