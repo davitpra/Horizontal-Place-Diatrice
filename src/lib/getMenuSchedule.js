@@ -6,7 +6,7 @@ export async function getMenuSchedule(date) {
   ).then((res) => {
     return [
       { meal: 'lunchMenu', data: res.data[0].Lunch },
-      { meal: 'supperMenu', data: res.data[0].Supper }
+      { meal: 'supperMenu', data: res.data[0].Dinner }
     ]
   });
 }

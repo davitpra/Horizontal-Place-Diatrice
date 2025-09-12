@@ -9,8 +9,9 @@ import { useMealBar } from "@/hooks/useMealBar";
 import { useResidentsStore } from "@/store/useResidentsStore";
 import { useDayMenusStore } from "@/store/useDayMenusStore";
 import { useMealsStore } from "@/store/useMealsStore";
+import { useMenuScheduleStore } from "@/store/useMenuScheduleStore";
 
-export function Serving({ residents, date, breakFast, menus, lunch, supper }) {
+export function Serving({ residents, date, breakFast, menus, lunch, supper, menuSchedule }) {
   // STATES
   const [currentMeals, setCurrentMeals] = useState(breakFast);
   const [residentsOnSeating, setResidentsOnSeating] = useState(residents);
@@ -25,6 +26,8 @@ export function Serving({ residents, date, breakFast, menus, lunch, supper }) {
   const setDayMenus = useDayMenusStore((state) => state.setDayMenus);
   // GET MEALS STORE FUNCTIONS
   const { setMeal, meals } = useMealsStore();
+  // FUNCTION TO SET STORE MENU SCHEDULE
+  const setMenuSchedule = useMenuScheduleStore((state) => state.setMenuSchedule);
 
   // useEffect to set the residents on the store 
   useEffect(() => {
@@ -37,6 +40,16 @@ export function Serving({ residents, date, breakFast, menus, lunch, supper }) {
     }
     storeData();
   }, [date, residents, setResidents]);
+
+  // useEffect to set the menu schedule on the store
+  useEffect(() => {
+    try {
+      setMenuSchedule(menuSchedule);
+      console.log("Menu Schedule set in store:", menuSchedule);
+    } catch (error) {
+      console.error("Error", error);
+    }
+  }, [menuSchedule]);
 
   // UseEffect to update the menus on the store
   useEffect(() => {

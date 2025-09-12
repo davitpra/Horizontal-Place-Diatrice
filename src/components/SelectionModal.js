@@ -5,9 +5,7 @@ import { Modal } from "./Modal";
 import { useSelectionModal } from "@/hooks/useSelectionModal";
 import { MEAL_OPTIONS } from "@/constants/mealOption";
 import { changeComplete } from "@/lib/changeComplete";
-import { getDayLunchs } from "@/lib/getDayLunchs";
-import { getMenuSchedule } from "@/lib/getMenuSchedule";
-import { date } from "@/constants/date";
+import { useMenuScheduleStore } from "@/store/useMenuScheduleStore";
 
 export function SelectionModal({
   resident,
@@ -19,65 +17,96 @@ export function SelectionModal({
   const ADD = "Add";
   const NONE = "none";
 
-  const [options, setOptions] = useState(MEAL_OPTIONS[0]);
-
-  const [lunchOptions, setLunchOptions] = useState([]);
-  const [supperOptions, setSupperOptions] = useState([]);
-
-  useEffect(() => {
-    const fetchMenuData = async () => {
-      const [lunchMenu, supperMenu] = await getMenuSchedule(date)
-
-      console.log("------------> lunchMenu:", lunchMenu);
-      console.log("------------> supperMenu:", supperMenu);
-
-      setLunchOptions(getDayLunchs(lunchMenu.data));
-      setSupperOptions(getDayLunchs(supperMenu.data));
-    };
-    
-    fetchMenuData();
-  }, []);
+  console.log("Orders in SelectionModal:", order);
 
   // to open or close the modal
   const SelectionModal = useSelectionModal();
 
-  // Update meal options with fetched data
+  // state to control the modal open/close
+  const [open, setOpen] = useState(SelectionModal.isOpen);
+
+  // state to hold the meal selection
+  const [meals, setMeals] = useState({});
+
+  // state to hold the meal options
+  const [options, setOptions] = useState(MEAL_OPTIONS[0]);
+
+  // Get menu data from the store
+  const [lunchMenu, supperMenu] = useMenuScheduleStore((state) => state.menuSchedule);
+
+  // Close modal when the SelectionModal state changes
   useEffect(() => {
-    if (lunchOptions.length > 0) {
+    setOpen(SelectionModal.isOpen);
+  }, [SelectionModal.isOpen]);
+
+  // Close modal when pick out of the modal
+  useEffect(() => {
+    if (!open) {
+      SelectionModal.onClose();
+    }
+  }, [open]);
+
+  // Update meal options with menu data
+  useEffect(() => {
+    if (lunchMenu.data) {
       const updatedLunchOptions = MEAL_OPTIONS[1].map((item) => {
-        if (item.key === "MainCourse") {
-          return { ...item, options: lunchOptions };
+        if (item.key === "salad") {
+          return { ...item, options: ["none", lunchMenu.data.salad] };
+        }
+        if (item.key === "soup") {
+          return { ...item, options: ["none", lunchMenu.data.soup] };
+        }
+        if (item.key === "option_1") {
+          return { ...item, options: ["none", lunchMenu.data.option_1] };
+        }
+        if (item.key === "option_2") {
+          return { ...item, options: ["none", lunchMenu.data.option_2] };
+        }
+        if (item.key === "dessert") {
+          return { ...item, options: ["none", lunchMenu.data.dessert] };
         }
         return item;
       });
-      MEAL_OPTIONS[0] = updatedLunchOptions;
+
+      MEAL_OPTIONS[1] = updatedLunchOptions;
     }
 
-    if (supperOptions.length > 0) {
+    if (supperMenu.data) {
       const updatedSupperOptions = MEAL_OPTIONS[2].map((item) => {
-        if (item.key === "MainCourse") {
-          return { ...item, options: supperOptions };
+        if (item.key === "option_1") {
+          return { ...item, options: ["none",supperMenu.data.option_1] };
+        }
+        if (item.key === "option_2") {
+          return { ...item, options: ["none", supperMenu.data.option_2] };
+        }
+        if (item.key === "side 1") {
+          return { ...item, options: ["none", supperMenu.data.side_1] };
+        }
+        if (item.key === "side 2") {
+          return { ...item, options: ["none", supperMenu.data.side_2] };
+        }
+        if (item.key === "side 3") {
+          return { ...item, options: ["none", supperMenu.data.side_3] };
+        }
+        if (item.key === "side 4") {
+          return { ...item, options: ["none", supperMenu.data.side_4] };
+        }
+        if (item.key === "dessert") {
+          return { ...item, options: ["none", supperMenu.data.dessert] };
         }
         return item;
       });
-      MEAL_OPTIONS[1] = updatedSupperOptions;
+
+      MEAL_OPTIONS[2] = updatedSupperOptions;
     }
-    // If the modal is open, update the options state to reflect any changes  
-    if (SelectionModal.isOpen) {
-      setOptions(MEAL_OPTIONS[mealNumber]);
-    }
-  }, [lunchOptions, supperOptions, SelectionModal.isOpen, mealNumber]);
-      
+  }, []);
+
 
   // Set the options based on the meal number
   useEffect(() => {
     setOptions(MEAL_OPTIONS[mealNumber]);
   }, [mealNumber]);
 
-  const [open, setOpen] = useState(SelectionModal.isOpen);
-
-  // state to hold the meal selection
-  const [meals, setMeals] = useState({});
 
   // Transform order into a format suitable for the UI
   function transformorder(preference) {
@@ -99,8 +128,8 @@ export function SelectionModal({
     return Object.entries(meals).reduce((acc, [key, value]) => {
       if (key === "FruitPlate" || key === "Yogurt" || key === "Muffing" || key === "Bacon" || key === "Pancake") {
         acc[key] = value === "Add" ? true : value === "none" ? false : value;
-      }else {
-        acc[key] = value; 
+      } else {
+        acc[key] = value;
       }
       return acc;
     }, {});
@@ -122,17 +151,7 @@ export function SelectionModal({
     }
   }, [order, index, open]);
 
-  // Close modal when the SelectionModal state changes
-  useEffect(() => {
-    setOpen(SelectionModal.isOpen);
-  }, [SelectionModal.isOpen]);
 
-  // Close modal when pick out of the modal
-  useEffect(() => {
-    if (!open) {
-      SelectionModal.onClose();
-    }
-  }, [open]);
 
   // Handle change of the meal selection
   const handleChange = (event, key) => {
@@ -154,12 +173,12 @@ export function SelectionModal({
       const savedMeals = reverseTransformorder(meals);
 
       const neworder = order.map((preference, i) =>
-        i === index 
-      ? {
-        ...preference, 
-        meals: [savedMeals],
-      }
-      : preference
+        i === index
+          ? {
+            ...preference,
+            meals: [savedMeals],
+          }
+          : preference
       );
 
       setOrder(neworder);

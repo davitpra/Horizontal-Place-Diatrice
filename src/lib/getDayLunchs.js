@@ -37,7 +37,6 @@ export async function getDayLunchs(date) {
           // description_option_1: lunch?.option_1? lunchMenu?.data.description_option_1 : lunch?.option_1,
           option_2: lunch?.option_2? lunchMenu?.data.option_2 : lunch?.option_2,
           // description_option_2: lunch?.option_2? lunchMenu?.data.description_option_2 : lunch?.option_2,
-          half_half: lunch?.half_half,
           dessert: lunch?.dessert? lunchMenu?.data.dessert : lunch?.dessert,
           Comment: lunch?.Comment,
         }),

@@ -38,11 +38,12 @@ const LUNCH = [
   { key: "Juice", options: ["none", "Tomato", "Orange", "Cramberry", "Apple"] },
   { key: "Milk", options: ["none", "regular", "lactose free"] },
   { key: "additionals", options: [""] },
-  { key: "Soup", options: ["none", "Add"] },
-  { key: "Salad", options: ["none", "Add"] },
-  { key: "Lunch", options: ["option 1", "option 2"] },
-  { key: "Dessert", options: ["Ice Cream", "Peaches", "Rice Pudding", "Jelly"] },
   { key: "Comment", options: [""] },
+  { key: "soup", options: ["none", "Add"] },
+  { key: "salad", options: ["none", "Add"] },
+  { key: "option_1", options: ["none", "Add"] },
+  { key: "option_2", options: ["none", "Add"] },
+  { key: "dessert", options: ["Ice Cream", "Peaches", "Rice Pudding", "Jelly"] },
 ];
 
 const SUPPER = [
@@ -52,6 +53,13 @@ const SUPPER = [
   { key: "Milk", options: ["none", "regular", "lactose free"] },
   { key: "additionals", options: [""] },
   { key: "Comment", options: [""] },
+  { key: "option_1", options: ["none", "Add"] },
+  { key: "option_2", options: ["none", "Add"] },
+  { key: "side_1", options: ["none", "Add"] },
+  { key: "side_2", options: ["none", "Add"] },
+  { key: "side_3", options: ["none", "Add"] },
+  { key: "side_4", options: ["none", "Add"] },
+  { key: "dessert", options: ["Ice Cream", "Peaches", "Rice Pudding", "Jelly"] },
 ];
 
 export const MEAL_OPTIONS = [BREAKFAST, LUNCH, SUPPER];

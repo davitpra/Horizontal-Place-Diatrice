@@ -6,6 +6,7 @@ import { Serving } from "@/components/Serving";
 import { useCreateLunch } from "@/hooks/useCreateLunch";
 import { useCreateSupper } from "@/hooks/useCreateSupper";
 import { date } from "@/constants/date";
+import { getMenuSchedule } from "@/lib/getMenuSchedule";
 
 export default async function Home() {
   let residents = [];
@@ -13,13 +14,14 @@ export default async function Home() {
   let lunch = [];
   let supper = [];
   let menus = [];
-
-    // let date = useGetFormattedDate();
+  let menuSchedule = [];
+  // let date = useGetFormattedDate();
 
   try {
     residents = await getAllResidents();
     menus = await useCreateMenus(residents, date);
     breakFast = await useCreateBreakfast(residents, date, menus);
+    menuSchedule = await getMenuSchedule(date)
     lunch = await useCreateLunch(residents, date, menus);
     supper = await useCreateSupper(residents, date, menus);
 
@@ -31,5 +33,5 @@ export default async function Home() {
     console.log("Error", error);
   }
 
-  return <Serving residents={residents} date ={date} breakFast={breakFast} menus={menus} lunch={lunch} supper={supper}/>
+  return <Serving residents={residents} date={date} breakFast={breakFast} menus={menus} lunch={lunch} supper={supper} menuSchedule={menuSchedule} />
 }
