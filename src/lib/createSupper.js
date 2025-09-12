@@ -1,7 +1,7 @@
 import { query } from "./strapi";
 
 export async function createSupper({date, table, full_name, documentId, supper_preferences}) {
-  //if lunch_preferences is not provided, use default values
+  //if supper_preferences is not provided, use default values
   const preferences = supper_preferences ?? {
         went_out_to_eat: false,
         onTray: false,

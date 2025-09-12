@@ -17,8 +17,6 @@ export function SelectionModal({
   const ADD = "Add";
   const NONE = "none";
 
-  console.log("Orders in SelectionModal:", order);
-
   // to open or close the modal
   const SelectionModal = useSelectionModal();
 

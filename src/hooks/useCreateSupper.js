@@ -15,15 +15,15 @@ export const useCreateSupper = async (residents, date, menus) => {
   }
 
   try {
-    // Obtener los desayunos existentes para la fecha
+    // Obtener las cenas existentes para la fecha
     let daySuppers = await getDaySuppers(date);
-    // Filtrar los menús que no tienen un desayuno asociado
-    const menusWithoutBreakfast = menus.filter((menu) => menu.supper === null);
+    // Filtrar los menús que no tienen una cena asociada
+    const menusWithoutSupper = menus.filter((menu) => menu.supper === null);
 
-    if (menusWithoutBreakfast.length > 0) {
-      // Crear desayunos para los menús que no tienen
+    if (menusWithoutSupper.length > 0) {
+      // Crear cenas para los menús que no tienen
       await Promise.all(
-        menusWithoutBreakfast.map(async (menu) => {
+        menusWithoutSupper.map(async (menu) => {
           const resident = residents.find(
             (resident) => resident.documentId === menu.resident.documentId
           );
@@ -40,7 +40,7 @@ export const useCreateSupper = async (residents, date, menus) => {
             date,
             table: resident.table,
             full_name: menu.resident.full_name,
-            Supper_preferences: resident.Supper_preferences,
+            supper_preferences: resident.Supper_preferences,
             documentId: menu.documentId,
           });
 
@@ -48,10 +48,9 @@ export const useCreateSupper = async (residents, date, menus) => {
         })
       );
 
-      // Obtener la lista actualizada de desayunos
+      // Obtener la lista actualizada de cenas
       daySuppers = await getDaySuppers(date);
     } 
-
     return daySuppers;
   } catch (error) {
     console.error("Error in useCreateSupper:", error);
