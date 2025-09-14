@@ -1,0 +1,202 @@
+
+##------------> RESIDENTS
+
+### GET ALL RESIDENTS INFO AND PREFERENCES
+GET http://localhost:1337/api/residents
+  ?populate[Breakfast_preferences][populate]=*
+  &populate[Lunch_preferences][populate]=*
+  &populate[Supper_preferences][populate]=*
+  &populate=Picture HTTP/1.1
+Authorization: Bearer xxx
+### GET ALL RESIDENTS INFO
+GET http://localhost:1337/api/residents
+  ?populate=* HTTP/1.1
+Authorization: Bearer xxx
+
+##------------> MENUS
+
+### Get all Menus
+GET http://localhost:1337/api/Menus
+  ?populate=* HTTP/1.1
+Authorization: Bearer xxx
+
+### Get all Menus for a specific day
+GET http://localhost:1337/api/Menus
+  ?filters[Date][$eq]=2025-02-15 HTTP/1.1
+Authorization: Bearer xxx
+
+### Get all Menus for a specific day with relations
+GET http://localhost:1337/api/menus
+  ?filters[Date][$eq]=2025-02-15&populate[breakfast][fields][0]=documentId
+  &populate[lunch][fields][0]=documentId
+  &populate[supper][fields][0]=documentId&populate[resident][fields][0]=full_name HTTP/1.1
+Authorization: Bearer xxx
+
+### Get all Menus for a specific resident
+GET http://localhost:1337/api/Menus
+  ?filters[resident][slug][$contains]=helen-serpa HTTP/1.1
+Authorization: Bearer xxx
+
+### POST A NEW MENU
+POST http://localhost:1337/api/Menus HTTP/1.1
+content-type: application/json
+Authorization: Bearer xxx
+
+{
+  "data": {
+    "Date": "2025-02-16",
+    "Title": "Helen Serpa-2025-02-16",
+    "slug": "helen-serpa-2025-02-16",
+    "resident": "enzh4xzu1gpuli6qz12q088a"
+  }
+}
+
+###------------> BREAKFASTS
+
+### Get all breakfasts
+GET http://localhost:1337/api/breakfasts
+  ?populate=* HTTP/1.1
+Authorization: Bearer xxx
+
+### Get a specific breakfast
+GET http://localhost:1337/api/breakfasts/slicirinj6fi9299g5iyaheh
+  ?populate=* HTTP/1.1
+Authorization: Bearer xxx
+
+### Get all breakfast for a specific day
+GET http://localhost:1337/api/breakfasts
+  ?filters[Date][$eq]=2025-02-15&populate[Breakfast][populate]=* HTTP/1.1
+Authorization: Bearer xxx
+
+### Get the basic fields for breakfast by day
+GET http://localhost:1337/api/breakfasts
+  ?filters[Date][$eq]=2025-02-15 HTTP/1.1
+Authorization: Bearer xxx
+
+### POST A NEW BREAKFAST
+POST http://localhost:1337/api/breakfasts HTTP/1.1
+content-type: application/json
+Authorization: Bearer xxx
+
+{
+  "data": {
+    "Date": "2025-02-15",
+    "title": "jhon-2025-02-15",
+    "slug": "jhon-2025-02-15",
+    "complete": false,
+    "Breakfast": {
+      "eggs": "scramble",
+      "toast": "brown",
+      "Cereals": "Oatmeal",
+      "FruitPlate": true,
+      "Yogurt": true,
+      "Muffing": true,
+      "Comment": null,
+      "Pancake": false,
+      "onTray": false,
+      "additionals": null,
+      "Bacon": null,
+      "went_out_to_eat": false
+    },
+    "menu": "zm6bvp6r4n16fwrcmvzjzh8p"
+  }
+}
+
+### CHANGE A SPECIFIC BREAKFAST
+PUT http://localhost:1337/api/breakfasts/slicirinj6fi9299g5iyaheh HTTP/1.1
+content-type: application/json
+Authorization: Bearer xxx
+
+{
+  "data": {
+    "Breakfast": {
+      "Muffing": true
+    }
+  }
+}
+
+### Get all breakfasts with drinks
+GET http://localhost:1337/api/breakfasts
+  ?populate[Breakfast][populate]=*&populate=menu HTTP/1.1
+Authorization: Bearer xxx
+
+###------------> LUNCHES
+
+### GET ALL LUNCHES
+GET http://localhost:1337/api/lunches HTTP/1.1
+Authorization: Bearer xxx
+
+### GET ALL LUNCHES FOR A SPECIFIC DAY
+GET http://localhost:1337/api/lunches
+  ?filters[Date][$eq]=2025-02-15&populate=* HTTP/1.1
+Authorization: Bearer xxx
+
+### add relation between residents and menus
+POST http://localhost:1337/api/lunches HTTP/1.1
+content-type: application/json
+Authorization: Bearer xxx
+
+{
+  "data": {
+    "Date": "2025-01-24",
+    "Title": "Helen Serpa-01/24/2025",
+    "Slug": "helen-serpa-01-24-2025",
+    "onTray": true,
+    "soup": true,
+    "salad": true,
+    "dessert": true,
+    "option_1": true,
+    "complete": true,
+    "menu": "jjb7nr6qicpb8os2wup545qh"
+  }
+}
+
+### CHANGE A SPECIFIC LUNCH
+PUT http://localhost:1337/api/lunches/sg547u1y7zog2inhnrnbwfd5 HTTP/1.1
+content-type: application/json
+Authorization: Bearer xxx
+
+{
+  "data": {
+    "onTray": true
+  }
+}
+
+###------------> SUPPERS
+
+### GET ALL SUPPERS
+GET http://localhost:1337/api/dinners HTTP/1.1
+Authorization: Bearer xxx
+
+### GET ALL SUPPERS FOR A SPECIFIC DAY
+GET http://localhost:1337/api/dinners
+  ?filters[Date][$eq]=2025-02-15&populate=* HTTP/1.1
+Authorization: Bearer xxx
+
+### add relation between residents and menus
+POST http://localhost:1337/api/dinners HTTP/1.1
+content-type: application/json
+Authorization: Bearer xxx
+
+{
+  "data": {
+    "Date": "2025-02-15",
+    "Title": "Helen Serpa-2025-02-15",
+    "slug": "helen-serpa-2025-02-15",
+    "onTray": true,
+    "option_1": true,
+    "side_1": true,
+    "side_2": true,
+    "dessert": true,
+    "complete": true,
+    "menu": "u4q5y7kvqhvaws3nr5v6rdiu"
+  }
+}
+
+###------------> MENUS CALENDAR
+
+### GET ALL MENU SCHEDULE BY DATE
+GET http://localhost:1337/api/menu-schedules
+  ?filters[Date][$eq]=2025-02-15&populate=* HTTP/1.1
+Authorization: Bearer xxx
+
