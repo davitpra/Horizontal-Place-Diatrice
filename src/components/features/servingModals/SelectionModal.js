@@ -4,7 +4,7 @@ import { useState, useEffect, use } from "react";
 import { Modal } from "@/components/ui/Modal";
 import { useSelectionModal } from "@/store/modals/useSelectionModal";
 import { MEAL_OPTIONS } from "@/constants/mealOption";
-import { changeComplete } from "@/lib/changeComplete";
+import { changeComplete } from "@/strapi/utils/changeComplete";
 import { useMenuScheduleStore } from "@/store/meals/useMenuScheduleStore";
 
 export function SelectionModal({

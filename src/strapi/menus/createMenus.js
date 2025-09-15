@@ -1,4 +1,4 @@
-import { query } from "./strapi";
+import { query } from "../strapi";
 
 
 export async function createMenus({date, full_name, documentId=null}) {

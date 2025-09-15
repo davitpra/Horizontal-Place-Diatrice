@@ -1,6 +1,6 @@
 "use client";
 
-import { changeComplete } from "@/lib/changeComplete";
+import { changeComplete } from "@/strapi/utils/changeComplete";
 import { useMealsStore } from "@/store/meals/useMealsStore";
 
 export const useHandleComplete = () => {

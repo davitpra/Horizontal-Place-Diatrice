@@ -1,5 +1,5 @@
-import { createBreakfast } from "@/lib/createBreakfast";
-import { getDayBreakfasts } from "@/lib/getDayBreakfasts";
+import { createBreakfast } from "@/strapi/meals/breakfast/createBreakfast";
+import { getDayBreakfasts } from "@/strapi/meals/breakfast/getDayBreakfasts";
 
 export const useCreateBreakfast = async (residents, date, menus) => {
   if (!residents || !Array.isArray(residents)) {

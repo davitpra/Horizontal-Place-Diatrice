@@ -1,4 +1,4 @@
-import { query } from "./strapi";
+import { query } from "../../strapi";
 
 
 export async function createBreakfast({date, table, full_name, documentId, breakFast}) {

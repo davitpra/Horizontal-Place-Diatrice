@@ -16,7 +16,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useHandleComplete } from "@/hooks/utils/useHandleComplete";
 import { useMealsStore } from "@/store/meals/useMealsStore";
-import { changeTray } from "@/lib/changeTray";
+import { changeTray } from "@/strapi/utils/changeTray";
 
 export function ServingModal({
   residentsOnSeating,

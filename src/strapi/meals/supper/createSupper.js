@@ -1,4 +1,4 @@
-import { query } from "./strapi";
+import { query } from "../../strapi";
 
 export async function createSupper({date, table, full_name, documentId, supper_preferences}) {
   //if supper_preferences is not provided, use default values

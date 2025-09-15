@@ -1,5 +1,5 @@
-import { createMenus } from "@/lib/createMenus";
-import { getDayMenus } from "@/lib/getDayMenus";
+import { createMenus } from "@/strapi/menus/createMenus";
+import { getDayMenus } from "@/strapi/menus/getDayMenus";
 
 export const useCreateMenus = async (residents, date) => {
   if (!residents || !Array.isArray(residents)) {

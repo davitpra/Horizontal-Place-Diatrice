@@ -2,7 +2,7 @@
 import { Table } from "../../components/ui/Table";
 import Title from "../../components/ui/Title";
 import { MealBar } from "../../components/ui/MealBar";
-import { getAllResidents } from "@/lib/getAllResidents";
+import { getAllResidents } from "@/strapi/residents/getAllResidents";
 
 export default async function Room() {
   const observations =[

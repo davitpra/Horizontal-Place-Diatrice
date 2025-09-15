@@ -1,4 +1,4 @@
-import { getAllResidents } from "@/lib/getAllResidents";
+import { getAllResidents } from "@/strapi/residents/getAllResidents";
 import { residents as rawData } from "../data/residents";
 import { useCreateMenus } from "@/hooks/meals/useCreateMenus";
 import { useCreateBreakfast } from "@/hooks/meals/useCreateBreakfast";
@@ -6,7 +6,7 @@ import { Serving } from "@/components/features/serving/Serving";
 import { useCreateLunch } from "@/hooks/meals/useCreateLunch";
 import { useCreateSupper } from "@/hooks/meals/useCreateSupper";
 import { date } from "@/constants/date";
-import { getMenuSchedule } from "@/lib/getMenuSchedule";
+import { getMenuSchedule } from "@/strapi/menuSchedule/getMenuSchedule";
 
 export default async function Home() {
   let residents = [];

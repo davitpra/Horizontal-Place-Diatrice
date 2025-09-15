@@ -1,5 +1,5 @@
-import { getMenuSchedule } from "./getMenuSchedule";
-import { query } from "./strapi";
+import { getMenuSchedule } from "../../menuSchedule/getMenuSchedule";
+import { query } from "../../strapi";
 
 export async function getDaySuppers(date) {
   let [lunchMenu, supperMenu] = await getMenuSchedule(date) 

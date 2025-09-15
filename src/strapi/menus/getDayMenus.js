@@ -1,4 +1,4 @@
-import { query } from "./strapi";
+import { query } from "../strapi";
 
 export async function getDayMenus(date) {
   return query(
