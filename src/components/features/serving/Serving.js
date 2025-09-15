@@ -4,12 +4,12 @@ import { ServingModal } from "@/components/features/servingModals/ServingModal";
 import { MealBar } from "@/components/ui/MealBar";
 import { TableMap } from "@/components/features/serving/TableMap";
 import Title from "@/components/ui/Title";
-import { useSeatingConfigure } from "@/hooks/useSeatingConfigure";
-import { useMealBar } from "@/hooks/useMealBar";
-import { useResidentsStore } from "@/store/useResidentsStore";
-import { useDayMenusStore } from "@/store/useDayMenusStore";
-import { useMealsStore } from "@/store/useMealsStore";
-import { useMenuScheduleStore } from "@/store/useMenuScheduleStore";
+import { useSeatingConfigure } from "@/store/seating/useSeatingConfigure";
+import { useMealBar } from "@/store/mealBar/useMealBar";
+import { useResidentsStore } from "@/store/residents/useResidentsStore";
+import { useDayMenusStore } from "@/store/meals/useDayMenusStore";
+import { useMealsStore } from "@/store/meals/useMealsStore";
+import { useMenuScheduleStore } from "@/store/meals/useMenuScheduleStore";
 
 export function Serving({ residents, date, breakFast, menus, lunch, supper, menuSchedule }) {
   // STATES

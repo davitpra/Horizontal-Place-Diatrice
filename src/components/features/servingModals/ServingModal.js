@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useEffect, useMemo, useRef, useLayoutEffect } from "react";
-import { useTableModal } from "@/hooks/useTableModal";
-import { useTableNumber } from "@/hooks/useTableNumber";
+import { useTableModal } from "@/store/modals/useTableModal";
+import { useTableNumber } from "@/store/seating/useTableNumber";
 import { Modal } from "@/components/ui/Modal";
-import { useMoreInfoModal } from "@/hooks/useMoreInfoModal";
-import { useSelectionModal } from "@/hooks/useSelectionModal";
-import { useMealBar } from "@/hooks/useMealBar";
+import { useMoreInfoModal } from "@/store/modals/useMoreInfoModal";
+import { useSelectionModal } from "@/store/modals/useSelectionModal";
+import { useMealBar } from "@/store/mealBar/useMealBar";
 import { MoreInfoModal } from "./MoreInfoModal";
 import { SelectionModal } from "./SelectionModal";
 import {
@@ -14,8 +14,8 @@ import {
   FolderPlusIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
-import { useHandleComplete } from "@/hooks/useHandleComplete";
-import { useMealsStore } from "@/store/useMealsStore";
+import { useHandleComplete } from "@/hooks/utils/useHandleComplete";
+import { useMealsStore } from "@/store/meals/useMealsStore";
 import { changeTray } from "@/lib/changeTray";
 
 export function ServingModal({

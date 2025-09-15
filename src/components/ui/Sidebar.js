@@ -17,7 +17,7 @@ import {
   MagnifyingGlassIcon,
   ChevronDownIcon,
 } from "@heroicons/react/20/solid";
-import { useSeatingConfigure } from "../../hooks/useSeatingConfigure";
+import { useSeatingConfigure } from "../../store/seating/useSeatingConfigure";
 import { ORDERSEATINGS } from "../../constants/orderseatings";
 import { usePathname } from "next/navigation";
 import Link from "next/link";

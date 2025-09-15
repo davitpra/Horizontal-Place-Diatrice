@@ -1,10 +1,10 @@
 import { getAllResidents } from "@/lib/getAllResidents";
 import { residents as rawData } from "../data/residents";
-import { useCreateMenus } from "@/hooks/useCreateMenus";
-import { useCreateBreakfast } from "@/hooks/useCreateBreakfast";
+import { useCreateMenus } from "@/hooks/meals/useCreateMenus";
+import { useCreateBreakfast } from "@/hooks/meals/useCreateBreakfast";
 import { Serving } from "@/components/features/serving/Serving";
-import { useCreateLunch } from "@/hooks/useCreateLunch";
-import { useCreateSupper } from "@/hooks/useCreateSupper";
+import { useCreateLunch } from "@/hooks/meals/useCreateLunch";
+import { useCreateSupper } from "@/hooks/meals/useCreateSupper";
 import { date } from "@/constants/date";
 import { getMenuSchedule } from "@/lib/getMenuSchedule";
 

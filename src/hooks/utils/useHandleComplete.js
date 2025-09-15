@@ -1,7 +1,7 @@
 "use client";
 
 import { changeComplete } from "@/lib/changeComplete";
-import { useMealsStore } from "@/store/useMealsStore";
+import { useMealsStore } from "@/store/meals/useMealsStore";
 
 export const useHandleComplete = () => {
   const { updateMealItem } = useMealsStore();

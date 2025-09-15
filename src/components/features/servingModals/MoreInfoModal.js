@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useMoreInfoModal } from "@/hooks/useMoreInfoModal";
+import { useMoreInfoModal } from "@/store/modals/useMoreInfoModal";
 import { Modal } from "../../ui/Modal";
-import { useMealBar } from "@/hooks/useMealBar";
-import { useHandleComplete } from "@/hooks/useHandleComplete";
+import { useMealBar } from "@/store/mealBar/useMealBar";
+import { useHandleComplete } from "@/hooks/utils/useHandleComplete";
 
 export function MoreInfoModal({
   resident,
