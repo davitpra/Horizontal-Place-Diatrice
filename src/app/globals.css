@@ -13,8 +13,6 @@
     --foreground: #171717;
   }
 }
-html {
-}
 
 body {
   background-color: var(--background);

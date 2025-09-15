@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import { ServingModal } from "./ServingModal";
-import { MealBar } from "./MealBar";
-import { TableMap } from "./TableMap";
-import Title from "./Title";
+import { ServingModal } from "@/components/features/servingModals/ServingModal";
+import { MealBar } from "@/components/ui/MealBar";
+import { TableMap } from "@/components/features/serving/TableMap";
+import Title from "@/components/ui/Title";
 import { useSeatingConfigure } from "@/hooks/useSeatingConfigure";
 import { useMealBar } from "@/hooks/useMealBar";
 import { useResidentsStore } from "@/store/useResidentsStore";

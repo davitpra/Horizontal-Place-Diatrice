@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, use } from "react";
-import { Modal } from "./Modal";
+import { Modal } from "@/components/ui/Modal";
 import { useSelectionModal } from "@/hooks/useSelectionModal";
 import { MEAL_OPTIONS } from "@/constants/mealOption";
 import { changeComplete } from "@/lib/changeComplete";

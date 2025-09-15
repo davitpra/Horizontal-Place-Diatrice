@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useEffect, useState} from "react";
-import { useTableModal } from "../hooks/useTableModal";
-import { useTableNumber } from "../hooks/useTableNumber";
+import { useTableModal } from "@/hooks/useTableModal";
+import { useTableNumber } from "@/hooks/useTableNumber";
 
 // function to count the people by table
 function countPeopleByTable(residentsOnSeating) {

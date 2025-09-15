@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect, useMemo, useRef, useLayoutEffect } from "react";
-import { useTableModal } from "../hooks/useTableModal";
-import { useTableNumber } from "../hooks/useTableNumber";
-import { Modal } from "./Modal";
+import { useTableModal } from "@/hooks/useTableModal";
+import { useTableNumber } from "@/hooks/useTableNumber";
+import { Modal } from "@/components/ui/Modal";
 import { useMoreInfoModal } from "@/hooks/useMoreInfoModal";
 import { useSelectionModal } from "@/hooks/useSelectionModal";
 import { useMealBar } from "@/hooks/useMealBar";

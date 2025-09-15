@@ -1,5 +1,5 @@
 import React from "react";
-import { Wraper } from "@/components/Wraper";
+import { Wraper } from "@/components/ui/Wraper";
 import {
   Disclosure,
   DisclosureButton,

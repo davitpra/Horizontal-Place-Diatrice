@@ -1,8 +1,8 @@
 'use client'
 import { residents } from "../../data/residents"
-import Title from "../../components/Title"
-import { TableForTrays } from "../../components/TableForTrays"
-import { MealBar } from "../../components/MealBar"
+import Title from "../../components/ui/Title"
+import { TableForTrays } from "@/components/ui/TableForTrays"
+import { MealBar } from "../../components/ui/MealBar"
   
   export default function Trays() {
     const observations =[

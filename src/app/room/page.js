@@ -1,7 +1,7 @@
 // import { residents } from "../../data/residents";
-import { Table } from "../../components/Table";
-import Title from "../../components/Title";
-import { MealBar } from "../../components/MealBar";
+import { Table } from "../../components/ui/Table";
+import Title from "../../components/ui/Title";
+import { MealBar } from "../../components/ui/MealBar";
 import { getAllResidents } from "@/lib/getAllResidents";
 
 export default async function Room() {

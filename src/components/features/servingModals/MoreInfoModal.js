@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useMoreInfoModal } from "@/hooks/useMoreInfoModal";
-import { Modal } from "./Modal";
+import { Modal } from "../../ui/Modal";
 import { useMealBar } from "@/hooks/useMealBar";
 import { useHandleComplete } from "@/hooks/useHandleComplete";
 

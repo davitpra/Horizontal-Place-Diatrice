@@ -2,7 +2,7 @@ import { getAllResidents } from "@/lib/getAllResidents";
 import { residents as rawData } from "../data/residents";
 import { useCreateMenus } from "@/hooks/useCreateMenus";
 import { useCreateBreakfast } from "@/hooks/useCreateBreakfast";
-import { Serving } from "@/components/Serving";
+import { Serving } from "@/components/features/serving/Serving";
 import { useCreateLunch } from "@/hooks/useCreateLunch";
 import { useCreateSupper } from "@/hooks/useCreateSupper";
 import { date } from "@/constants/date";
