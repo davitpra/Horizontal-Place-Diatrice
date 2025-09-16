@@ -45,7 +45,6 @@ export function Serving({ residents, date, breakFast, menus, lunch, supper, menu
   useEffect(() => {
     try {
       setMenuSchedule(menuSchedule);
-      console.log("Menu Schedule set in store:", menuSchedule);
     } catch (error) {
       console.error("Error", error);
     }

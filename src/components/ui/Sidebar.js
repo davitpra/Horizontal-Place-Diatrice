@@ -26,7 +26,8 @@ const navigation = [
   { name: "Serving", href: "/" },
   { name: "By Room", href: "/room" },
   { name: "Trays", href: "/trays" },
-  { name: "Analisis", href: "#" },
+  { name: "Summary", href: "/summary" },
+  { name: "Tables", href: "/table" },
 ];
 
 const Serving = [
