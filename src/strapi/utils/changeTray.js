@@ -1,35 +1,38 @@
-export async function changeTray({ documentId, options, onTray = undefined, condition }) {
+import { query } from "../strapi";
+
+
+// Mapa de endpoints para cada condición
+const ENDPOINT_MAP = {
+  breakfast: 'breakfasts',
+  lunch: 'lunches',
+  supper: 'dinners',
+};
+
+export async function changeTray({ documentId, onTray, condition }) {
+  // Early return si no hay documentId
+  if (!documentId) {
+    throw new Error("Missing required field: documentId");
+  }
+
+  // Early return si la condición no es válida
+  if (!(condition in ENDPOINT_MAP)) {
+    throw new Error("Invalid condition. Must be 'breakfast', 'lunch', or 'supper'.");
+  }
 
   try {
-    const response = await fetch("/api/changeTray", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ documentId, options, onTray, condition}),
-    });
+    // Construimos el body basado en la condición
+    const data = condition === 'breakfast'
+      ? { Breakfast: { onTray } }
+      : { onTray };
 
-    // Intentar parsear response JSON para dar mensajes útiles
-    let body = null;
-    try {
-      body = await response.json();
-    } catch (e) {
-      body = null;
-    }
+    const endpoint = `${ENDPOINT_MAP[condition]}/${documentId}`;
+    const body = { data };
 
-    if (!response.ok) {
-      let errMsg = `HTTP ${response.status}`;
-      if (body) {
-        if (body.error) errMsg = typeof body.error === 'string' ? body.error : JSON.stringify(body.error);
-        else if (body.message) errMsg = typeof body.message === 'string' ? body.message : JSON.stringify(body.message);
-        else errMsg = JSON.stringify(body);
-      }
-      throw new Error(errMsg);
-    }
-
-    return body;
+    const response = await query(endpoint, "PUT", body);
+    console.log(`${condition} updated:`, response);
+    return response;
   } catch (error) {
-  console.error("Error in changeTray:", error);
+    console.error(`Error updating ${condition}:`, error);
     throw error;
   }
 }

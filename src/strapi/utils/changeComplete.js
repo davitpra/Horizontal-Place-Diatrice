@@ -1,37 +1,44 @@
-export async function changeComplete({ documentId, options, complete = undefined, condition }) {
+import { query } from "../strapi";
 
-  console.log("changeComplete called with:", { documentId, options, complete, condition });
-
+export async function changeComplete({
+  documentId,
+  complete = undefined,
+  condition,
+}) {
   try {
-    const response = await fetch("/api/changeComplete", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
+    // Validar que documentId esté presente
+    if (!documentId) {
+      throw new Error("Missing required field: documentId");
+    }
+
+    const body = {
+      data: {
+        complete: complete,
       },
-      body: JSON.stringify({ documentId, options, complete, condition}),
-    });
+    };
 
-    // Intentar parsear response JSON para dar mensajes útiles
-    let body = null;
-    try {
-      body = await response.json();
-    } catch (e) {
-      body = null;
+    let endpoint = "";
+    switch (condition) {
+      case "breakfast":
+        endpoint = `breakfasts/${documentId}`;
+        break;
+      case "lunch":
+        endpoint = `lunches/${documentId}`;
+        break;
+      case "supper":
+        endpoint = `dinners/${documentId}`;
+        break;
+      default:
+        throw new Error(
+          "Invalid condition. Must be 'breakfast', 'lunch', or 'supper'."
+        );
     }
 
-    if (!response.ok) {
-      let errMsg = `HTTP ${response.status}`;
-      if (body) {
-        if (body.error) errMsg = typeof body.error === 'string' ? body.error : JSON.stringify(body.error);
-        else if (body.message) errMsg = typeof body.message === 'string' ? body.message : JSON.stringify(body.message);
-        else errMsg = JSON.stringify(body);
-      }
-      throw new Error(errMsg);
-    }
-
-    return body;
+    const response = await query(endpoint, "PUT", body);
+    console.log(`${condition} updated:`, response);
+    return response;
   } catch (error) {
-    console.error("Error in changeComplete:", error);
+    console.error(`Error updating ${condition}:`, error);
     throw error;
   }
 }

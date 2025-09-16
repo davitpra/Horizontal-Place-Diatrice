@@ -30,7 +30,7 @@ export const useCreateSupper = async (residents, date, menus) => {
 
           if (!resident) {
             console.log(
-              `Resident not found for menu: ${menu.resident.full_name}`
+              `Resident not found for supper: ${menu.resident.full_name}`
             );
             return;
           }
@@ -43,8 +43,6 @@ export const useCreateSupper = async (residents, date, menus) => {
             supper_preferences: resident.Supper_preferences,
             documentId: menu.documentId,
           });
-
-          console.log(`Supper created for ${menu.resident.full_name}`);
         })
       );
 

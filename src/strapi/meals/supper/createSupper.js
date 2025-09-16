@@ -34,7 +34,6 @@ export async function createSupper({date, table, full_name, documentId, supper_p
   try {
     const response = await query("dinners", 'POST', body);
     console.log("body", body);
-    console.log("supper created:", response);
     return response;
   } catch (error) {
     console.error("Error creating supper:", error);
