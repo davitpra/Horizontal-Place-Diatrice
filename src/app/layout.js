@@ -31,7 +31,7 @@ export default function RootLayout({ children }) {
       >
         <Sidebar>
           {children}
-          <Message title={footerTitle} message={footerMessage}/>
+          {/* <Message title={footerTitle} message={footerMessage}/> */}
         </Sidebar>
       </body>
     </html>

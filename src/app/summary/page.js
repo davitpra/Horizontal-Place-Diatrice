@@ -21,8 +21,13 @@ export default function Summary() {
     async function fetchData() {
       // Fetch meals
       const fetchedMeals = await getDayLunchs(date);
-      const meals = fetchedMeals.map((meal) =>meal.meals).flat();
-      setRawMeals(meals || []);
+      const meal = fetchedMeals.map((meal) => 
+        meal.meals.map(mealItem => ({
+          ...mealItem,
+          complete: meal.complete,
+        }))
+      ).flat();
+      setRawMeals(meal || []);
 
       // Fetch menu options
       const fetchedMenuOptions = await getMenuSchedule(date);
@@ -55,7 +60,7 @@ export default function Summary() {
   );
    
    const combinedMenu = LUNCH_WITHOUT_DRINKS.map(item => {
-     console.log(`Processing ${item.key}:`, menuOptions[item.key]);
+
      return {
        key: item.key,
        description: menuOptions[item.key] || "No option available"
@@ -84,8 +89,8 @@ export default function Summary() {
         const value = meal[key];
         if (value && value !== "none") {
           mealPreferences[key].total += 1;
-          // A meal is completed if it has a specific option selected
-          if (value !== "") {
+          // A meal is completed if it has a specific option selected and meal is complete
+          if (value !== "" && meal.complete) {
             mealPreferences[key].completed += 1;
           }
         }
