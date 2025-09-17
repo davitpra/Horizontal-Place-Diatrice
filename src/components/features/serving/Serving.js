@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { ServingModal } from "@/components/features/servingModals/ServingModal";
 import { MealBar } from "@/components/ui/MealBar";
 import { TableMap } from "@/components/features/serving/TableMap";
@@ -9,123 +9,80 @@ import { useMealBar } from "@/store/mealBar/useMealBar";
 import { useResidentsStore } from "@/store/residents/useResidentsStore";
 import { useDayMenusStore } from "@/store/meals/useDayMenusStore";
 import { useMealsStore } from "@/store/meals/useMealsStore";
-import { useMenuScheduleStore } from "@/store/meals/useMenuScheduleStore";
 
-export function Serving({ residents, date, breakFast, menus, lunch, supper, menuSchedule }) {
-  // STATES
-  const [currentMeals, setCurrentMeals] = useState(breakFast);
-  const [residentsOnSeating, setResidentsOnSeating] = useState(residents);
-  const [mealsOnSeating, setMealsOnSeating] = useState([]);
-  const [menusOnSeating, setMenusOnSeating] = useState([]);
-  const [condition, setCondition] = useState("breakfast");
-  const observations = ["The chair positions may not be correct"];
+const MEAL_TYPES = {
+  BREAKFAST: 'breakfast',
+  LUNCH: 'lunch',
+  SUPPER: 'supper'
+};
 
-  // FUNCTION TO SET STORE RESIDENTS
-  const setResidents = useResidentsStore((state) => state.setResidents);
-  // FUCTION TO SET STORE MENUS
-  const setDayMenus = useDayMenusStore((state) => state.setDayMenus);
-  // GET MEALS STORE FUNCTIONS
-  const { setMeal, meals } = useMealsStore();
-  // FUNCTION TO SET STORE MENU SCHEDULE
-  const setMenuSchedule = useMenuScheduleStore((state) => state.setMenuSchedule);
+const MEAL_TYPE_BY_NUMBER = [
+  MEAL_TYPES.BREAKFAST,
+  MEAL_TYPES.LUNCH,
+  MEAL_TYPES.SUPPER
+];
 
-  // useEffect to set the residents on the store 
-  useEffect(() => {
-    async function storeData() {
-      try {
-        setResidents(residents);
-      } catch (error) {
-        console.error("Error", error);
-      }
-    }
-    storeData();
-  }, [date, residents, setResidents]);
+export function Serving() {
+  // Get data from stores
+  const { meals } = useMealsStore();
+  const residents = useResidentsStore((state) => state.residents);
+  const menus = useDayMenusStore((state) => state.dayMenus);
+  
+  // Get UI state from stores
+  const selectedSeating = useSeatingConfigure((state) => state.seating);
+  const selectedMealNumber = useMealBar((state) => state.mealNumber);
 
-  // useEffect to set the menu schedule on the store
-  useEffect(() => {
-    try {
-      setMenuSchedule(menuSchedule);
-    } catch (error) {
-      console.error("Error", error);
-    }
-  }, [menuSchedule]);
+  // Local state
+  const [currentMealType, setCurrentMealType] = useState(MEAL_TYPES.BREAKFAST);
+  const [currentMeals, setCurrentMeals] = useState(meals[MEAL_TYPES.BREAKFAST]);
 
-  // UseEffect to update the menus on the store
-  useEffect(() => {
-    try {
-      setDayMenus(menus);
-    } catch (error) {
-      console.error("Error", error);
-    }
-  }, [menus, setDayMenus]);
+  // Filter residents by seating
+  const residentsInSeating = useMemo(() => 
+    residents.filter(person => person.Seating === selectedSeating),
+    [residents, selectedSeating]
+  );
 
-  // UseEffect to update meals in the store
-  useEffect(() => {
-    try {
-      setMeal('breakfast', breakFast);
-      setMeal('lunch', lunch);
-      setMeal('supper', supper);
-    } catch (error) {
-      console.error("Error updating meals:", error);
-    }
-  }, [breakFast, lunch, supper, setMeal]);
-
-  // to get the seating number
-  const onSeating = useSeatingConfigure((state) => state.seating);
-  // to get the meal number of the meal bar
-  const mealNumber = useMealBar((state) => state.mealNumber);
-  // to get the residents on the store
-  const storeResidents = useResidentsStore((state) => state.residents);
-  // to get the menus on the store
-  const dayMenus = useDayMenusStore((state) => state.dayMenus);
-
-  // SET MEALS AND CONDITION BASED ON MEAL NUMBER
-  useEffect(() => {
-    const mealTypes = ['breakfast', 'lunch', 'supper'];
-    const mealType = mealTypes[mealNumber] || 'breakfast';
-    
-    setCondition(mealType);
-    setCurrentMeals(meals[mealType] || []);
-  }, [mealNumber, meals]);
-
-  // FILTER RESIDENTS BY SEATING  
-  useEffect(() => {
-    const residentsBySeating = storeResidents.filter(
-      (person) => person.Seating === onSeating
-    );
-    setResidentsOnSeating(residentsBySeating);
-  }, [storeResidents, onSeating]);
-
-  // FILTER MEALS BY SEATING AND MEAL NUMBER
-  useEffect(() => {
-    const menusBySeating = dayMenus.filter((menu) =>
-      residentsOnSeating.some(
-        (resident) => resident.documentId === menu.resident?.documentId
+  // Filter menus by residents in seating
+  const menusInSeating = useMemo(() => 
+    menus.filter(menu => 
+      residentsInSeating.some(
+        resident => resident.documentId === menu.resident?.documentId
       )
-    );
+    ),
+    [menus, residentsInSeating]
+  );
 
-    setMenusOnSeating(menusBySeating);
-
-    const mealsBySeating = currentMeals.filter((meal) =>
-      menusBySeating.some(
-        (menu) => menu?.[condition]?.documentId === meal.documentId
+  // Filter meals by menus in seating
+  const mealsInSeating = useMemo(() => 
+    currentMeals.filter(meal =>
+      menusInSeating.some(
+        menu => menu?.[currentMealType]?.documentId === meal.documentId
       )
-    );
+    ),
+    [currentMeals, menusInSeating, currentMealType]
+  );
 
-    setMealsOnSeating(mealsBySeating);
-  }, [residentsOnSeating, dayMenus, currentMeals, condition]);
+  // Update current meal type and meals when meal number changes
+  useEffect(() => {
+    const newMealType = MEAL_TYPE_BY_NUMBER[selectedMealNumber] || MEAL_TYPES.BREAKFAST;
+    setCurrentMealType(newMealType);
+    setCurrentMeals(meals[newMealType] || []);
+  }, [selectedMealNumber, meals]);
 
   return (
     <>
       <ServingModal
-        residentsOnSeating={residentsOnSeating}
-        menusOnSeating={menusOnSeating}
-        mealsOnSeating={mealsOnSeating}
-        condition={condition}
+        residentsOnSeating={residentsInSeating}
+        menusOnSeating={menusInSeating}
+        mealsOnSeating={mealsInSeating}
+        condition={currentMealType}
       />
       <MealBar />
-      <TableMap meal={mealsOnSeating} />
-      <Title observations={observations} className="mb-4" />
+      <TableMap meal={mealsInSeating} />
+      <Title 
+        observations={["The chair positions may not be correct"]} 
+        className="mb-4" 
+      />
     </>
   );
 }
