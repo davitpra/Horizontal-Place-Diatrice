@@ -2,13 +2,11 @@
 import Title from "../../components/ui/Title";
 import { MealBar } from "../../components/ui/MealBar";
 import { Wraper } from "@/components/ui/Wraper";
-import { getDayLunchs } from "@/strapi/meals/lunch/getDayLunchs";
-import { date } from "@/constants/date";
 import { useEffect, useState } from "react";
-import { getMenuSchedule } from "@/strapi/menuSchedule/getMenuSchedule";
 import { useMealBar } from "@/store/mealBar/useMealBar";
 import { useCalculateMealStats } from "@/hooks/utils/useCalculateMealStats";
 import { useMealsStore } from "@/store/meals/useMealsStore";
+import { useMenuScheduleStore } from "@/store/meals/useMenuScheduleStore";
 
 export default function Summary() {
   const [meals, setMeals] = useState([]); // Estado para almacenar las estadísticas de las comidas
@@ -17,45 +15,37 @@ export default function Summary() {
 
   const mealStore = useMealsStore(state => state.meals);
   const { breakfast, lunch, supper } = mealStore;
+  const menuSchedule = useMenuScheduleStore(state => state.menuSchedule);
 
   const mealNumber = useMealBar(state => state.mealNumber);
 
-  // Efecto para cargar los datos iniciales
-  useEffect(() => {
-    async function fetchData() {
-      // Fetch meals
-      const fetchedMeals = await getDayLunchs(date);
-      const meal = fetchedMeals.map((meal) => 
-        meal.meals.map(mealItem => ({
-          ...mealItem,
-          complete: meal.complete,
-        }))
-      ).flat();
-
-      setRawMeals(meal || []);
-
-      // Fetch menu options
-      const fetchedMenuOptions = await getMenuSchedule(date);
-      const menuData = fetchedMenuOptions[0]?.data || {};
-      setMenuOptions(menuData);
-    }
-
-    fetchData();
-  }, []);
 
   // Efecto para cargar las comidas del storage según el número de comida seleccionado
   useEffect(() => {
     const meals = mealNumber === 0? breakfast : mealNumber === 1? lunch : supper;
-    console.log('------> meals', meals);
+    const mealsWithComplete = meals.map(meal => 
+      meal.meals.map(mealItem => ({
+        ...mealItem,
+        complete: meal.complete,
+      }))
+    ).flat();
+    setRawMeals(mealsWithComplete || []);
+
+    if (mealNumber > 0) {
+      const menuOptions = menuSchedule[mealNumber - 1]?.data || {};
+      setMenuOptions(menuOptions);
+    } else {
+      setMenuOptions({});
+    }
   }, [mealNumber]);
 
   // Efecto para calcular las estadísticas cuando cambian los datos
   useEffect(() => {
     if (rawMeals.length > 0 && Object.keys(menuOptions).length > 0) {
-      const stats = useCalculateMealStats(rawMeals, menuOptions);
+      const stats = useCalculateMealStats(rawMeals, menuOptions, mealNumber);
       setMeals(stats);
     }
-  }, [rawMeals, menuOptions]);
+  }, [mealNumber, rawMeals, menuOptions]);
 
   const observations = [
     "Overview of the meals being served, meal preferences and dietary needs.",
