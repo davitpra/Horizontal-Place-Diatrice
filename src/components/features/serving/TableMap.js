@@ -29,7 +29,9 @@ function calculateCompletedByTable(meal) {
 
 export function TableMap({ meal }) {
 
-  const [residentsByTable, setResidentsByTable] = useState(countPeopleByTable(meal));
+  const residentsOnSeating = meal.filter((meal) => !meal.onTray && !meal.went_out_to_eat);
+  
+  const [residentsByTable, setResidentsByTable] = useState(countPeopleByTable(residentsOnSeating));
   const [completedByTable, setCompletedByTable] = useState({});
   // to open or close the modal
   const tableModal = useTableModal();
@@ -40,21 +42,21 @@ export function TableMap({ meal }) {
   const tablesNumbers = Array.from({ length: 17 }, (_, i) => i + 1);
 
   useEffect(() => {
-    const peopleByTable = countPeopleByTable(meal);
+    const peopleByTable = countPeopleByTable(residentsOnSeating);
     setResidentsByTable((prev) => {
       const isEqual = JSON.stringify(prev) === JSON.stringify(peopleByTable);
       return isEqual ? prev : peopleByTable;
     });
-  }, [meal]);
+  }, [residentsOnSeating]);
 
   useEffect(() => {
-    const newCompletedByTable = calculateCompletedByTable(meal);
+    const newCompletedByTable = calculateCompletedByTable(residentsOnSeating);
     // Actualizar el estado solo si el valor cambia
     setCompletedByTable((prev) => {
       const isEqual = JSON.stringify(prev) === JSON.stringify(newCompletedByTable);
       return isEqual ? prev : newCompletedByTable;
     });
-  }, [meal]);
+  }, [residentsOnSeating]);
 
   // function to toggle the modal
   const toggleModal = useCallback(() => {

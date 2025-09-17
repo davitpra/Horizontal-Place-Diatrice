@@ -7,12 +7,16 @@ import { date } from "@/constants/date";
 import { useEffect, useState } from "react";
 import { getMenuSchedule } from "@/strapi/menuSchedule/getMenuSchedule";
 import { useMealBar } from "@/store/mealBar/useMealBar";
-import { useCalculateMealStats } from "@/hooks/useCalculateMealStats";
+import { useCalculateMealStats } from "@/hooks/utils/useCalculateMealStats";
+import { useMealsStore } from "@/store/meals/useMealsStore";
 
 export default function Summary() {
   const [meals, setMeals] = useState([]); // Estado para almacenar las estadísticas de las comidas
   const [menuOptions, setMenuOptions] = useState({}); // Estado para almacenar las opciones del menu
   const [rawMeals, setRawMeals] = useState([]);
+
+  const mealStore = useMealsStore(state => state.meals);
+  const { breakfast, lunch, supper } = mealStore;
 
   // Efecto para cargar los datos iniciales
   useEffect(() => {

@@ -97,11 +97,10 @@ export function ServingModal({
 
   // Filtrar menús, residentes y comidas por mesa seleccionada
   useEffect(() => {
-    // 1. Primero filtramos las comidas por mesa y que no estén en bandeja
+    // 1. Primero filtramos las comidas por mesa y que no estén fuera 
     const mealsByTable =
       mealsOnSeating?.filter((meal) => 
-        meal.table === selectTable && 
-        !meal.onTray // Filtramos las comidas que ya están en bandeja
+        meal.table === selectTable && !meal.went_out_to_eat
       ) || [];
 
     // 2. Luego filtramos los menús que tienen comidas en esta mesa
@@ -119,7 +118,7 @@ export function ServingModal({
           (menu) => menu.resident.documentId === resident.documentId
         )
       ) || [];
-    
+
     setResidentsOnTable(residentsInTable);
 
     // 4. Aseguramos que las comidas estén en el mismo orden que los residentes
@@ -131,11 +130,11 @@ export function ServingModal({
         const meal = mealsByTable.find(
           (meal) => meal.documentId === residentMenu?.[condition]?.documentId
         );
-        // Solo incluimos la comida si no está en bandeja
-        return meal && !meal.onTray ? meal : null;
+       
+        return meal;
       })
       .filter(Boolean);
-    
+
     setMealOnTable(orderedMealsByTable);
   }, [
     selectTable,
@@ -180,6 +179,7 @@ export function ServingModal({
           filterDrinks: filteredMeals,
           complete: preference.complete,
           documentId: preference.documentId,
+          onTray: preference.onTray,
         };
       });
     } catch (error) {
@@ -227,9 +227,9 @@ export function ServingModal({
   const handleChangeToTray = async () => {
     console.log("Changing to tray for selected residents:", residentsToTray);
     try {
-      const updatedTray = residentsToTray.map((documentId) => ({
-        documentId,
-        onTray: true,
+      const updatedTray = residentsToTray.map(({documentId, onTray} = {}) => ({
+        documentId: documentId,
+        onTray: !onTray,
       }));
 
       console.log("Updated Tray Preferences:", updatedTray);
@@ -252,9 +252,9 @@ export function ServingModal({
         throw new Error("Invalid meal number");
       }
 
-      // Actualizar el store, esto automáticamente filtrará los items con onTray=true
-      residentsToTray.forEach((documentId) => {
-        updateMealItem(mealType, documentId, { onTray: true });
+      // Actualizar el store con el nuevo estado de onTray
+      residentsToTray.forEach(({documentId, onTray} = {}) => {
+        updateMealItem(mealType, documentId, { onTray: !onTray });
       });
 
       // Cerrar el modal después de actualizar
@@ -274,7 +274,7 @@ export function ServingModal({
     }
   };
 
-  // Renderizar el modal principal con la tabla de residentes y pedidos
+   // Renderizar el modal principal con la tabla de residentes y pedidos
   return (
     <Modal
       isOpen={open}
@@ -303,7 +303,9 @@ export function ServingModal({
                             setChecked(false);
                           } else {
                             setResidentsToTray(
-                              (updateMealOnTable || []).map((r) => r.documentId)
+                              (updateMealOnTable || []).map((r) => 
+                                ({documentId: r.documentId, onTray: r.onTray})
+                              )
                             );
                             setChecked(true);
                           }
@@ -337,18 +339,16 @@ export function ServingModal({
                         <input
                           type="checkbox"
                           className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
-                          checked={residentsToTray.includes(
-                            updateMealOnTable[index]?.documentId
-                          )}
+                          checked={residentsToTray.some(({documentId, onTray}) => documentId === updateMealOnTable[index]?.documentId && onTray === updateMealOnTable[index]?.onTray)}
                           onChange={(e) => {
-                            const id = updateMealOnTable[index].documentId;
+                            const {documentId, onTray} = updateMealOnTable[index];
                             setResidentsToTray((prev) => {
                               if (e.target.checked) {
                                 // evitar duplicados
-                                if (prev.includes(id)) return prev;
-                                return [...prev, id];
+                                if (prev.includes({documentId: documentId})) return prev;
+                                return [...prev, {documentId: documentId, onTray: onTray}];
                               } else {
-                                return prev.filter((pid) => pid !== id);
+                                return prev.filter(({documentId}) => documentId !== documentId);
                               }
                             });
                           }}
@@ -393,12 +393,19 @@ export function ServingModal({
                           )}
                         </div>
                         <div className="ml-4">
-                          <div className="font-medium text-gray-900">
-                            {resident.full_name}
-                          </div>
-                          <div className="mt-1 text-gray-500">
-                            Room {resident.roomId}
-                          </div>
+                          <p className="font-medium text-gray-900">
+                            {resident.full_name} 
+
+                          </p>
+                          <p className="mt-1 text-gray-500">
+                            Room {resident.roomId} 
+                            {updateMealOnTable[index]?.onTray ? (
+                              <span className="ml-2 rounded-md bg-yellow-50 px-1.5 py-0.5 text-xs font-medium text-yellow-800 inset-ring inset-ring-yellow-600/20 dark:bg-yellow-400/10 dark:text-yellow-500 dark:inset-ring-yellow-400/20">
+                                on tray
+                              </span>
+                            ) : null}
+                          </p>
+
                         </div>
                       </div>
                     </td>
@@ -446,11 +453,10 @@ export function ServingModal({
                         onClick={() => {
                           handleComplete(updateMealOnTable, index);
                         }}
-                        className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${
-                          updateMealOnTable[index]?.complete
+                        className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${updateMealOnTable[index]?.complete
                             ? "bg-green-50 text-green-700 ring-green-600/20"
                             : "bg-gray-50 text-gray-700 ring-gray-600/20"
-                        }`}
+                          }`}
                       >
                         {updateMealOnTable[index]?.complete
                           ? "Complete"

@@ -11,7 +11,7 @@ export const useMealsStore = create((set) => ({
       meals: {
         ...state.meals,
         [type]: Array.isArray(meals) 
-          ? meals.filter(meal => meal?.onTray !== true && meal?.went_out_to_eat !== true)
+          ? meals
           : []
       }
     })),
@@ -26,9 +26,7 @@ export const useMealsStore = create((set) => ({
       return {
         meals: {
           ...state.meals,
-          [type]: updatedMeals.filter(meal => 
-            meal?.onTray !== true && meal?.went_out_to_eat !== true
-          )
+          [type]: updatedMeals
         }
       };
     })
