@@ -18,6 +18,8 @@ export default function Summary() {
   const mealStore = useMealsStore(state => state.meals);
   const { breakfast, lunch, supper } = mealStore;
 
+  const mealNumber = useMealBar(state => state.mealNumber);
+
   // Efecto para cargar los datos iniciales
   useEffect(() => {
     async function fetchData() {
@@ -29,6 +31,7 @@ export default function Summary() {
           complete: meal.complete,
         }))
       ).flat();
+
       setRawMeals(meal || []);
 
       // Fetch menu options
@@ -39,6 +42,12 @@ export default function Summary() {
 
     fetchData();
   }, []);
+
+  // Efecto para cargar las comidas del storage según el número de comida seleccionado
+  useEffect(() => {
+    const meals = mealNumber === 0? breakfast : mealNumber === 1? lunch : supper;
+    console.log('------> meals', meals);
+  }, [mealNumber]);
 
   // Efecto para calcular las estadísticas cuando cambian los datos
   useEffect(() => {
