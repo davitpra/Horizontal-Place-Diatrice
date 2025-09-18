@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { ServingModal } from "@/components/features/servingModals/ServingModal";
 import { MealBar } from "@/components/ui/MealBar";
 import { TableMap } from "@/components/features/serving/TableMap";
@@ -9,6 +9,7 @@ import { useMealBar } from "@/store/mealBar/useMealBar";
 import { useResidentsStore } from "@/store/residents/useResidentsStore";
 import { useDayMenusStore } from "@/store/meals/useDayMenusStore";
 import { useMealsStore } from "@/store/meals/useMealsStore";
+import { useSeatingFilters } from "@/hooks/utils/useSeatingFilters";
 
 const MEAL_TYPES = {
   BREAKFAST: 'breakfast',
@@ -25,8 +26,6 @@ const MEAL_TYPE_BY_NUMBER = [
 export function Serving() {
   // Get data from stores
   const { meals } = useMealsStore();
-  const residents = useResidentsStore((state) => state.residents);
-  const menus = useDayMenusStore((state) => state.dayMenus);
   
   // Get UI state from stores
   const selectedSeating = useSeatingConfigure((state) => state.seating);
@@ -36,31 +35,12 @@ export function Serving() {
   const [currentMealType, setCurrentMealType] = useState(MEAL_TYPES.BREAKFAST);
   const [currentMeals, setCurrentMeals] = useState(meals[MEAL_TYPES.BREAKFAST]);
 
-  // Filter residents by seating
-  const residentsInSeating = useMemo(() => 
-    residents.filter(person => person.Seating === selectedSeating),
-    [residents, selectedSeating]
-  );
-
-  // Filter menus by residents in seating
-  const menusInSeating = useMemo(() => 
-    menus.filter(menu => 
-      residentsInSeating.some(
-        resident => resident.documentId === menu.resident?.documentId
-      )
-    ),
-    [menus, residentsInSeating]
-  );
-
-  // Filter meals by menus in seating
-  const mealsInSeating = useMemo(() => 
-    currentMeals.filter(meal =>
-      menusInSeating.some(
-        menu => menu?.[currentMealType]?.documentId === meal.documentId
-      )
-    ),
-    [currentMeals, menusInSeating, currentMealType]
-  );
+  // Get filtered data based on seating
+  const { residentsInSeating, menusInSeating, mealsInSeating } = useSeatingFilters({
+    meals: currentMeals,
+    selectedSeating,
+    currentMealType,
+  });
 
   // Update current meal type and meals when meal number changes
   useEffect(() => {

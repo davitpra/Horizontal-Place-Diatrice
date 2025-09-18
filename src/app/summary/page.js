@@ -9,14 +9,15 @@ import { useMealsStore } from "@/store/meals/useMealsStore";
 import { useMenuScheduleStore } from "@/store/meals/useMenuScheduleStore";
 
 export default function Summary() {
-  const [meals, setMeals] = useState([]); // Estado para almacenar las estadísticas de las comidas
-  const [menuOptions, setMenuOptions] = useState({}); // Estado para almacenar las opciones del menu
-  const [rawMeals, setRawMeals] = useState([]); // Estado para calcular las comidas completadas. 
-
   // Store para obtener las comidas y el menu schedule
   const mealStore = useMealsStore(state => state.meals);
   const { breakfast, lunch, supper } = mealStore;
   const menuSchedule = useMenuScheduleStore(state => state.menuSchedule);
+
+  const [meals, setMeals] = useState([]); // Estado para almacenar las estadísticas de las comidas
+  const [menuOptions, setMenuOptions] = useState({}); // Estado para almacenar las opciones del menu
+  const [rawMeals, setRawMeals] = useState([]); // Estado para calcular las comidas completadas. 
+
 
   // Store para obtener el número de comida seleccionado
   const mealNumber = useMealBar(state => state.mealNumber);
