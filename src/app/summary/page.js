@@ -104,7 +104,7 @@ export default function Summary() {
                 <tbody className="divide-y divide-gray-200 bg-white">
                   {meals.length > 0 ? (
                     meals.map((stat) => (
-                      <tr key={stat.preference}>
+                      <tr key={stat.id}>
                         <td className="py-3.5 pr-3 text-center text-sm font-medium text-gray-900">
                           {stat.preference}
                         </td>

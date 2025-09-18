@@ -15,52 +15,84 @@ export const calculateMealStats = (rawMeals, menuOptions, mealNumber) => {
         "Milk",
         "additionals",
         "Comment",
+        "Cereals",
+        "Yogurt",
+        "Muffing",
       ].includes(item.key)
   );
 
   if (!rawMeals?.length) return [];
 
-  console.log('-----------> MENUOPTIONS_WITHOUT_DRINKS', MENUOPTIONS_WITHOUT_DRINKS);
-
   const combinedMenu = MENUOPTIONS_WITHOUT_DRINKS.map((item) => {
-    return {
+
+    if (menuOptions[item.key]) {
+    return [{
       key: item.key,
       description: menuOptions[item.key] || "No option available",
-    };
+    }];
+    }
+
+    return item.options
+      .filter(option => option !== "none")
+      .map((option) => {
+        if (option === "Add") {
+          return {
+            key: item.key,
+            description: item.key,
+          }
+        } else {
+          return {
+            key: item.key,
+            description: option,
+          }
+        }
+      })
   });
 
   // Initialize statistics object based on LUNCH array
-  const mealPreferences = {};
+  const mealPreferences = [];
 
-  combinedMenu.forEach(({ key, description }) => {
-    // Initialize the preference counter for this key
-    mealPreferences[key] = {
-      description: description,
-      completed: 0,
-      total: 0,
-    };
+  combinedMenu.forEach((menuArray) => {
+    menuArray.forEach(({ key, description }) => {
+        // Create a unique identifier by combining key and description
+        const uniqueKey = `${key}-${description}`;
+        mealPreferences.push({
+          uniqueKey,
+          key,
+          description,
+          completed: 0,
+          total: 0,
+        });
+    });
   });
 
   // Count preferences
   rawMeals.forEach((meal) => {
-    combinedMenu.forEach(({ key }) => {
-      const value = meal[key];
-      if (value && value !== "none") {
-        mealPreferences[key].total += 1;
-        // A meal is completed if it has a specific option selected and meal is complete
-        if (value !== "" && meal.complete) {
-          mealPreferences[key].completed += 1;
+    combinedMenu.forEach((menuArray) => {
+      menuArray.forEach(({ key, description }) => {
+        const value = meal[key];
+        if (value === description) {
+          const uniqueKey = `${key}-${description}`;
+          const preference = mealPreferences.find((p) => p.uniqueKey === uniqueKey);
+          if (preference) {
+            preference.total += 1;
+            // A meal is completed if it has a specific option selected and meal is complete
+            if (meal.complete) {
+              preference.completed += 1;
+            }
+          }
         }
-      }
+      });
     });
   });
 
   // Convert to array format for table
-  return Object.entries(mealPreferences).map(([preference, stats]) => ({
-    preference,
-    description: stats.description,
-    totalAmount: stats.total,
-    completed: stats.completed,
-    toComplete: stats.total - stats.completed,
+  return mealPreferences.map(({ uniqueKey, key, description, completed, total }) => ({
+    id: uniqueKey, // Add unique key for React rendering
+    preference: key,
+    description,
+    totalAmount: total,
+    completed,
+    toComplete: total - completed,
   }));
 };
