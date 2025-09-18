@@ -1,11 +1,12 @@
 import { MEAL_OPTIONS } from "@/constants/mealOption";
 
-export const useCalculateMealStats = (rawMeals, menuOptions, mealNumber) => {
-  const MENUOPTIONS = MEAL_OPTIONS[mealNumber];
-
-  console.log('rawMeals', rawMeals);
+export const calculateMealStats = (rawMeals, menuOptions, mealNumber) => {
+  if (!rawMeals?.length) return [];
+  
+  const currentMenuOptions = MEAL_OPTIONS[mealNumber];
+  
   // Filter out drink options from LUNCH for meal preference statistics
-  const MENUOPTIONS_WITHOUT_DRINKS = MENUOPTIONS.filter(
+  const MENUOPTIONS_WITHOUT_DRINKS = currentMenuOptions.filter(
     (item) =>
       ![
         "water",
@@ -17,14 +18,16 @@ export const useCalculateMealStats = (rawMeals, menuOptions, mealNumber) => {
       ].includes(item.key)
   );
 
-  const combinedMenu = MENUOPTIONS_WITHOUT_DRINKS.map(item => {
+  if (!rawMeals?.length) return [];
+
+  console.log('-----------> MENUOPTIONS_WITHOUT_DRINKS', MENUOPTIONS_WITHOUT_DRINKS);
+
+  const combinedMenu = MENUOPTIONS_WITHOUT_DRINKS.map((item) => {
     return {
       key: item.key,
-      description: menuOptions[item.key] || "No option available"
+      description: menuOptions[item.key] || "No option available",
     };
   });
-
-  if (!rawMeals?.length) return [];
 
   // Initialize statistics object based on LUNCH array
   const mealPreferences = {};

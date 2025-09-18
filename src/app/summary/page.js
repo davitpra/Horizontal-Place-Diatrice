@@ -4,21 +4,22 @@ import { MealBar } from "../../components/ui/MealBar";
 import { Wraper } from "@/components/ui/Wraper";
 import { useEffect, useState } from "react";
 import { useMealBar } from "@/store/mealBar/useMealBar";
-import { useCalculateMealStats } from "@/hooks/utils/useCalculateMealStats";
+import { calculateMealStats } from "@/hooks/utils/calculateMealStats";
 import { useMealsStore } from "@/store/meals/useMealsStore";
 import { useMenuScheduleStore } from "@/store/meals/useMenuScheduleStore";
 
 export default function Summary() {
   const [meals, setMeals] = useState([]); // Estado para almacenar las estadísticas de las comidas
   const [menuOptions, setMenuOptions] = useState({}); // Estado para almacenar las opciones del menu
-  const [rawMeals, setRawMeals] = useState([]);
+  const [rawMeals, setRawMeals] = useState([]); // Estado para calcular las comidas completadas. 
 
+  // Store para obtener las comidas y el menu schedule
   const mealStore = useMealsStore(state => state.meals);
   const { breakfast, lunch, supper } = mealStore;
   const menuSchedule = useMenuScheduleStore(state => state.menuSchedule);
 
+  // Store para obtener el número de comida seleccionado
   const mealNumber = useMealBar(state => state.mealNumber);
-
 
   // Efecto para cargar las comidas del storage según el número de comida seleccionado
   useEffect(() => {
@@ -29,20 +30,25 @@ export default function Summary() {
         complete: meal.complete,
       }))
     ).flat();
+    // Setear las comidas con el estado de complete.
     setRawMeals(mealsWithComplete || []);
 
+    // Configurar menuOptions basado en el mealNumber
     if (mealNumber > 0) {
       const menuOptions = menuSchedule[mealNumber - 1]?.data || {};
       setMenuOptions(menuOptions);
     } else {
-      setMenuOptions({});
+      // Para breakfast (mealNumber === 0), usar el primer elemento del menuSchedule
+      const breakfastOptions = menuSchedule[0]?.data || {};
+      setMenuOptions(breakfastOptions);
     }
-  }, [mealNumber]);
+  }, [mealNumber, breakfast, lunch, supper, menuSchedule]);
+
 
   // Efecto para calcular las estadísticas cuando cambian los datos
   useEffect(() => {
     if (rawMeals.length > 0 && Object.keys(menuOptions).length > 0) {
-      const stats = useCalculateMealStats(rawMeals, menuOptions, mealNumber);
+      const stats = calculateMealStats(rawMeals, menuOptions, mealNumber);
       setMeals(stats);
     }
   }, [mealNumber, rawMeals, menuOptions]);
