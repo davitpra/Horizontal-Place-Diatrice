@@ -12,7 +12,7 @@ import {
   PopoverButton,
   PopoverPanel,
 } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, BellIcon, UserIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import {
   MagnifyingGlassIcon,
   ChevronDownIcon,
@@ -131,13 +131,9 @@ export function Sidebar({ children }) {
                         href="#"
                         className="flex items-center gap-x-4 px-6 py-3 text-sm/6 font-semibold text-gray-900 hover:bg-gray-50"
                       >
-                        <img
-                          alt=""
-                          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                          className="size-8 rounded-full bg-gray-50"
-                        />
+                        <UserIcon className="size-8" />
                         <span className="sr-only">Your profile</span>
-                        <span aria-hidden="true">Tom Cook</span>
+                        <span aria-hidden="true">Davit Prado</span>
                       </a>
                     </li>
                   </ul>
@@ -158,37 +154,33 @@ export function Sidebar({ children }) {
             <Bars3Icon aria-hidden="true" className="size-6" />
           </button>
 
-          {showSeating && (
-            <>
-              {/* Seating label */}
-              <Popover className="relative">
-                <PopoverButton className="inline-flex items-center gap-x-1 text-sm/6 font-semibold text-gray-900">
-                  <span>{seatingLabel}</span>
-                  <ChevronDownIcon aria-hidden="true" className="size-5" />
-                </PopoverButton>
+          {/* Seating label */}
+          <Popover className="relative">
+            <PopoverButton className="inline-flex items-center gap-x-1 text-sm/6 font-semibold text-gray-900">
+              <span>{seatingLabel}</span>
+              <ChevronDownIcon aria-hidden="true" className="size-5" />
+            </PopoverButton>
 
-                <PopoverPanel
-                  transition
-                  className="absolute left-1/2 z-10 mt-5 flex w-screen max-w-min -translate-x-1/2 px-4 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
-                >
-                  <div className="w-56 shrink rounded-xl bg-white p-4 text-sm/6 font-semibold text-gray-900 shadow-lg ring-1 ring-gray-900/5">
-                    {Serving.map((item) => (
-                      <button
-                        key={item.name}
-                        href="#"
-                        className="block p-2 hover:text-indigo-600"
-                        onClick={() => {
-                          seating.setSeating(item.seating);
-                        }}
-                      >
-                        {item.name}
-                      </button>
-                    ))}
-                  </div>
-                </PopoverPanel>
-              </Popover>
-            </>
-          )}
+            <PopoverPanel
+              transition
+              className="absolute left-1/2 z-10 mt-5 flex w-screen max-w-min -translate-x-1/2 px-4 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
+            >
+              <div className="w-56 shrink rounded-xl bg-white p-4 text-sm/6 font-semibold text-gray-900 shadow-lg ring-1 ring-gray-900/5">
+                {Serving.map((item) => (
+                  <button
+                    key={item.name}
+                    href="#"
+                    className="block p-2 hover:text-indigo-600"
+                    onClick={() => {
+                      seating.setSeating(item.seating);
+                    }}
+                  >
+                    {item.name}
+                  </button>
+                ))}
+              </div>
+            </PopoverPanel>
+          </Popover>
           {/* Separator */}
           <div
             aria-hidden="true"
@@ -233,11 +225,7 @@ export function Sidebar({ children }) {
               <Menu as="div" className="relative">
                 <MenuButton className="-m-1.5 flex items-center p-1.5">
                   <span className="sr-only">User</span>
-                  <img
-                    alt=""
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                    className="size-8 rounded-full bg-gray-50"
-                  />
+                  <UserIcon className="size-8" />
                 </MenuButton>
               </Menu>
             </div>
@@ -248,13 +236,7 @@ export function Sidebar({ children }) {
         <main>
           <div className="px-4 py-4 sm:px-6 lg:px-8">{children}</div>
         </main>
-      </div>
-
-      {/* {showSeating && (
-      <aside className="fixed bottom-0 left-20 top-16 hidden w-96 overflow-y-auto border-r border-gray-200 px-4 py-6 sm:px-6 lg:px-8 lg:block">
-        aqui va el submenu en el sidebar
-      </aside>
-      )} */}
+      </div> 
     </>
   );
 }
