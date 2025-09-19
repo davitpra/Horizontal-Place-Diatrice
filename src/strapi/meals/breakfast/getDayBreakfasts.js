@@ -2,11 +2,10 @@ import { query } from "../../strapi";
 
 export async function getDayBreakfasts(date) {
   return query(
-    `breakfasts?filters[Date][$eq]=${date}&populate[Breakfast][populate]=*`
+    `breakfasts?filters[Date][$eq]=${date}`
   ).then((res) => {
     return res.data.map((breakFast) => {
-      const { Breakfast, complete, slug, documentId, table} = breakFast;
-      const went_out_to_eat = Breakfast?.went_out_to_eat;
+      const { went_out_to_eat, complete, slug, documentId, table} = breakFast;
       //GET DAY OF WEEK
       let today = new Date();
       let dayOfWeek = today.getDay();
@@ -28,40 +27,40 @@ export async function getDayBreakfasts(date) {
       // Array of meals preferences with the valid properties
       const meals = [
         filterValidProperties({
-          water: Breakfast?.water,
-          Hotdrink: Breakfast?.Hotdrink,
-          Juice: Breakfast?.Juice,
-          Cereals: Breakfast?.Cereals,
-          Milk: Breakfast?.Milk,
-          eggs: Breakfast?.eggs,
-          toast: Breakfast?.toast,
-          FruitPlate: Breakfast?.FruitPlate,
-          Yogurt: Breakfast?.Yogurt,
-          Muffing: Breakfast?.Muffing,
-          additionals: Breakfast?.additionals,
-          Comment: Breakfast?.Comment,
+          water: breakFast?.water,
+          Hotdrink: breakFast?.Hotdrink,
+          Juice: breakFast?.Juice,
+          Cereals: breakFast?.Cereals,
+          Milk: breakFast?.Milk,
+          eggs: breakFast?.eggs,
+          toast: breakFast?.toast,
+          FruitPlate: breakFast?.FruitPlate,
+          Yogurt: breakFast?.Yogurt,
+          Muffing: breakFast?.Muffing,
+          additionals: breakFast?.additionals,
+          Comment: breakFast?.Comment,
         }),
       ];
 
-      // if it is Thursday, add pancakes to breakfast
+      // if it is Thursday, add pancakes to breakFast
       if (dayOfWeek === 4) {
-        if (Breakfast?.Pancake) {
+        if (breakFast?.Pancake) {
           meals[0].Pancake = true;
         } else {
           meals[0].Pancake = false;
         }
       }
 
-      // if it is Sunday or Wednesday, add bacon to breakfast
+      // if it is Sunday or Wednesday, add bacon to breakFast
       if (dayOfWeek === 0 || dayOfWeek === 3) {
-        if (Breakfast?.Bacon) {
+        if (breakFast?.Bacon) {
           meals[0].Bacon = true;
         } else {
           meals[0].Bacon = false;
         }
       }
 
-      const onTray = Breakfast?.onTray;
+      const onTray = breakFast?.onTray;
 
       return {
         documentId,
