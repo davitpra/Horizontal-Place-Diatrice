@@ -18,7 +18,7 @@ export async function createLunch({date, table, full_name, documentId, lunch_pre
   "data":{
       "Title": `${full_name}-${date}`,
       "table": table,
-      "Slug": `${slug}-${date}`,
+      "slug": `${slug}-${date}`,
       "Date": `${date}`,
       "complete": false,
       "went_out_to_eat": went_out_to_eat,
