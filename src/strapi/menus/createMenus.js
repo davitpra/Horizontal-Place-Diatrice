@@ -1,21 +1,23 @@
 import { query } from "../strapi";
 
 
-export async function createMenus({date, full_name, documentId=null}) {
+export async function createMenus({date, full_name, documentId=null, table, Seating}) {
 
   const slug =full_name.toLowerCase().replace(/\s+/g, '-')
 
   const body ={
   "data":{
-      "Date": `${date}`,
-      "Title": `${full_name}-${date}`,
-      "slug": `${slug}-${date}`,
+        "Date": `${date}`,
+        "Title": `${full_name}-${date}`,
+        "slug": `${slug}-${date}`,
+        "table": `${table}`,
+        "Seating": `${Seating}`,
       }
-  }
+    }
 
-  if (documentId) {
-    body.data.resident = `${documentId}`;
-  }
+    if (documentId) {
+      body.data.resident = `${documentId}`;
+    }
 
   try {
     const response = await query("menus", 'POST', body);
