@@ -18,8 +18,6 @@ export const useCreateBreakfast = async (residents, date, menus) => {
     // Obtener los desayunos existentes para la fecha
     let dayBreakfast = await getDayBreakfasts(date);
 
-    console.log('dayBreakfast', dayBreakfast)
-
     // Filtrar los menús que no tienen un desayuno asociado
     const menusWithoutBreakfast = menus.filter((menu) => menu.breakfast === null);
 
