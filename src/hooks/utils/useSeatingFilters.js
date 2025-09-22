@@ -16,14 +16,9 @@ export const useSeatingFilters = ({
     [residents, selectedSeating]
   );
 
-  // Filter menus by residents in seating
-  const menusInSeating = useMemo(() => 
-    menus.filter(menu => 
-      residentsInSeating.some(
-        resident => resident.documentId === menu.resident?.documentId
-      )
-    ),
-    [menus, residentsInSeating]
+  const menusInSeating = useMemo(() =>
+    menus.filter(menu => menu.Seating === selectedSeating),
+    [menus, selectedSeating]
   );
 
   // Filter meals by menus in seating
