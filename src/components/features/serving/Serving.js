@@ -6,8 +6,6 @@ import { TableMap } from "@/components/features/serving/TableMap";
 import Title from "@/components/ui/Title";
 import { useSeatingConfigure } from "@/store/seating/useSeatingConfigure";
 import { useMealBar } from "@/store/mealBar/useMealBar";
-import { useResidentsStore } from "@/store/residents/useResidentsStore";
-import { useDayMenusStore } from "@/store/meals/useDayMenusStore";
 import { useMealsStore } from "@/store/meals/useMealsStore";
 import { useSeatingFilters } from "@/hooks/utils/useSeatingFilters";
 

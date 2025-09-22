@@ -2,30 +2,56 @@
 import Title from "../../components/ui/Title";
 import { MealBar } from "../../components/ui/MealBar";
 import { Wraper } from "@/components/ui/Wraper";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMealBar } from "@/store/mealBar/useMealBar";
 import { calculateMealStats } from "@/hooks/utils/calculateMealStats";
 import { useMealsStore } from "@/store/meals/useMealsStore";
 import { useMenuScheduleStore } from "@/store/meals/useMenuScheduleStore";
+import { useDayMenusStore } from "@/store/meals/useDayMenusStore";
+import { useSeatingConfigure } from "@/store/seating/useSeatingConfigure";
 
 export default function Summary() {
   // Store para obtener las comidas y el menu schedule
   const mealStore = useMealsStore(state => state.meals);
   const { breakfast, lunch, supper } = mealStore;
+  const dayMenusStore = useDayMenusStore(state => state.dayMenus);
   const menuSchedule = useMenuScheduleStore(state => state.menuSchedule);
 
   const [meals, setMeals] = useState([]); // Estado para almacenar las estadísticas de las comidas
   const [menuOptions, setMenuOptions] = useState({}); // Estado para almacenar las opciones del menu
   const [rawMeals, setRawMeals] = useState([]); // Estado para calcular las comidas completadas. 
 
-
-  // Store para obtener el número de comida seleccionado
+  // Store para obtener el número de comida seleccionado 
   const mealNumber = useMealBar(state => state.mealNumber);
+  const selectedSeating = useSeatingConfigure((state) => state.seating);
+
+  const menusInSeating = useMemo(() => {
+    return dayMenusStore.filter(menu => menu.Seating === selectedSeating);
+  }, [dayMenusStore, selectedSeating]);
+
+  const mealsInSeating = useMemo(() => {
+    return menusInSeating.map(menu =>{
+      if (mealNumber === 0) {
+        return menu.breakfast;
+      } else if (mealNumber === 1) {
+        return menu.lunch;
+      } else {
+        return menu.supper;
+      }
+    });
+  }, [menusInSeating, mealNumber]);
 
   // Efecto para cargar las comidas del storage según el número de comida seleccionado
   useEffect(() => {
-    const meals = mealNumber === 0? breakfast : mealNumber === 1? lunch : supper;
-    const mealsWithComplete = meals.map(meal => 
+    // Obtener las comidas del store del menú seleccionado
+    const meals = mealNumber === 0 ? breakfast : mealNumber === 1 ? lunch : supper;
+
+    // Encontrar las comidas que coinciden con los documentIds de las comidas en el seating
+    const matchingMeals = meals.filter(meal => 
+      mealsInSeating.some(seatingMeal => seatingMeal.documentId === meal.documentId)
+    );
+
+    const mealsWithComplete = matchingMeals.map(meal =>
       meal.meals.map(mealItem => ({
         ...mealItem,
         complete: meal.complete,
@@ -43,15 +69,17 @@ export default function Summary() {
       const breakfastOptions = menuSchedule[0]?.data || {};
       setMenuOptions(breakfastOptions);
     }
-  }, [mealNumber, breakfast, lunch, supper, menuSchedule]);
-
+  }, [mealNumber, breakfast, lunch, supper, menuSchedule, dayMenusStore, selectedSeating]);
 
   // Efecto para calcular las estadísticas cuando cambian los datos
   useEffect(() => {
     if (rawMeals.length > 0 && Object.keys(menuOptions).length > 0) {
       const stats = calculateMealStats(rawMeals, menuOptions, mealNumber);
       setMeals(stats);
+    } else {
+      setMeals([]);
     }
+    console.log("meals", meals);
   }, [mealNumber, rawMeals, menuOptions]);
 
   const observations = [
