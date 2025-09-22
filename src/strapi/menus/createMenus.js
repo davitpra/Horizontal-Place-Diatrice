@@ -1,7 +1,7 @@
 import { query } from "../strapi";
 
 
-export async function createMenus({date, full_name, documentId=null, table, Seating}) {
+export async function createMenus({date, full_name, documentId=null, Seating}) {
 
   const slug =full_name.toLowerCase().replace(/\s+/g, '-')
 
@@ -10,7 +10,6 @@ export async function createMenus({date, full_name, documentId=null, table, Seat
         "Date": `${date}`,
         "Title": `${full_name}-${date}`,
         "slug": `${slug}-${date}`,
-        "table": `${table}`,
         "Seating": `${Seating}`,
       }
     }

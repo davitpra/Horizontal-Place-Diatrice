@@ -31,7 +31,6 @@ export const useCreateMenus = async (residents, date) => {
             date,
             full_name: resident.full_name,
             documentId: resident.documentId,
-            table: resident.table,
             Seating: resident.Seating,
             slug: resident.slug,
           });
