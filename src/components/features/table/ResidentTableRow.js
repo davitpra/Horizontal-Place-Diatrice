@@ -31,7 +31,7 @@ const ResidentTableRow = ({
       <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
         <ResidentInfo resident={resident} />
       </td>
-      <td className="hidden sm:block whitespace-nowrap px-3 py-5 text-sm text-gray-500">
+      <td className="hidden sm:block whitespace-nowrap px-3 py-2 text-sm text-gray-500">
         {Object.entries(mealInfo?.filterDrinks || {}).map(([key, value]) => (
           <div key={key} className="py-0 grid grid-cols-2 gap-0 px-0">
             <dt className="text-sm/6 font-medium text-gray-900 block">{key}</dt>

@@ -43,6 +43,7 @@ export default function Tables() {
   };
 
   const handleComplete = (meals, index) => {
+    // TODO: Implement complete logic
     console.log('handleComplete', meals, index);
   };
 
@@ -59,7 +60,7 @@ export default function Tables() {
   });
 
 
-  // Custom hooks - moved up to avoid reference error
+  // Ordena los residentes por mesa, menús y comidas
   const {
     residentsOnTable,
     mealOnTable,
@@ -71,17 +72,6 @@ export default function Tables() {
     menusOnSeating: menusInSeating,
     condition: currentMealType,
   });
-
-  // Initialize checkbox selection
-  const {
-    checkbox,
-    checked,
-    indeterminate,
-    selectedItems: residentsToTray,
-    handleSelectAll,
-    handleSelectItem,
-    resetSelection,
-  } = useCheckboxSelection(updateMealOnTable);
 
   // Agrupar residentes por mesa
   const groupedResidents = residentsOnTable.reduce((acc, resident) => {
@@ -102,6 +92,7 @@ export default function Tables() {
     setCurrentMealType(newMealType);
   }, [selectedMealNumber]);
 
+
   // Update current meals when meal type or meals data changes
   useEffect(() => {
     if (meals[currentMealType]) {
@@ -110,6 +101,17 @@ export default function Tables() {
     }
   }, [currentMealType, meals]);
 
+  // Initialize checkbox selection
+  const {
+    checkbox,
+    checked,
+    indeterminate,
+    selectedItems: residentsToTray,
+    handleSelectAll,
+    handleSelectItem,
+    resetSelection,
+  } = useCheckboxSelection(updateMealOnTable);
+  
   const observations = [
     "Overview of the meals being served, meal preferences and dietary needs.",
   ];
@@ -135,7 +137,7 @@ export default function Tables() {
                         <th
                           scope="colgroup"
                           colSpan={5}
-                          className="bg-gray-50 py-2 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-3"
+                          className="bg-gray-50 py-2 pr-3 pl-4 text-center text-sm font-semibold text-gray-900 sm:pl-3"
                         >
                           Table {tableNumber}
                         </th>

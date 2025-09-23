@@ -10,7 +10,7 @@ const ActionButtons = ({
 }) => {
   return (
     <>
-      <td className="hidden sm:block whitespace-nowrap px-3 py-5 text-sm text-gray-500">
+      <td className="hidden sm:block whitespace-nowrap px-3 py-2 text-sm text-gray-500">
         <button
           onClick={() => onOpenInfo(resident)}
           className="text-indigo-600 hover:text-indigo-900"
