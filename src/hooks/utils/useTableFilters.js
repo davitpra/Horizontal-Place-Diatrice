@@ -15,10 +15,13 @@ export const useTableFilters = ({
   useEffect(() => {
     // 1. Primero filtramos las comidas por mesa y que no estén fuera 
     const mealsByTable =
-      mealsOnSeating?.filter((meal) => 
-        meal.table === selectTable && !meal.went_out_to_eat
+      mealsOnSeating?.filter((meal) => {
+        if (selectTable) {
+          return meal.table === selectTable && !meal.went_out_to_eat
+        } else {
+          return meal
+        }}
       ) || [];
-
     // 2. Luego filtramos los menús que tienen comidas en esta mesa
     const menusByTable =
       menusOnSeating?.filter((menu) =>

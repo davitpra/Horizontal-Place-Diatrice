@@ -10,6 +10,7 @@ import { useMealBar } from "@/store/mealBar/useMealBar";
 import { useSeatingFilters } from "@/hooks/utils/useSeatingFilters";
 import TableHeader from "@/components/features/table/TableHeader";
 import ResidentTableRow from "@/components/features/table/ResidentTableRow";
+import { useTableFilters } from "@/hooks/utils/useTableFilters";
 
 const MEAL_TYPES = {
   BREAKFAST: 'breakfast',
@@ -34,24 +35,7 @@ export default function Tables() {
   // Local state
   const [currentMealType, setCurrentMealType] = useState(MEAL_TYPES.BREAKFAST);
   const [currentMeals, setCurrentMeals] = useState(meals[MEAL_TYPES.BREAKFAST]);
-  const [updateMealOnTable, setUpdateMealOnTable] = useState([]);
 
-  // Update meal table state when meals or seating changes
-  useEffect(() => {
-    if (!currentMeals) return;
-    
-    const initialMealState = currentMeals.map(meal => ({
-      complete: false,
-      filterDrinks: meal.preferences || {},
-      documentId: meal.documentId, // Add this to maintain consistency with selection
-    }));
-
-    // Only update if the state actually changed
-    const hasStateChanged = JSON.stringify(initialMealState) !== JSON.stringify(updateMealOnTable);
-    if (hasStateChanged) {
-      setUpdateMealOnTable(initialMealState);
-    }
-  }, [currentMeals]);
 
   const handleOpenMoreInfo = (resident) => {
     // TODO: Implement modal or drawer to show more resident information
@@ -59,12 +43,7 @@ export default function Tables() {
   };
 
   const handleComplete = (meals, index) => {
-    const updatedMeals = [...updateMealOnTable];
-    updatedMeals[index] = {
-      ...updatedMeals[index],
-      complete: !updatedMeals[index]?.complete
-    };
-    setUpdateMealOnTable(updatedMeals);
+    console.log('handleComplete', meals, index);
   };
 
   const handleSelectionModal = (resident) => {
@@ -72,6 +51,28 @@ export default function Tables() {
     console.log('Opening selection modal for:', resident);
   };
 
+  // Get filtered data based on seating
+  const { residentsInSeating, menusInSeating, mealsInSeating } = useSeatingFilters({
+    meals: currentMeals,
+    selectedSeating,
+    currentMealType,
+  });
+
+
+  // Custom hooks - moved up to avoid reference error
+  const {
+    residentsOnTable,
+    mealOnTable,
+    updateMealOnTable,
+    setMealOnTable,
+  } = useTableFilters({
+    residentsOnSeating: residentsInSeating,
+    mealsOnSeating: mealsInSeating,
+    menusOnSeating: menusInSeating,
+    condition: currentMealType,
+  });
+
+  // Initialize checkbox selection
   const {
     checkbox,
     checked,
@@ -82,15 +83,8 @@ export default function Tables() {
     resetSelection,
   } = useCheckboxSelection(updateMealOnTable);
 
-  // Get filtered data based on seating
-  const { residentsInSeating, menusInSeating, mealsInSeating } = useSeatingFilters({
-    meals: currentMeals,
-    selectedSeating,
-    currentMealType,
-  });
-
   // Agrupar residentes por mesa
-  const groupedResidents = residentsInSeating.reduce((acc, resident) => {
+  const groupedResidents = residentsOnTable.reduce((acc, resident) => {
     const tableNumber = resident.table;
     if (!acc[tableNumber]) {
       acc[tableNumber] = [];
