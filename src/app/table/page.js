@@ -1,15 +1,14 @@
 "use client";
-import { Table } from "../../components/ui/Table";
 import Title from "../../components/ui/Title";
 import { MealBar } from "../../components/ui/MealBar";
-import { getAllResidents } from "@/strapi/residents/getAllResidents";
-import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useState } from "react";
 import {
   FolderOpenIcon,
   FolderPlusIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
 import { Wraper } from "@/components/ui/Wraper";
+import { useCheckboxSelection } from "@/hooks/utils/useCheckboxSelection";
 
 const rawData = [
   {
@@ -35,30 +34,22 @@ const rawData = [
 ];
 
 export default function Tables() {
-  // Estados para checkbox
-  const checkbox = useRef();
-  const [checked, setChecked] = useState(false);
-  const [indeterminate, setIndeterminate] = useState(false);
-  const [residentsToTray, setResidentsToTray] = useState([]);
   const [residentsOntable, setResidentsOntable] = useState(rawData);
   const [updateMealOnTable, setUpdatedMealOnTable] = useState(rawData); // Pedidos actualizados sin bebidas
+  
+  const {
+    checkbox,
+    checked,
+    indeterminate,
+    selectedItems: residentsToTray,
+    handleSelectAll,
+    handleSelectItem,
+    resetSelection,
+  } = useCheckboxSelection(updateMealOnTable);
 
   const observations = [
     "Overview of the meals being served, meal preferences and dietary needs.",
   ];
-
-  // funcionalidad para checkbox
-  useLayoutEffect(() => {
-    const isIndeterminate =
-      residentsToTray.length > 0 &&
-      residentsToTray.length < residentsOntable.length;
-    setChecked(residentsToTray.length === residentsOntable.length);
-    setIndeterminate(isIndeterminate);
-    // Protege contra checkbox.current undefined
-    if (checkbox.current) {
-      checkbox.current.indeterminate = isIndeterminate;
-    }
-  }, [residentsToTray, residentsOntable]);
 
   return (
     <>
@@ -79,19 +70,7 @@ export default function Tables() {
                           type="checkbox"
                           className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
                           checked={checked}
-                          onChange={() => {
-                            if (checked) {
-                              setResidentsToTray([]);
-                              setChecked(false);
-                            } else {
-                              setResidentsToTray(
-                                (updateMealOnTable || []).map(
-                                  (r) => r.documentId
-                                )
-                              );
-                              setChecked(true);
-                            }
-                          }}
+                          onChange={handleSelectAll}
                           disabled={residentsOntable.length === 0}
                         />
                       </div>
@@ -121,21 +100,8 @@ export default function Tables() {
                           <input
                             type="checkbox"
                             className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
-                            checked={residentsToTray.includes(
-                              updateMealOnTable[index]?.documentId
-                            )}
-                            onChange={(e) => {
-                              const id = updateMealOnTable[index].documentId;
-                              setResidentsToTray((prev) => {
-                                if (e.target.checked) {
-                                  // evitar duplicados
-                                  if (prev.includes(id)) return prev;
-                                  return [...prev, id];
-                                } else {
-                                  return prev.filter((pid) => pid !== id);
-                                }
-                              });
-                            }}
+                            checked={residentsToTray.some(item => item.documentId === resident.documentId)}
+                            onChange={() => handleSelectItem(resident)}
                             disabled={residentsOntable.length === 0}
                           />
                           <svg
