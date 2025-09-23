@@ -11,6 +11,7 @@ import { useSeatingFilters } from "@/hooks/utils/useSeatingFilters";
 import TableHeader from "@/components/features/table/TableHeader";
 import ResidentTableRow from "@/components/features/table/ResidentTableRow";
 import { useTableFilters } from "@/hooks/utils/useTableFilters";
+import { useHandleComplete } from "@/hooks/utils/useHandleComplete";
 
 const MEAL_TYPES = {
   BREAKFAST: 'breakfast',
@@ -42,9 +43,31 @@ export default function Tables() {
     console.log('Opening more info for:', resident);
   };
 
-  const handleComplete = (meals, index) => {
-    // TODO: Implement complete logic
-    console.log('handleComplete', meals, index);
+  const { handleComplete: handleCompleteAction } = useHandleComplete();
+
+  const handleComplete = async (meals, index) => {
+    const documentId = meals[index]?.documentId;
+    const mealType = MEAL_TYPE_BY_NUMBER[selectedMealNumber];
+
+    if (!mealType) {
+      console.error("Invalid meal number:", selectedMealNumber);
+      return;
+    }
+
+    const newCompleteState = await handleCompleteAction({
+      documentId,
+      condition: currentMealType,
+      mealType,
+      isComplete: meals[index]?.complete
+    });
+
+    if (newCompleteState !== null) {
+      setMealOnTable((prev) =>
+        prev.map((item, i) =>
+          i === index ? { ...item, complete: newCompleteState } : item
+        )
+      );
+    }
   };
 
   const handleSelectionModal = (resident) => {
