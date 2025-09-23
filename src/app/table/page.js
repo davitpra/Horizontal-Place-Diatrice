@@ -38,11 +38,17 @@ export default function Tables() {
 
   // Update meal table state when meals or seating changes
   useEffect(() => {
-    if (currentMeals) {
-      const initialMealState = currentMeals.map(meal => ({
-        complete: false,
-        filterDrinks: meal.preferences || {},
-      }));
+    if (!currentMeals) return;
+    
+    const initialMealState = currentMeals.map(meal => ({
+      complete: false,
+      filterDrinks: meal.preferences || {},
+      documentId: meal.documentId, // Add this to maintain consistency with selection
+    }));
+
+    // Only update if the state actually changed
+    const hasStateChanged = JSON.stringify(initialMealState) !== JSON.stringify(updateMealOnTable);
+    if (hasStateChanged) {
       setUpdateMealOnTable(initialMealState);
     }
   }, [currentMeals]);
@@ -83,16 +89,32 @@ export default function Tables() {
     currentMealType,
   });
 
-  console.log("residentsInSeating", residentsInSeating);
-  console.log("menusInSeating", menusInSeating);
-  console.log("mealsInSeating", mealsInSeating);
+  // Agrupar residentes por mesa
+  const groupedResidents = residentsInSeating.reduce((acc, resident) => {
+    const tableNumber = resident.table;
+    if (!acc[tableNumber]) {
+      acc[tableNumber] = [];
+    }
+    acc[tableNumber].push(resident);
+    return acc;
+  }, {});
 
-  // Update current meal type and meals when meal number changes
+  // Ordenar las mesas por número
+  const sortedTables = Object.keys(groupedResidents).sort((a, b) => Number(a) - Number(b));
+
+  // Update current meal type when meal number changes
   useEffect(() => {
     const newMealType = MEAL_TYPE_BY_NUMBER[selectedMealNumber] || MEAL_TYPES.BREAKFAST;
     setCurrentMealType(newMealType);
-    setCurrentMeals(meals[newMealType] || []);
-  }, [selectedMealNumber, meals]);
+  }, [selectedMealNumber]);
+
+  // Update current meals when meal type or meals data changes
+  useEffect(() => {
+    if (meals[currentMealType]) {
+      const initialMeals = meals[currentMealType];
+      setCurrentMeals(initialMeals);
+    }
+  }, [currentMealType, meals]);
 
   const observations = [
     "Overview of the meals being served, meal preferences and dietary needs.",
@@ -113,29 +135,34 @@ export default function Tables() {
                   disabled={residentsInSeating.length === 0}
                 />
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {residentsInSeating.map((resident, index) => (
-                    <Fragment key={resident.documentId}>
-                      {/*<tr className="border-t border-gray-200">
+                  {sortedTables.map((tableNumber) => (
+                    <Fragment key={tableNumber}>
+                      <tr className="border-t border-gray-200">
                         <th
                           scope="colgroup"
                           colSpan={5}
                           className="bg-gray-50 py-2 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-3"
                         >
-                          Table {resident.table}
+                          Table {tableNumber}
                         </th>
-                      </tr> */}
-                      <ResidentTableRow
-                        key={resident.documentId}
-                        resident={resident}
-                        isSelected={residentsToTray.some(item => item.documentId === resident.documentId)}
-                        onSelect={handleSelectItem}
-                        disabled={residentsInSeating.length === 0}
-                        mealInfo={updateMealOnTable[index]}
-                        isComplete={updateMealOnTable[index]?.complete}
-                        onComplete={() => handleComplete(updateMealOnTable, index)}
-                        onOpenInfo={handleOpenMoreInfo}
-                        onChangeSelection={handleSelectionModal}
-                      />
+                      </tr>
+                      {groupedResidents[tableNumber].map((resident) => {
+                        const index = residentsInSeating.findIndex(r => r.documentId === resident.documentId);
+                        return (
+                          <ResidentTableRow
+                            key={resident.documentId}
+                            resident={resident}
+                            isSelected={residentsToTray.some(item => item.documentId === resident.documentId)}
+                            onSelect={handleSelectItem}
+                            disabled={residentsInSeating.length === 0}
+                            mealInfo={updateMealOnTable[index]}
+                            isComplete={updateMealOnTable[index]?.complete}
+                            onComplete={() => handleComplete(updateMealOnTable, index)}
+                            onOpenInfo={handleOpenMoreInfo}
+                            onChangeSelection={handleSelectionModal}
+                          />
+                        );
+                      })}
                     </Fragment>
                   ))}
                 </tbody>

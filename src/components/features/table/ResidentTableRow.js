@@ -15,7 +15,6 @@ const ResidentTableRow = ({
   onChangeSelection,
 }) => {
 
-  const host = process.env.NEXT_PUBLIC_STRAPI_API_URL;
   return (
     <tr key={resident.documentId}>
       <td className="relative px-7 sm:w-12 sm:px-6">
@@ -30,7 +29,7 @@ const ResidentTableRow = ({
         </div>
       </td>
       <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
-        <ResidentInfo resident={resident} host={host} />
+        <ResidentInfo resident={resident} />
       </td>
       <td className="hidden sm:block whitespace-nowrap px-3 py-5 text-sm text-gray-500">
         {Object.entries(mealInfo?.filterDrinks || {}).map(([key, value]) => (

@@ -8,12 +8,12 @@ const TableHeader = ({ checked, onSelectAll, disabled }) => {
         <th scope="col" className="relative px-7 w-12 px-6">
           <div className="absolute inset-y-0 left-0 hidden w-0.5 bg-indigo-600 group-has-checked:block" />
           <div className="group absolute top-1/2 left-4 -mt-2 grid size-4 grid-cols-1">
-            <CheckboxCell
+{/*             <CheckboxCell
               checked={checked}
               onChange={onSelectAll}
               disabled={disabled}
               label="Select all residents"
-            />
+            /> */}
           </div>
         </th>
         <th className="py-3.5 pr-3 text-left text-sm font-semibold text-gray-900 pl-0">

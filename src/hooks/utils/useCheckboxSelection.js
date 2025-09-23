@@ -7,14 +7,23 @@ export const useCheckboxSelection = (items) => {
   const [selectedItems, setSelectedItems] = useState([]);
 
   useLayoutEffect(() => {
-    const isIndeterminate = selectedItems.length > 0 && selectedItems.length < items.length;
-    setChecked(selectedItems.length === items.length);
-    setIndeterminate(isIndeterminate);
+    const isAllSelected = selectedItems.length === items.length;
+    const isIndeterminate = selectedItems.length > 0 && !isAllSelected;
+    
+    // Only update checked state if it's different
+    if (checked !== isAllSelected) {
+      setChecked(isAllSelected);
+    }
+    
+    // Only update indeterminate state if it's different
+    if (indeterminate !== isIndeterminate) {
+      setIndeterminate(isIndeterminate);
+    }
     
     if (checkbox.current) {
       checkbox.current.indeterminate = isIndeterminate;
     }
-  }, [selectedItems, items]);
+  }, [selectedItems, items, checked, indeterminate]);
 
   const handleSelectAll = () => {
     if (checked) {
