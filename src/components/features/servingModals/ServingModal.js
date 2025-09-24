@@ -18,6 +18,7 @@ import { useCheckboxSelection } from "@/hooks/utils/useCheckboxSelection";
 import { useTableFilters } from "@/hooks/utils/useTableFilters";
 import { useTrayManagement } from "@/hooks/utils/useTrayManagement";
 import { useModalManagement } from "@/hooks/utils/useModalManagement";
+import { useMarkAsOut } from "@/hooks/utils/useMarkAsOut";
 
 export function ServingModal({
   residentsOnSeating,
@@ -62,6 +63,15 @@ export function ServingModal({
   } = useCheckboxSelection(updateMealOnTable);
 
   const { handleChangeToTray } = useTrayManagement({
+    condition,
+    mealNumber,
+    onSuccess: () => {
+      tableModal.onClose();
+      resetSelection();
+    },
+  });
+
+  const { handleMarkAsOut } = useMarkAsOut({
     condition,
     mealNumber,
     onSuccess: () => {
@@ -115,6 +125,8 @@ export function ServingModal({
       title={`Table ${selectTable}`}
       button="Change to Tray"
       buttonAction={() => handleChangeToTray(residentsToTray)}
+      button2 = "Mark as Out"
+      button2Action={() => handleMarkAsOut(residentsToTray)}
     >
       <div className="mt-8 flow-root">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">

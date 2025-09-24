@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
-export function Modal({ isOpen, close, title, button, children, buttonAction }) {
+export function Modal({ isOpen, close, title, button, children, buttonAction, button2, button2Action }) {
   const [open, setOpen] = useState(isOpen);
 
   // Close modal when the TableModal state changes
@@ -28,8 +28,8 @@ export function Modal({ isOpen, close, title, button, children, buttonAction }) 
               <h3 className="text-lg font-medium leading-6 text-gray-900">
                 {title}
               </h3>
-              <div className="flex space-x-10">
-                <div className="ml-4 mt-2 shrink-0">
+              <div className="flex space-x-10 ">
+                <div className="ml-4 mt-2 shrink-0 flex space-x-4">
                   <button
                     type="button"
                     className="relative inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
@@ -41,6 +41,17 @@ export function Modal({ isOpen, close, title, button, children, buttonAction }) 
                   >
                     {button}
                   </button>
+                  {button2 && <button
+                    type="button"
+                    className="relative inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    onClick={() => {
+                      button2Action();
+                      setOpen(false);
+                    }
+                    }
+                  >
+                    {button2}
+                  </button>}
                 </div>
                 <div className="pr-0 pt-4 sm:block">
                   <button

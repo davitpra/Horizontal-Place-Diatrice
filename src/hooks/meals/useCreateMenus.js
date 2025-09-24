@@ -2,6 +2,8 @@ import { createMenus } from "@/strapi/menus/createMenus";
 import { getDayMenus } from "@/strapi/menus/getDayMenus";
 
 export const useCreateMenus = async (residents, date) => {
+
+
   if (!residents || !Array.isArray(residents)) {
     throw new Error("Invalid residents array");
   }
