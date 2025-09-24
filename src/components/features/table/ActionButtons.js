@@ -42,14 +42,14 @@ const ActionButtons = ({
         <button
           type="button"
           className="hidden sm:block text-indigo-600 hover:text-indigo-900"
-          onClick={() => onChangeSelection(resident)}
+          onClick={() => onChangeSelection(resident,index)}
         >
           Change Selection
           <span className="sr-only">, {resident.full_name}</span>
         </button>
         <FolderPlusIcon
           className="sm:hidden h-6 w-6"
-          onClick={() => onChangeSelection(resident)}
+          onClick={() => onChangeSelection(resident, index)}
         />
       </td>
     </>

@@ -6,16 +6,23 @@ import { useSelectionModal } from "@/store/modals/useSelectionModal";
 import { MEAL_OPTIONS } from "@/constants/mealOption";
 import { changeComplete } from "@/strapi/utils/changeComplete";
 import { useMenuScheduleStore } from "@/store/meals/useMenuScheduleStore";
+import { useMealBar } from "@/store/mealBar/useMealBar";
 
 export function SelectionModal({
   resident,
   setOrder,
   order = [{}],
   index = 0,
-  mealNumber = 0,
 }) {
   const ADD = "Add";
   const NONE = "none";
+
+  console.log("resident", resident);
+  console.log("order", order);
+  console.log("index", index);
+
+  // Get hooks
+  const mealNumber = useMealBar((state) => state.mealNumber);
 
   // to open or close the modal
   const SelectionModal = useSelectionModal();

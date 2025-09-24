@@ -221,7 +221,7 @@ export default function Tables() {
       />
       <SelectionModal
         resident={residentInfo}
-        order={updateMealOnTable}
+        order={mealOnTable}
         index={selectedIndex}
         setMealOnTable={setMealOnTable}
         mealNumber={selectedMealNumber}
