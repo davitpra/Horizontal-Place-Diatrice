@@ -12,10 +12,6 @@ export function MoreInfoModal({
   index = 0,
   complete,
 }) {
-  console.log("resident", resident);
-  console.log("index", index);
-  console.log("order index", order[index]);
-  console.log("complete", complete);
   // to open or close the modal
   const InfoModal = useMoreInfoModal();
   const [open, setOpen] = useState(InfoModal.isOpen);

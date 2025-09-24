@@ -17,10 +17,6 @@ export function SelectionModal({
   const ADD = "Add";
   const NONE = "none";
 
-  console.log("resident", resident);
-  console.log("order", order);
-  console.log("index", index);
-
   // Get hooks
   const mealNumber = useMealBar((state) => state.mealNumber);
 
