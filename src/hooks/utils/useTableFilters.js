@@ -17,7 +17,7 @@ export const useTableFilters = ({
     const mealsByTable =
       mealsOnSeating?.filter((meal) => {
         if (selectTable) {
-          return meal.table === selectTable && !meal.went_out_to_eat
+          return meal.table === selectTable
         } else {
           return meal
         }}
@@ -93,6 +93,7 @@ export const useTableFilters = ({
           complete: preference.complete,
           documentId: preference.documentId,
           onTray: preference.onTray,
+          went_out_to_eat: preference.went_out_to_eat,
         };
       });
     } catch (error) {

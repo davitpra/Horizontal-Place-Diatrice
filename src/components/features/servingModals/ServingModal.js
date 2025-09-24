@@ -205,9 +205,14 @@ export function ServingModal({
                           </p>
                           <p className="mt-1 text-gray-500">
                             Room {resident.roomId}
-                            {updateMealOnTable[index]?.onTray ? (
+                            {updateMealOnTable[index]?.onTray && !updateMealOnTable[index]?.went_out_to_eat ? (
                               <span className="ml-2 rounded-md bg-yellow-50 px-1.5 py-0.5 text-xs font-medium text-yellow-800 inset-ring inset-ring-yellow-600/20 dark:bg-yellow-400/10 dark:text-yellow-500 dark:inset-ring-yellow-400/20">
                                 on tray
+                              </span>
+                            ) : null}
+                            {updateMealOnTable[index]?.went_out_to_eat ? (
+                              <span className="ml-2 rounded-md bg-red-50 px-1.5 py-0.5 text-xs font-medium text-red-800 inset-ring inset-ring-red-600/20 dark:bg-red-400/10 dark:text-red-500 dark:inset-ring-red-400/20">
+                                Out
                               </span>
                             ) : null}
                           </p>

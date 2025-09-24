@@ -2,6 +2,7 @@
 import { UserIcon } from "@heroicons/react/24/outline";
 
 const ResidentInfo = ({ resident, mealInfo }) => {
+  console.log("mealInfo", mealInfo);
   const host = process.env.NEXT_PUBLIC_STRAPI_HOST;
   return (
     <div className="flex items-center">
@@ -19,8 +20,11 @@ const ResidentInfo = ({ resident, mealInfo }) => {
       <div className="ml-4">
         <div className="font-medium text-gray-900">{resident.full_name}</div>
         <div className="mt-1 text-gray-500">Room {resident.roomId}
-          {mealInfo?.onTray && <span className="ml-2 rounded-md bg-yellow-50 px-1.5 py-0.5 text-xs font-medium text-yellow-800 inset-ring inset-ring-yellow-600/20 dark:bg-yellow-400/10 dark:text-yellow-500 dark:inset-ring-yellow-400/20">
+          {mealInfo?.onTray && !mealInfo?.went_out_to_eat &&<span className="ml-2 rounded-md bg-yellow-50 px-1.5 py-0.5 text-xs font-medium text-yellow-800 inset-ring inset-ring-yellow-600/20 dark:bg-yellow-400/10 dark:text-yellow-500 dark:inset-ring-yellow-400/20">
             on tray
+          </span>}
+          {mealInfo?.went_out_to_eat && <span className="ml-2 rounded-md bg-red-50 px-1.5 py-0.5 text-xs font-medium text-red-800 inset-ring inset-ring-red-600/20 dark:bg-red-400/10 dark:text-red-500 dark:inset-ring-red-400/20">
+            Out 
           </span>}
         </div>
       </div>
