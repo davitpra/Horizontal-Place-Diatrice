@@ -12,6 +12,10 @@ import TableHeader from "@/components/features/table/TableHeader";
 import ResidentTableRow from "@/components/features/table/ResidentTableRow";
 import { useTableFilters } from "@/hooks/utils/useTableFilters";
 import { useHandleComplete } from "@/hooks/utils/useHandleComplete";
+import { useMoreInfoModal } from "@/store/modals/useMoreInfoModal";
+import { useSelectionModal } from "@/store/modals/useSelectionModal";
+import { MoreInfoModal } from "@/components/features/servingModals/MoreInfoModal";
+import { SelectionModal } from "@/components/features/servingModals/SelectionModal";
 
 const MEAL_TYPES = {
   BREAKFAST: 'breakfast',
@@ -36,12 +40,34 @@ export default function Tables() {
   // Local state
   const [currentMealType, setCurrentMealType] = useState(MEAL_TYPES.BREAKFAST);
   const [currentMeals, setCurrentMeals] = useState(meals[MEAL_TYPES.BREAKFAST]);
+  const [residentInfo, setResidentInfo] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState(null);
 
+  // Modal stores
+  const InfoModal = useMoreInfoModal();
+  const SelecModal = useSelectionModal();
 
-  const handleOpenMoreInfo = (resident) => {
-    // TODO: Implement modal or drawer to show more resident information
-    console.log('Opening more info for:', resident);
+  const handleOpenMoreInfo = (resident, index) => {
+    if (!resident) return;
+    setResidentInfo(resident);
+    setSelectedIndex(index);
+    InfoModal.onOpen();
   };
+
+  const handleSelectionModal = (resident, index) => {
+    if (!resident) return;
+    setResidentInfo(resident);
+    setSelectedIndex(index);
+    SelecModal.onOpen();
+  };
+
+  // Reset resident info when modals close
+  useEffect(() => {
+    if (!InfoModal.isOpen && !SelecModal.isOpen) {
+      setResidentInfo(null);
+      setSelectedIndex(null);
+    }
+  }, [InfoModal.isOpen, SelecModal.isOpen]);
 
   const { handleComplete: handleCompleteAction } = useHandleComplete();
 
@@ -68,11 +94,6 @@ export default function Tables() {
         )
       );
     }
-  };
-
-  const handleSelectionModal = (resident) => {
-    // TODO: Implement selection modal logic
-    console.log('Opening selection modal for:', resident);
   };
 
   // Get filtered data based on seating
@@ -171,6 +192,7 @@ export default function Tables() {
                           <ResidentTableRow
                             key={resident.documentId}
                             resident={resident}
+                            index={index}
                             isSelected={residentsToTray.some(item => item.documentId === resident.documentId)}
                             onSelect={handleSelectItem}
                             disabled={residentsInSeating.length === 0}
@@ -190,6 +212,20 @@ export default function Tables() {
           </div>
         </div>
       </Wraper>
+      <MoreInfoModal
+        resident={residentInfo}
+        order={mealOnTable}
+        index={selectedIndex}
+        setMealOnTable={setMealOnTable}
+        complete={updateMealOnTable[selectedIndex]?.complete}
+      />
+      <SelectionModal
+        resident={residentInfo}
+        order={updateMealOnTable}
+        index={selectedIndex}
+        setMealOnTable={setMealOnTable}
+        mealNumber={selectedMealNumber}
+      />
     </>
   );
 }

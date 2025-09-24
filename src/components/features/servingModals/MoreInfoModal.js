@@ -12,6 +12,10 @@ export function MoreInfoModal({
   index = 0,
   complete,
 }) {
+  console.log("resident", resident);
+  console.log("index", index);
+  console.log("order index", order[index]);
+  console.log("complete", complete);
   // to open or close the modal
   const InfoModal = useMoreInfoModal();
   const [open, setOpen] = useState(InfoModal.isOpen);
@@ -60,7 +64,7 @@ export function MoreInfoModal({
     <Modal
       isOpen={open}
       close={InfoModal.onClose}
-      title={resident.full_name}
+      title={resident?.full_name || 'Resident Information'}
       button={localComplete ? "Mark as Incomplete" : "Mark as Complete"}
       buttonAction={handleComplete}
     >

@@ -285,7 +285,6 @@ export function ServingModal({
         resident={residentInfo}
         order={mealOnTable}
         index={index}
-        mealNumber={mealNumber}
         setMealOnTable={setMealOnTable}
         complete={updateMealOnTable[index]?.complete}
       />

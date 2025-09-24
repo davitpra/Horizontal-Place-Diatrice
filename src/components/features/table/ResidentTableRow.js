@@ -5,6 +5,7 @@ import ActionButtons from "./ActionButtons";
 
 const ResidentTableRow = ({
   resident,
+  index,
   isSelected,
   onSelect,
   disabled,
@@ -43,6 +44,7 @@ const ResidentTableRow = ({
       </td>
       <ActionButtons
         resident={resident}
+        index={index}
         isComplete={isComplete}
         onComplete={onComplete}
         onOpenInfo={onOpenInfo}

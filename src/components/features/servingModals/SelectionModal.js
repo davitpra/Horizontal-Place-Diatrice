@@ -46,7 +46,7 @@ export function SelectionModal({
 
   // Update meal options with menu data
   useEffect(() => {
-    if (lunchMenu.data) {
+    if (lunchMenu?.data) {
       const updatedLunchOptions = MEAL_OPTIONS[1].map((item) => {
         if (item.key === "salad") {
           return { ...item, options: ["none", lunchMenu.data.salad] };
@@ -69,10 +69,10 @@ export function SelectionModal({
       MEAL_OPTIONS[1] = updatedLunchOptions;
     }
 
-    if (supperMenu.data) {
+    if (supperMenu?.data) {
       const updatedSupperOptions = MEAL_OPTIONS[2].map((item) => {
         if (item.key === "option_1") {
-          return { ...item, options: ["none",supperMenu.data.option_1] };
+          return { ...item, options: ["none", supperMenu.data.option_1] };
         }
         if (item.key === "option_2") {
           return { ...item, options: ["none", supperMenu.data.option_2] };
@@ -97,7 +97,7 @@ export function SelectionModal({
 
       MEAL_OPTIONS[2] = updatedSupperOptions;
     }
-  }, []);
+  }, [lunchMenu, supperMenu]); // Added dependencies
 
 
   // Set the options based on the meal number
@@ -195,7 +195,7 @@ export function SelectionModal({
     <Modal
       isOpen={open}
       close={SelectionModal.onClose}
-      title={resident.full_name}
+      title={resident?.full_name || 'Meal Selection'}
       button="Save"
       buttonAction={handleSave}
     >
