@@ -159,13 +159,21 @@ export default function Tables() {
   } = useCheckboxSelection(updateMealOnTable);
 
   const observations = [
-    "Overview of the meals being served, meal preferences and dietary needs.",
+    "A list of all residents including their name, room, seating and observation.",
   ];
 
   return (
-    <>
-      <Title title={"Summary"} observations={observations} />
-      <MealBar />
+    <div className="h-screen overflow-y-auto">
+      <div className="sticky top-0 z-10 bg-white pb-4">
+        <Title
+          title={"Residents"}
+          observations={observations}
+          button="Change to Tray"
+          buttonAction={() => { }}
+          button2="Mark as Out"
+          button2Action={() => { }} />
+        <MealBar />
+      </div>
       <Wraper>
         <div className="mt-8 flow-root">
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -250,6 +258,6 @@ export default function Tables() {
         setMealOnTable={setMealOnTable}
         mealNumber={selectedMealNumber}
       />
-    </>
+    </div>
   );
 }
