@@ -8,16 +8,16 @@ import { useMealsStore } from "@/store/meals/useMealsStore";
 import { useSeatingConfigure } from "@/store/seating/useSeatingConfigure";
 import { useMealBar } from "@/store/mealBar/useMealBar";
 import { useSeatingFilters } from "@/hooks/utils/useSeatingFilters";
-import TableHeader from "@/components/features/table/TableHeader";
+import TableHeader from "@/components/features/tableResident/TableHeader";
 import { useTableFilters } from "@/hooks/utils/useTableFilters";
 import { useHandleComplete } from "@/hooks/utils/useHandleComplete";
 import { useMoreInfoModal } from "@/store/modals/useMoreInfoModal";
 import { useSelectionModal } from "@/store/modals/useSelectionModal";
 import { MoreInfoModal } from "@/components/features/servingModals/MoreInfoModal";
 import { SelectionModal } from "@/components/features/servingModals/SelectionModal";
-import CheckboxCell from "@/components/features/table/CheckboxCell";
-import ResidentInfo from "@/components/features/table/ResidentInfo";
-import ActionButtons from "@/components/features/table/ActionButtons";
+import CheckboxCell from "@/components/features/tableResident/CheckboxCell";
+import ResidentInfo from "@/components/features/tableResident/ResidentInfo";
+import ActionButtons from "@/components/features/tableResident/ActionButtons";
 
 const MEAL_TYPES = {
   BREAKFAST: 'breakfast',

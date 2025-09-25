@@ -2,6 +2,7 @@
 import Title from "../../components/ui/Title";
 import { MealBar } from "../../components/ui/MealBar";
 import { Wraper } from "@/components/ui/Wraper";
+import { Table, TableHead, TableBody, EmptyRow } from "@/components/features/tableInfo/Table";
 import { useEffect, useMemo, useState } from "react";
 import { useMealBar } from "@/store/mealBar/useMealBar";
 import { calculateMealStats } from "@/hooks/utils/calculateMealStats";
@@ -91,81 +92,42 @@ export default function Summary() {
       <Title title={"Summary"} observations={observations} />
       <MealBar />
       <Wraper>
-        <div className="mt-8 flow-root">
-          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-              <table className="min-w-full divide-y divide-gray-300">
-                <thead>
-                  <tr>
-                    <th
-                      scope="col"
-                      className="py-3.5 pr-3 text-center text-sm font-semibold text-gray-900 "
-                    >
-                      Serve
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900"
-                    >
-                      Description
-                    </th>
-
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900"
-                    >
-                      Total amount
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900"
-                    >
-                      Completed
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900"
-                    >
-                      To complete
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
-                  {meals.length > 0 ? (
-                    meals.map((stat) => (
-                      <tr key={stat.id}>
-                        <td className="py-3.5 pr-3 text-center text-sm font-medium text-gray-900">
-                          {stat.preference}
-                        </td>
-                        <td className="px-3 py-3.5 text-center text-sm text-gray-700">
-                          {stat.description}
-                        </td>
-                        <td className="px-3 py-3.5 text-center text-sm text-gray-700">
-                          {stat.totalAmount}
-                        </td>
-                        <td className="px-3 py-3.5 text-center text-sm text-gray-700">
-                          {stat.completed}
-                        </td>
-                        <td className="px-3 py-3.5 text-center text-sm text-gray-700">
-                          {stat.toComplete}
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td
-                        colSpan={5}
-                        className="py-3.5 text-center text-sm text-gray-900"
-                      >
-                        No meal data available
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+        <Table>
+          <TableHead
+            columns={[
+              "Serve",
+              "Description",
+              "Total amount",
+              "Completed",
+              "To complete",
+            ]}
+          />
+          <TableBody>
+            {meals.length > 0 ? (
+              meals.map((stat) => (
+                <tr key={stat.id}>
+                  <td className="py-3.5 pr-3 text-center text-sm font-medium text-gray-900">
+                    {stat.preference}
+                  </td>
+                  <td className="px-3 py-3.5 text-center text-sm text-gray-700">
+                    {stat.description}
+                  </td>
+                  <td className="px-3 py-3.5 text-center text-sm text-gray-700">
+                    {stat.totalAmount}
+                  </td>
+                  <td className="px-3 py-3.5 text-center text-sm text-gray-700">
+                    {stat.completed}
+                  </td>
+                  <td className="px-3 py-3.5 text-center text-sm text-gray-700">
+                    {stat.toComplete}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <EmptyRow colSpan={5} message="No meal data available" />
+            )}
+          </TableBody>
+        </Table>
       </Wraper>
     </>
   );
