@@ -9,13 +9,15 @@ import { useSeatingConfigure } from "@/store/seating/useSeatingConfigure";
 import { useMealBar } from "@/store/mealBar/useMealBar";
 import { useSeatingFilters } from "@/hooks/utils/useSeatingFilters";
 import TableHeader from "@/components/features/table/TableHeader";
-import ResidentTableRow from "@/components/features/table/ResidentTableRow";
 import { useTableFilters } from "@/hooks/utils/useTableFilters";
 import { useHandleComplete } from "@/hooks/utils/useHandleComplete";
 import { useMoreInfoModal } from "@/store/modals/useMoreInfoModal";
 import { useSelectionModal } from "@/store/modals/useSelectionModal";
 import { MoreInfoModal } from "@/components/features/servingModals/MoreInfoModal";
 import { SelectionModal } from "@/components/features/servingModals/SelectionModal";
+import CheckboxCell from "@/components/features/table/CheckboxCell";
+import ResidentInfo from "@/components/features/table/ResidentInfo";
+import ActionButtons from "@/components/features/table/ActionButtons";
 
 const MEAL_TYPES = {
   BREAKFAST: 'breakfast',
@@ -155,7 +157,7 @@ export default function Tables() {
     handleSelectItem,
     resetSelection,
   } = useCheckboxSelection(updateMealOnTable);
-  
+
   const observations = [
     "Overview of the meals being served, meal preferences and dietary needs.",
   ];
@@ -189,19 +191,41 @@ export default function Tables() {
                       {groupedResidents[tableNumber].map((resident) => {
                         const index = residentsInSeating.findIndex(r => r.documentId === resident.documentId);
                         return (
-                          <ResidentTableRow
-                            key={resident.documentId}
-                            resident={resident}
-                            index={index}
-                            isSelected={residentsToTray.some(item => item.documentId === resident.documentId)}
-                            onSelect={handleSelectItem}
-                            disabled={residentsInSeating.length === 0}
-                            mealInfo={updateMealOnTable[index]}
-                            isComplete={updateMealOnTable[index]?.complete}
-                            onComplete={() => handleComplete(updateMealOnTable, index)}
-                            onOpenInfo={handleOpenMoreInfo}
-                            onChangeSelection={handleSelectionModal}
-                          />
+                          <tr key={resident.documentId}>
+                            <td className="relative px-7 sm:w-12 sm:px-6">
+                              <div className="absolute inset-y-0 left-0 hidden w-0.5 bg-indigo-600 group-has-checked:block" />
+                              <div className="absolute top-1/2 left-4 -mt-2 grid size-4 grid-cols-1">
+                                <CheckboxCell
+                                  checked={residentsToTray.some(item => item.documentId === resident.documentId)}
+                                  onChange={() => handleSelectItem(resident)}
+                                  disabled={residentsInSeating.length === 0}
+                                  label={`Select ${resident.full_name}`}
+                                />
+                              </div>
+                            </td>
+                            <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
+                              <ResidentInfo resident={resident} mealInfo={updateMealOnTable[index]} />
+                            </td>
+                            <td className="hidden sm:block whitespace-nowrap px-3 py-2 text-sm text-gray-500">
+                              {Object.entries(updateMealOnTable[index]?.filterDrinks || {}).map(([key, value]) => (
+                                <div key={key} className="py-0 grid grid-cols-2 gap-0 px-0">
+                                  <dt className="text-sm/6 font-medium text-gray-900 block">{key}</dt>
+                                  <dd className="text-sm/6 text-gray-700 mt-0 overflow-hidden text-ellipsis whitespace-nowrap text-left">
+                                    {typeof value === "boolean" ? (value ? "Add" : "none") : value}
+                                  </dd>
+                                </div>
+                              ))}
+                            </td>
+                            <ActionButtons
+                              key={resident.documentId}
+                              resident={resident}
+                              index={index}
+                              isComplete={updateMealOnTable[index]?.complete}
+                              onComplete={() => handleComplete(updateMealOnTable, index)}
+                              onOpenInfo={handleOpenMoreInfo}
+                              onChangeSelection={handleSelectionModal}
+                            />
+                          </tr>
                         );
                       })}
                     </Fragment>
