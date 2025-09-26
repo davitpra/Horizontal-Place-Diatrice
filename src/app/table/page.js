@@ -19,6 +19,7 @@ import { SelectionModal } from "@/components/features/servingModals/SelectionMod
 import CheckboxCell from "@/components/features/tableResident/CheckboxCell";
 import ResidentInfo from "@/components/features/tableResident/ResidentInfo";
 import ActionButtons from "@/components/features/tableResident/ActionButtons";
+import { useMarkAsOut } from "@/hooks/utils/useMarkAsOut";
 
 const MEAL_TYPES = {
   BREAKFAST: 'breakfast',
@@ -108,6 +109,15 @@ export default function Tables() {
     },
   });
 
+  
+  const { handleMarkAsOut } = useMarkAsOut({
+    condition: currentMealType,
+    mealNumber: selectedMealNumber,
+    onSuccess: () => {
+      resetSelection();
+    },
+  });
+
   // Get filtered data based on seating
   const { residentsInSeating, menusInSeating, mealsInSeating } = useSeatingFilters({
     meals: currentMeals,
@@ -181,7 +191,7 @@ export default function Tables() {
           button="Change to Tray"
           buttonAction={() => handleChangeToTray(residentsToTray)}
           button2="Mark as Out"
-          button2Action={() => { }} />
+          button2Action={() => handleMarkAsOut(residentsToTray)} />
         <MealBar />
       </div>
       <Wraper>
