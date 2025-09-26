@@ -11,6 +11,7 @@ import { useSeatingFilters } from "@/hooks/utils/useSeatingFilters";
 import TableHeader from "@/components/features/tableResident/TableHeader";
 import { useTableFilters } from "@/hooks/utils/useTableFilters";
 import { useHandleComplete } from "@/hooks/utils/useHandleComplete";
+import { useTrayManagement } from "@/hooks/utils/useTrayManagement";
 import { useMoreInfoModal } from "@/store/modals/useMoreInfoModal";
 import { useSelectionModal } from "@/store/modals/useSelectionModal";
 import { MoreInfoModal } from "@/components/features/servingModals/MoreInfoModal";
@@ -98,6 +99,15 @@ export default function Tables() {
     }
   };
 
+  // Initialize tray management
+  const { handleChangeToTray } = useTrayManagement({
+    condition: currentMealType,
+    mealNumber: selectedMealNumber,
+    onSuccess: () => {
+      resetSelection();
+    },
+  });
+
   // Get filtered data based on seating
   const { residentsInSeating, menusInSeating, mealsInSeating } = useSeatingFilters({
     meals: currentMeals,
@@ -169,7 +179,7 @@ export default function Tables() {
           title={"Residents"}
           observations={observations}
           button="Change to Tray"
-          buttonAction={() => { }}
+          buttonAction={() => handleChangeToTray(residentsToTray)}
           button2="Mark as Out"
           button2Action={() => { }} />
         <MealBar />
@@ -204,8 +214,8 @@ export default function Tables() {
                               <div className="absolute inset-y-0 left-0 hidden w-0.5 bg-indigo-600 group-has-checked:block" />
                               <div className="absolute top-1/2 left-4 -mt-2 grid size-4 grid-cols-1">
                                 <CheckboxCell
-                                  checked={residentsToTray.some(item => item.documentId === resident.documentId)}
-                                  onChange={() => handleSelectItem(resident)}
+                                  checked={residentsToTray.some(({ documentId, onTray }) => documentId === updateMealOnTable[index]?.documentId && onTray === updateMealOnTable[index]?.onTray)}
+                                  onChange={() => handleSelectItem(updateMealOnTable[index])}
                                   disabled={residentsInSeating.length === 0}
                                   label={`Select ${resident.full_name}`}
                                 />

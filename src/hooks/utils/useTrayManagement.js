@@ -5,6 +5,9 @@ export const useTrayManagement = ({ condition, mealNumber, onSuccess }) => {
   const { updateMealItem } = useMealsStore();
 
   const handleChangeToTray = async (selectedResidents) => {
+    console.log("handleChangeToTray initiated");
+
+    console.log("selectedResidents", selectedResidents);
     try {
       const updatedTray = selectedResidents.map(({documentId, onTray} = {}) => ({
         documentId: documentId,

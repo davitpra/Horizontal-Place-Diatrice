@@ -124,7 +124,7 @@ export function ServingModal({
       title={`Table ${selectTable}`}
       button="Change to Tray"
       buttonAction={() => handleChangeToTray(residentsToTray)}
-      button2 = "Mark as Out"
+      button2="Mark as Out"
       button2Action={() => handleMarkAsOut(residentsToTray)}
     >
       <div className="mt-8 flow-root">
@@ -142,7 +142,7 @@ export function ServingModal({
                     <td className="relative px-7 sm:w-12 sm:px-6">
                       <div className="absolute inset-y-0 left-0 hidden w-0.5 bg-indigo-600 group-has-checked:block" />
                       <CheckboxCell
-                        checked={residentsToTray.some(({documentId, onTray}) => documentId === updateMealOnTable[index]?.documentId && onTray === updateMealOnTable[index]?.onTray)}
+                        checked={residentsToTray.some(({ documentId, onTray }) => documentId === updateMealOnTable[index]?.documentId && onTray === updateMealOnTable[index]?.onTray)}
                         onChange={() => handleSelectItem(updateMealOnTable[index])}
                         disabled={residentsOnTable.length === 0}
                         label={`Select ${resident.full_name}`}

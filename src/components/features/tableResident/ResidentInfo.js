@@ -2,7 +2,6 @@
 import { UserIcon } from "@heroicons/react/24/outline";
 
 const ResidentInfo = ({ resident, mealInfo }) => {
-  console.log("mealInfo", mealInfo);
   const host = process.env.NEXT_PUBLIC_STRAPI_HOST;
   return (
     <div className="flex items-center">
