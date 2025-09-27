@@ -10,9 +10,7 @@ import TableHeader from "@/components/features/tableResident/TableHeader";
 import { useTrayFilters } from "@/hooks/utils/useTrayFilters";
 import { useHandleComplete } from "@/hooks/utils/useHandleComplete";
 import { useTrayManagement } from "@/hooks/utils/useTrayManagement";
-import { useMoreInfoModal } from "@/store/modals/useMoreInfoModal";
 import { useSelectionModal } from "@/store/modals/useSelectionModal";
-import { MoreInfoModal } from "@/components/features/servingModals/MoreInfoModal";
 import { SelectionModal } from "@/components/features/servingModals/SelectionModal";
 import CheckboxCell from "@/components/features/tableResident/CheckboxCell";
 import ResidentInfo from "@/components/features/tableResident/ResidentInfo";
@@ -45,14 +43,13 @@ export default function Tables() {
   const [selectedIndex, setSelectedIndex] = useState(null);
 
   // Modal stores
-  const InfoModal = useMoreInfoModal();
   const SelecModal = useSelectionModal();
 
   const handleOpenMoreInfo = (resident, index) => {
     if (!resident) return;
     setResidentInfo(resident);
     setSelectedIndex(index);
-    InfoModal.onOpen();
+    SelecModal.onOpen();
   };
 
   const handleSelectionModal = (resident, index) => {
@@ -64,11 +61,11 @@ export default function Tables() {
 
   // Reset resident info when modals close
   useEffect(() => {
-    if (!InfoModal.isOpen && !SelecModal.isOpen) {
+    if (!SelecModal.isOpen) {
       setResidentInfo(null);
       setSelectedIndex(null);
     }
-  }, [InfoModal.isOpen, SelecModal.isOpen]);
+  }, [SelecModal.isOpen]);
 
   const { handleComplete: handleCompleteAction } = useHandleComplete();
 
@@ -119,12 +116,13 @@ export default function Tables() {
   const {
     residentsOnTray,
     mealOnTray,
-    updateMealOnTray,
     setMealOnTray,
   } = useTrayFilters({
     meal: currentMeals,
     condition: currentMealType,
   });
+
+  console.log("mealOnTray", mealOnTray);
 
 
   // Update current meal type when meal number changes
@@ -151,7 +149,7 @@ export default function Tables() {
     handleSelectAll,
     handleSelectItem,
     resetSelection,
-  } = useCheckboxSelection(updateMealOnTray);
+  } = useCheckboxSelection(mealOnTray);
 
   const observations = [
     "For breakfast tray call to 3009 (Housekeeping) to take the trays",
@@ -190,18 +188,18 @@ export default function Tables() {
                           <div className="absolute inset-y-0 left-0 hidden w-0.5 bg-indigo-600 group-has-checked:block" />
                           <div className="absolute top-1/2 left-4 -mt-2 grid size-4 grid-cols-1">
                             <CheckboxCell
-                              checked={residentsToTray.some(({ documentId, onTray }) => documentId === updateMealOnTray[index]?.documentId && onTray === updateMealOnTray[index]?.onTray)}
-                              onChange={() => handleSelectItem(updateMealOnTray[index])}
+                              checked={residentsToTray.some(({ documentId, onTray }) => documentId === mealOnTray[index]?.documentId && onTray === mealOnTray[index]?.onTray)}
+                              onChange={() => handleSelectItem(mealOnTray[index])}
                               disabled={residentsOnTray.length === 0}
                               label={`Select ${resident.full_name}`}
                             />
                           </div>
                         </td>
                         <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
-                          <ResidentInfo resident={resident} mealInfo={updateMealOnTray[index]} />
+                          <ResidentInfo resident={resident} mealInfo={mealOnTray[index]} />
                         </td>
                         <td className="hidden sm:block whitespace-nowrap px-3 py-2 text-sm text-gray-500">
-                          {Object.entries(updateMealOnTray[index]?.filterDrinks || {}).map(([key, value]) => (
+                          {Object.entries(mealOnTray[index].meals[0] || {}).map(([key, value]) => (
                             <div key={key} className="py-0 grid grid-cols-2 gap-0 px-0">
                               <dt className="text-sm/6 font-medium text-gray-900 block">{key}</dt>
                               <dd className="text-sm/6 text-gray-700 mt-0 overflow-hidden text-ellipsis whitespace-nowrap text-left">
@@ -214,9 +212,8 @@ export default function Tables() {
                           key={resident.documentId}
                           resident={resident}
                           index={index}
-                          isComplete={updateMealOnTray[index]?.complete}
-                          onComplete={() => handleComplete(updateMealOnTray, index)}
-                          onOpenInfo={handleOpenMoreInfo}
+                          isComplete={mealOnTray[index]?.complete}
+                          onComplete={() => handleComplete(mealOnTray, index)}
                           onChangeSelection={handleSelectionModal}
                         />
                       </tr>
@@ -228,13 +225,6 @@ export default function Tables() {
           </div>
         </div>
       </Wraper>
-      <MoreInfoModal
-        resident={residentInfo}
-        order={mealOnTray}
-        index={selectedIndex}
-        setMealOnTable={setMealOnTray}
-        complete={updateMealOnTray[selectedIndex]?.complete}
-      />
       <SelectionModal
         resident={residentInfo}
         order={mealOnTray}

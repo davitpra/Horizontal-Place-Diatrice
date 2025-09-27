@@ -155,6 +155,7 @@ export function Sidebar({ children }) {
           </button>
 
           {/* Seating label */}
+          {pathname !== "/trays" && (
           <Popover className="relative">
             <PopoverButton className="inline-flex items-center gap-x-1 text-sm/6 font-semibold text-gray-900">
               <span>{seatingLabel}</span>
@@ -181,6 +182,7 @@ export function Sidebar({ children }) {
               </div>
             </PopoverPanel>
           </Popover>
+          )}
           {/* Separator */}
           <div
             aria-hidden="true"

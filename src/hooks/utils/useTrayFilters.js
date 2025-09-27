@@ -10,7 +10,6 @@ export const useTrayFilters = ({
   const menus = useDayMenusStore((state) => state.dayMenus);
   const [residentsOnTray, setResidentsOnTray] = useState([]);
   const [mealOnTray, setMealOnTray] = useState([]);
-  const [updateMealOnTray, setUpdatedMealOnTray] = useState([]);
 
   // Filtrar menús, residentes y comidas que están en la bandeja
   useEffect(() => {
@@ -53,59 +52,11 @@ export const useTrayFilters = ({
     setMealOnTray(orderedMealsOnTray);
   }, [residents, meal, menus, condition]);
 
-  // Filtrar las bebidas de los pedidos
-  const ordersWithoutDrinks = useMemo(() => {
-    const filterDrinks = (meals) => {
-      const {
-        water,
-        Hotdrink,
-        Juice,
-        Cereals,
-        Comment,
-        ...filteredPreference
-      } = meals;
-      return filteredPreference;
-    };
-
-    try {
-      if (!Array.isArray(mealOnTray)) {
-        console.error("order is not an array:", mealOnTray);
-        return [];
-      }
-
-      // Filtrar las bebidas de cada pedido
-      return mealOnTray.map((preference) => {
-        if (
-          !preference ||
-          !Array.isArray(preference.meals) ||
-          !preference.meals[0]
-        ) {
-          console.error("Invalid preference object:", preference);
-          return {};
-        }
-        const filteredMeals = filterDrinks(preference.meals[0]);
-        return {
-          filterDrinks: filteredMeals,
-          complete: preference.complete,
-          documentId: preference.documentId,
-          onTray: preference.onTray,
-          went_out_to_eat: preference.went_out_to_eat,
-        };
-      });
-    } catch (error) {
-      console.error("An error occurred while filtering order:", error);
-      return [];
-    }
-  }, [mealOnTray]);
-
-  useEffect(() => {
-    setUpdatedMealOnTray(ordersWithoutDrinks);
-  }, [ordersWithoutDrinks]);
+  console.log("mealOnTray useTrayFilters", mealOnTray);
 
   return {
     residentsOnTray,
     mealOnTray,
-    updateMealOnTray,
     setMealOnTray,
   };
 };
