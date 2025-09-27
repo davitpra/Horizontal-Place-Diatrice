@@ -13,7 +13,7 @@ export const useTableFilters = ({
 
   // Filtrar menús, residentes y comidas por mesa seleccionada
   useEffect(() => {
-    // 1. Primero filtramos las comidas por mesa y que no estén fuera 
+    // 1. Primero filtramos las comidas por mesa y si no hay mesa seleccionada, filtramos todas las comidas
     const mealsByTable =
       mealsOnSeating?.filter((meal) => {
         if (selectTable) {
