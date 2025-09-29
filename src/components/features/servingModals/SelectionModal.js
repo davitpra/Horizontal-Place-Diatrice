@@ -7,10 +7,10 @@ import { MEAL_OPTIONS } from "@/constants/mealOption";
 import { changeComplete } from "@/strapi/utils/changeComplete";
 import { useMenuScheduleStore } from "@/store/meals/useMenuScheduleStore";
 import { useMealBar } from "@/store/mealBar/useMealBar";
+import { useMealsStore } from "@/store/meals/useMealsStore";
 
 export function SelectionModal({
   resident,
-  setOrder,
   order = [{}],
   index = 0,
 }) {
@@ -34,6 +34,9 @@ export function SelectionModal({
 
   // Get menu data from the store
   const [lunchMenu, supperMenu] = useMenuScheduleStore((state) => state.menuSchedule);
+
+  // update the meals on store
+  const updateMealItem = useMealsStore((state) => state.updateMealItem);
 
   // Close modal when the SelectionModal state changes
   useEffect(() => {
@@ -127,9 +130,32 @@ export function SelectionModal({
       return {};
     }
     return Object.entries(meals).reduce((acc, [key, value]) => {
-      if (key === "FruitPlate" || key === "Yogurt" || key === "Muffing" || key === "Bacon" || key === "Pancake") {
+      // Handle breakfast items
+      if (
+        key === "FruitPlate" ||
+        key === "Yogurt" ||
+        key === "Muffing" ||
+        key === "Bacon" ||
+        key === "Pancake"
+      ) {
         acc[key] = value === "Add" ? true : value === "none" ? false : value;
-      } else {
+      }
+      // Handle lunch and supper items
+      else if (
+        key === "soup" ||
+        key === "salad" ||
+        key === "option_1" ||
+        key === "option_2" ||
+        key === "side_1" ||
+        key === "side_2" ||
+        key === "side_3" ||
+        key === "side_4" ||
+        key === "dessert"
+      ) {
+        acc[key] = value === "none" ? false : true;
+      }
+      // Handle any other cases
+      else {
         acc[key] = value;
       }
       return acc;
@@ -166,6 +192,7 @@ export function SelectionModal({
   // Handle save action
   const handleSave = async () => {
     const documentId = order[index].documentId;
+
     if (!documentId) {
       console.error("No documentId found for resident:", resident.full_name);
       return;
@@ -181,12 +208,17 @@ export function SelectionModal({
           }
           : preference
       );
+      // Ensure mealNumber is within valid range (0-2)
+      const validMealNumber = mealNumber >= 0 && mealNumber <= 2 ? mealNumber : 0;
+      const type = ['breakfast', 'lunch', 'supper'][validMealNumber];
 
-      setOrder(neworder);
-      await changeComplete({
-        documentId,
-        options: savedMeals,
-      });
+
+      updateMealItem(type, documentId, savedMeals);
+
+      //await changeComplete({
+      //documentId,
+      //options: savedMeals,
+      //});
       console.log("Meal selection saved successfully");
       SelectionModal.onClose();
     } catch (error) {

@@ -191,15 +191,12 @@ export function ServingModal({
         resident={residentInfo}
         order={mealOnTable}
         index={index}
-        setMealOnTable={setMealOnTable}
         complete={updateMealOnTable[index]?.complete}
       />
       <SelectionModal
         resident={residentInfo}
         order={mealOnTable}
         index={index}
-        setMealOnTable={setMealOnTable}
-        mealNumber={mealNumber}
       />
     </Modal>
   );

@@ -17,11 +17,35 @@ export const useMealsStore = create((set) => ({
     })),
   updateMealItem: (type, documentId, updates) =>
     set((state) => {
-      const updatedMeals = state.meals[type].map(meal =>
-        meal.documentId === documentId
-          ? { ...meal, ...updates }
-          : meal
-      );
+      // Check if the meal with documentId exists
+      const mealExists = state.meals[type].some(meal => meal.documentId === documentId);
+      
+      let updatedMeals;
+      if (mealExists) {
+        // Update existing meal
+        updatedMeals = state.meals[type].map(meal => {
+          if (meal.documentId === documentId) {
+            // Create a new meal object with existing properties
+            const updatedMeal = { ...meal };
+            
+            // Update the meals array with the new updates
+            updatedMeal.meals = [updates]; // Replace the first item in meals array with updates
+            
+            return updatedMeal;
+          }
+          return meal;
+        });
+      } else {
+        // Add new meal with documentId and meals array containing updates
+        updatedMeals = [...state.meals[type], { 
+          documentId, 
+          meals: [updates],
+          complete: true,
+          onTray: true,
+          went_out_to_eat: false
+        }];
+      }
+      
       
       return {
         meals: {
