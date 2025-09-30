@@ -140,20 +140,20 @@ export function SelectionModal({
       ) {
         acc[key] = value === "Add" ? true : value === "none" ? false : value;
       }
-      // Handle lunch and supper items
-      else if (
-        key === "soup" ||
-        key === "salad" ||
-        key === "option_1" ||
-        key === "option_2" ||
-        key === "side_1" ||
-        key === "side_2" ||
-        key === "side_3" ||
-        key === "side_4" ||
-        key === "dessert"
-      ) {
-        acc[key] = value === "none" ? false : true;
-      }
+      // // Handle lunch and supper items
+      // else if (
+      //   key === "soup" ||
+      //   key === "salad" ||
+      //   key === "option_1" ||
+      //   key === "option_2" ||
+      //   key === "side_1" ||
+      //   key === "side_2" ||
+      //   key === "side_3" ||
+      //   key === "side_4" ||
+      //   key === "dessert"
+      // ) {
+      //   acc[key] = value === "none" ? false : value;
+      // }
       // Handle any other cases
       else {
         acc[key] = value;
@@ -198,28 +198,20 @@ export function SelectionModal({
       return;
     }
     try {
+      // reverse the transform order
       const savedMeals = reverseTransformorder(meals);
 
-      const neworder = order.map((preference, i) =>
-        i === index
-          ? {
-            ...preference,
-            meals: [savedMeals],
-          }
-          : preference
-      );
-      // Ensure mealNumber is within valid range (0-2)
-      const validMealNumber = mealNumber >= 0 && mealNumber <= 2 ? mealNumber : 0;
-      const type = ['breakfast', 'lunch', 'supper'][validMealNumber];
-
-
+      // update the meal item on the store
+      const type = ['breakfast', 'lunch', 'supper'][mealNumber];
       updateMealItem(type, documentId, savedMeals);
+
+      console.log("savedMeals", savedMeals);
 
       //await changeComplete({
       //documentId,
       //options: savedMeals,
       //});
-      console.log("Meal selection saved successfully");
+      //console.log("Meal selection saved successfully");
       SelectionModal.onClose();
     } catch (error) {
       console.error("Error saving meal selection:", error);
