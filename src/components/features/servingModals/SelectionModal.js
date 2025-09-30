@@ -113,6 +113,7 @@ export function SelectionModal({
 
 
   // Transform order into a format suitable for the UI
+  // TODO: this function is not working as expected
   function transformorder(preference) {
     if (!preference || typeof preference !== "object") {
       console.error("Invalid preference object");
@@ -124,6 +125,8 @@ export function SelectionModal({
     }, {});
   }
 
+  // TODO: this function is not be here
+  // Reverse the transform order, 
   function reverseTransformorder(meals) {
     if (!meals || typeof meals !== "object") {
       console.error("Invalid meals object");
@@ -140,20 +143,20 @@ export function SelectionModal({
       ) {
         acc[key] = value === "Add" ? true : value === "none" ? false : value;
       }
-      // // Handle lunch and supper items
-      // else if (
-      //   key === "soup" ||
-      //   key === "salad" ||
-      //   key === "option_1" ||
-      //   key === "option_2" ||
-      //   key === "side_1" ||
-      //   key === "side_2" ||
-      //   key === "side_3" ||
-      //   key === "side_4" ||
-      //   key === "dessert"
-      // ) {
-      //   acc[key] = value === "none" ? false : value;
-      // }
+      // Handle lunch and supper items
+      else if (
+        key === "soup" ||
+        key === "salad" ||
+        key === "option_1" ||
+        key === "option_2" ||
+        key === "side_1" ||
+        key === "side_2" ||
+        key === "side_3" ||
+        key === "side_4" ||
+        key === "dessert"
+      ) {
+        acc[key] = value === "none" ? false : value;
+      }
       // Handle any other cases
       else {
         acc[key] = value;
