@@ -33,26 +33,20 @@ if (dayOfWeek === 0 || dayOfWeek === 3) {
 }
 
 const LUNCH = [
-  { key: "water", options: ["none", "with ice", "no ice"] },
-  { key: "Hotdrink", options: ["none", "Coffee", "Tea"] },
-  { key: "Juice", options: ["none", "Tomato", "Orange", "Cramberry", "Apple"] },
-  { key: "Milk", options: ["none", "regular", "lactose free"] },
-  { key: "additionals", options: [""] },
-  { key: "Comment", options: [""] },
   { key: "soup", options: ["none", "Add"] },
   { key: "salad", options: ["none", "Add"] },
   { key: "option_1", options: ["none", "Add"] },
   { key: "option_2", options: ["none", "Add"] },
   { key: "dessert", options: ["none", "Add"] },
-];
-
-const SUPPER = [
+  { key: "additionals", options: [""] },
+  { key: "Comment", options: [""] },
   { key: "water", options: ["none", "with ice", "no ice"] },
   { key: "Hotdrink", options: ["none", "Coffee", "Tea"] },
   { key: "Juice", options: ["none", "Tomato", "Orange", "Cramberry", "Apple"] },
   { key: "Milk", options: ["none", "regular", "lactose free"] },
-  { key: "additionals", options: [""] },
-  { key: "Comment", options: [""] },
+];
+
+const SUPPER = [
   { key: "option_1", options: ["none", "Add"] },
   { key: "option_2", options: ["none", "Add"] },
   { key: "side_1", options: ["none", "Add"] },
@@ -60,6 +54,13 @@ const SUPPER = [
   { key: "side_3", options: ["none", "Add"] },
   { key: "side_4", options: ["none", "Add"] },
   { key: "dessert", options: ["none", "Add"] },
+  { key: "additionals", options: [""] },
+  { key: "Comment", options: [""] },
+
+  { key: "water", options: ["none", "with ice", "no ice"] },
+  { key: "Hotdrink", options: ["none", "Coffee", "Tea"] },
+  { key: "Juice", options: ["none", "Tomato", "Orange", "Cramberry", "Apple"] },
+  { key: "Milk", options: ["none", "regular", "lactose free"] },
 ];
 
 export const MEAL_OPTIONS = [BREAKFAST, LUNCH, SUPPER];
