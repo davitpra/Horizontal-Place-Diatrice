@@ -113,7 +113,7 @@ export function SelectionModal({ resident, order = [{}], index = 0 }) {
 
       // update the meal item on the store
       const type = ["breakfast", "lunch", "supper"][mealNumber];
-      updateMealItem(type, documentId, savedMeals);
+      updateMealItem(type, documentId, meals);
 
       // persist changes to Strapi
       await updateMeal({
