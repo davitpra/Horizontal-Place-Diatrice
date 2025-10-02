@@ -18,7 +18,7 @@ import {
   transformOrder,
   reverseTransformOrder,
 } from "@/utils/mealTransformations";
-import { changeComplete } from "@/strapi/utils/changeComplete";
+import { updateMeal } from "@/strapi/meals/updateMeal";
 
 export function SelectionModal({ resident, order = [{}], index = 0 }) {
   // Store hooks
@@ -76,12 +76,13 @@ export function SelectionModal({ resident, order = [{}], index = 0 }) {
   // Effect to update meals when order changes
   useEffect(() => {
     if (currentMeals) {
-      const updatedOrder = transformOrder(currentMeals, mealNumber);
+      const menuData = mealNumber === 1 ? lunchMenu?.data : mealNumber === 2 ? supperMenu?.data : undefined;
+      const updatedOrder = transformOrder(currentMeals, mealNumber, menuData);
       setMeals(updatedOrder);
     } else {
       setMeals({});
     }
-  }, [currentMeals, mealNumber]);
+  }, [currentMeals, mealNumber, lunchMenu, supperMenu]);
 
   // Handle change of the meal selection
   const handleChange = useCallback((event, key) => {
@@ -106,19 +107,20 @@ export function SelectionModal({ resident, order = [{}], index = 0 }) {
     try {
       setError("");
       setIsLoading(true);
-
       // reverse the transform order
-      const savedMeals = reverseTransformOrder(meals, mealNumber);
+      const menuData = mealNumber === 1 ? lunchMenu?.data : mealNumber === 2 ? supperMenu?.data : undefined;
+      const savedMeals = reverseTransformOrder(meals, mealNumber, menuData);
 
       // update the meal item on the store
       const type = ["breakfast", "lunch", "supper"][mealNumber];
       updateMealItem(type, documentId, savedMeals);
 
-      // Uncomment if changeComplete is needed
-      // await changeComplete({
-      //   documentId,
-      //   options: savedMeals,
-      // });
+      // persist changes to Strapi
+      await updateMeal({
+        condition: type,
+        documentId,
+        options: savedMeals,
+      });
 
       selectionModal.onClose();
     } catch (error) {

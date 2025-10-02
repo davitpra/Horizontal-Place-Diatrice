@@ -24,7 +24,7 @@ const dayOfWeek = today.getDay();
 
 // if it is Thursday, add pancakes to breakfast
 if (dayOfWeek === 4) {
-  BREAKFAST.push({ key: "Pancakes", options: ["none", "Add"] });
+  BREAKFAST.push({ key: "Pancake", options: ["none", "Add"] });
 }
 
 // if it is Sunday or Wednesday, add bacon to breakfast

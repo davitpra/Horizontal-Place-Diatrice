@@ -76,9 +76,9 @@ function changeFormat(residents) {
     // if it is Thursday, add pancakes to breakfast
     if (dayOfWeek === 4) {
       if (Breakfast_preferences?.Pancake) {
-        meals[0].Pancakes = "Add";
+        meals[0].Pancake = "Add";
       } else {
-        meals[0].Pancakes = "none";
+        meals[0].Pancake = "none";
       }
     }
 

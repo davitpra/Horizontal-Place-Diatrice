@@ -10,7 +10,7 @@ export async function createBreakfast({date, table, full_name, documentId, break
     Comment: ''
   }
 
-  const {went_out_to_eat, onTray, additionals, Comment, water, Hotdrink, Cereals, Juice, Milk, eggs, toast, FruitPlate, Yogurt, Muffing, Pancakes, Bacon} = preferences;
+  const {went_out_to_eat, onTray, additionals, Comment, water, Hotdrink, Cereals, Juice, Milk, eggs, toast, FruitPlate, Yogurt, Muffing, Pancake, Bacon} = preferences;
 
   const slug =full_name.toLowerCase().replace(/\s+/g, '-')
 
@@ -35,7 +35,7 @@ export async function createBreakfast({date, table, full_name, documentId, break
       "FruitPlate": FruitPlate,
       "Yogurt": Yogurt,
       "Muffing": Muffing,
-      "Pancakes": Pancakes,
+      "Pancake": Pancake,
       "Bacon": Bacon,
       "menu": documentId,
   }}

@@ -15,9 +15,9 @@ export const MEAL_TYPE_BY_NUMBER = [
 export const BREAKFAST_ITEMS = {
   FRUIT_PLATE: 'FruitPlate',
   YOGURT: 'Yogurt',
-  MUFFIN: 'Muffin',
+  MUFFIN: 'Muffing',
   BACON: 'Bacon',
-  PANCAKE: 'Pancakes'
+  PANCAKE: 'Pancake'
 };
 
 export const LUNCH_SUPPER_ITEMS = {
