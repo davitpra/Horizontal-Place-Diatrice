@@ -73,13 +73,18 @@ src/
 ### Variables de Entorno
 Agregar al archivo `.env.local`:
 ```env
+# Strapi CMS Configuration
+STRAPI_HOST=http://localhost:1337
+
 # JWT Secret for token verification (same as Strapi JWT_SECRET)
 JWT_SECRET=your-super-secret-jwt-key-here
 
-# Auth Configuration
+# Auth Configuration (optional - for future NextAuth integration)
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=your-nextauth-secret-here
 ```
+
+**Importante**: Ya no se requiere `STRAPI_TOKEN`. El sistema ahora usa el JWT del usuario autenticado automáticamente.
 
 ### Dependencias Instaladas
 ```bash

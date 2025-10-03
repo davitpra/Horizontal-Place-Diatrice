@@ -16,7 +16,7 @@ const getBaseUrl = () => {
   return `http://localhost:${process.env.PORT || 3000}`;
 };
 
-export async function query(endpoint, method = 'GET', data = null, useAuth = false) {
+export async function query(endpoint, method = 'GET', data = null) {
   try {
     const baseUrl = getBaseUrl();
     const apiUrl = `${baseUrl}/api/strapi`;
@@ -29,8 +29,7 @@ export async function query(endpoint, method = 'GET', data = null, useAuth = fal
       body: JSON.stringify({
         endpoint,
         method,
-        data,
-        useAuth
+        data
       })
     });
 
@@ -45,19 +44,16 @@ export async function query(endpoint, method = 'GET', data = null, useAuth = fal
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    return await response.json();
+    const result = await response.json();
+    
+    // Check if the response indicates an authentication error
+    if (result.error && result.valid === false) {
+      throw new Error(result.error);
+    }
+
+    return result;
   } catch (error) {
     console.error('Strapi API error:', error);
     throw error;
   }
-}
-
-// Helper function for authenticated queries
-export async function authenticatedQuery(endpoint, method = 'GET', data = null) {
-  return query(endpoint, method, data, true);
-}
-
-// Helper function for public queries (no authentication required)
-export async function publicQuery(endpoint, method = 'GET', data = null) {
-  return query(endpoint, method, data, false);
 }

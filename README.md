@@ -69,12 +69,14 @@ Antes de comenzar, asegúrate de tener instalado:
    ```env
    # Strapi CMS Configuration
    NEXT_PUBLIC_STRAPI_HOST=http://localhost:1337
-   STRAPI_TOKEN=tu_token_de_strapi_aqui
-
-   # Para usar con REST Client (VS Code extension)
-   # Estas variables se usan en el archivo api.rest
    STRAPI_HOST=http://localhost:1337
-   STRAPI_TOKEN=tu_token_de_strapi_aqui
+
+   # JWT Secret for token verification (same as Strapi JWT_SECRET)
+   JWT_SECRET=your-super-secret-jwt-key-here
+
+   # Auth Configuration
+   NEXTAUTH_URL=http://localhost:3000
+   NEXTAUTH_SECRET=your-nextauth-secret-here
    ```
 
 4. **Inicia el servidor de desarrollo**
@@ -188,9 +190,11 @@ El archivo `api.rest` contiene todas las peticiones HTTP para probar la API de S
 2. **Configura las variables de entorno** en tu archivo `.env.local`:
    ```env
    STRAPI_HOST=http://localhost:1337
-   STRAPI_TOKEN=tu_token_de_strapi_aqui
+   JWT_SECRET=your-super-secret-jwt-key-here
    ```
 3. **Abre el archivo `api.rest`** y haz clic en "Send Request" sobre cualquier endpoint
+   
+   **Nota**: Ahora el sistema usa autenticación JWT del usuario en lugar de un token fijo de Strapi. Para endpoints protegidos, primero debes autenticarte y obtener un JWT válido.
 
 ## 🎨 Guías de Desarrollo
 
