@@ -18,9 +18,10 @@ Un sistema completo de gestión de residentes para centros de cuidado, desarroll
 - **Next.js 15.0.2** - Framework React con App Router
 - **React 18.3.1** - Biblioteca de interfaz de usuario
 - **TailwindCSS 3.4.1** - Framework de CSS utilitario
-- **Headless UI** - Componentes accesibles sin estilos
-- **Heroicons** - Iconografía SVG
-- **Zustand** - Gestión de estado ligera
+- **@headlessui/react 2.2.0** - Componentes accesibles sin estilos
+- **@heroicons/react 2.1.5** - Iconografía SVG
+- **@tailwindcss/forms 0.5.9** - Estilos de formularios
+- **Zustand 5.0.1** - Gestión de estado ligera
 
 ### Backend
 
@@ -29,9 +30,12 @@ Un sistema completo de gestión de residentes para centros de cuidado, desarroll
 
 ### Herramientas de Desarrollo
 
-- **ESLint** - Linter para JavaScript/TypeScript
-- **PostCSS** - Procesador de CSS
-- **Turbopack** - Bundler rápido para desarrollo
+- **TypeScript 5.9.2** - Superset tipado de JavaScript
+- **ESLint 8.x** - Linter para JavaScript/TypeScript
+- **PostCSS 8.x** - Procesador de CSS
+- **Turbopack** - Bundler rápido para desarrollo (habilitado por defecto)
+- **@types/node 24.6.0** - Tipos para Node.js
+- **@types/react 19.1.16** - Tipos para React
 
 ## 📋 Prerrequisitos
 
@@ -90,23 +94,36 @@ Antes de comenzar, asegúrate de tener instalado:
 ```
 src/
 ├── app/                    # App Router de Next.js
+│   ├── api/               # API Routes
+│   ├── fonts/             # Fuentes personalizadas
 │   ├── globals.css        # Estilos globales
 │   ├── layout.js          # Layout principal
 │   ├── page.js            # Página principal (servicio de comidas)
 │   ├── room/              # Página de gestión de residentes
+│   ├── summary/           # Página de resumen
+│   ├── table/             # Página de tabla
 │   └── trays/             # Página de bandejas
 ├── components/            # Componentes reutilizables
-│   ├── Table.js           # Tabla de residentes
-│   ├── MealBar.js         # Barra de navegación de comidas
-│   ├── SelectionModal.js  # Modal de selección
-│   └── ...
+│   ├── features/          # Componentes específicos de funcionalidades
+│   │   ├── serving/       # Componentes de servicio
+│   │   ├── servingModals/ # Modales de servicio
+│   │   ├── tableInfo/     # Información de tabla
+│   │   └── tableResident/ # Tabla de residentes
+│   ├── providers/         # Proveedores de contexto
+│   └── ui/                # Componentes de interfaz
+│       ├── Footer.js      # Pie de página
+│       ├── MealBar.js     # Barra de navegación de comidas
+│       ├── Modal.js       # Modal base
+│       ├── Sidebar.js     # Barra lateral
+│       ├── Table.js       # Tabla base
+│       ├── Title.js       # Título
+│       └── Wraper.js      # Wrapper
 ├── hooks/                 # Custom hooks
-│   ├── useCreateMenus.js  # Hook para crear menús
-│   ├── useTrays.js        # Hook para gestión de bandejas
-│   └── ...
-├── lib/                   # Utilidades y configuraciones
-│   ├── strapi.js          # Cliente de Strapi
-│   └── getAllResidents.js # Función para obtener residentes
+│   ├── meals/             # Hooks relacionados con comidas
+│   ├── ui/                # Hooks de interfaz
+│   └── utils/             # Hooks utilitarios
+├── strapi/                # Cliente y utilidades de Strapi
+├── utils/                 # Utilidades generales
 ├── data/                  # Datos estáticos
 ├── constants/             # Constantes de la aplicación
 └── store/                 # Estado global con Zustand
@@ -115,7 +132,7 @@ src/
 ## 🚀 Scripts Disponibles
 
 ```bash
-# Desarrollo con Turbopack (más rápido)
+# Desarrollo con Turbopack (más rápido) - habilitado por defecto
 npm run dev
 
 # Construcción para producción
@@ -124,7 +141,7 @@ npm run build
 # Iniciar servidor de producción
 npm run start
 
-# Linting del código
+# Linting del código con ESLint
 npm run lint
 ```
 
@@ -184,12 +201,23 @@ El archivo `api.rest` contiene todas las peticiones HTTP para probar la API de S
 - Early returns para mejorar legibilidad
 - TailwindCSS para todos los estilos
 - Implementar características de accesibilidad
+- TypeScript para tipado estático
+- Estructura modular con componentes separados por funcionalidad
 
-### Componentes
+### Arquitectura de Componentes
 
-- Todos los componentes son funcionales
-- Uso de hooks personalizados para lógica reutilizable
-- Props tipadas cuando sea posible
+- **UI Components**: Componentes base reutilizables (`src/components/ui/`)
+- **Feature Components**: Componentes específicos de funcionalidades (`src/components/features/`)
+- **Providers**: Contextos y proveedores de estado (`src/components/providers/`)
+- Todos los componentes son funcionales con hooks
+- Uso de custom hooks para lógica reutilizable
+- Props tipadas con TypeScript cuando sea posible
+
+### Estructura de Hooks
+
+- **Meals Hooks**: Lógica relacionada con comidas y menús
+- **UI Hooks**: Hooks para manejo de interfaz y estado local
+- **Utils Hooks**: Hooks utilitarios para operaciones comunes
 
 ## 🤝 Contribución
 
@@ -214,6 +242,18 @@ Si tienes problemas o preguntas:
 - [ ] Integración con sistemas de inventario
 - [ ] Aplicación móvil
 - [ ] Dashboard de administración
+- [ ] Sistema de roles y permisos
+- [ ] Exportación de datos
+- [ ] Integración con sistemas de facturación
+- [ ] Notificaciones push
+- [ ] Modo offline
+
+## 📊 Estado del Proyecto
+
+- **Versión**: 0.1.0
+- **Estado**: En desarrollo activo
+- **Última actualización**: Diciembre 2024
+- **Compatibilidad**: Node.js 18+, Next.js 15+
 
 ---
 
