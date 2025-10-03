@@ -3,6 +3,7 @@ import { Table } from "../../components/ui/Table";
 import Title from "../../components/ui/Title";
 import { MealBar } from "../../components/ui/MealBar";
 import { getAllResidents } from "@/strapi/residents/getAllResidents";
+import AuthGuard from "@/components/auth/AuthGuard";
 
 export default async function Room() {
   const observations =[
@@ -12,12 +13,12 @@ export default async function Room() {
   const residents = await getAllResidents();
  
   return (
-    <>
+    <AuthGuard>
       <Title title={"Residents"} observations={observations} />
       <MealBar />
       <Table
         residents={residents}
       />
-    </>
+    </AuthGuard>
   );
 }

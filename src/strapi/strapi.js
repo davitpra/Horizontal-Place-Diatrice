@@ -16,7 +16,7 @@ const getBaseUrl = () => {
   return `http://localhost:${process.env.PORT || 3000}`;
 };
 
-export async function query(endpoint, method = 'GET', data = null) {
+export async function query(endpoint, method = 'GET', data = null, useAuth = false) {
   try {
     const baseUrl = getBaseUrl();
     const apiUrl = `${baseUrl}/api/strapi`;
@@ -29,11 +29,19 @@ export async function query(endpoint, method = 'GET', data = null) {
       body: JSON.stringify({
         endpoint,
         method,
-        data
+        data,
+        useAuth
       })
     });
 
     if (!response.ok) {
+      // Handle authentication errors
+      if (response.status === 401) {
+        throw new Error('Unauthorized - Please log in');
+      }
+      if (response.status === 403) {
+        throw new Error('Forbidden - Insufficient permissions');
+      }
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
@@ -42,4 +50,14 @@ export async function query(endpoint, method = 'GET', data = null) {
     console.error('Strapi API error:', error);
     throw error;
   }
+}
+
+// Helper function for authenticated queries
+export async function authenticatedQuery(endpoint, method = 'GET', data = null) {
+  return query(endpoint, method, data, true);
+}
+
+// Helper function for public queries (no authentication required)
+export async function publicQuery(endpoint, method = 'GET', data = null) {
+  return query(endpoint, method, data, false);
 }

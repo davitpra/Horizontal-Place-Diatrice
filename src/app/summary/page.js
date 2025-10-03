@@ -10,6 +10,7 @@ import { useMealsStore } from "@/store/meals/useMealsStore";
 import { useMenuScheduleStore } from "@/store/meals/useMenuScheduleStore";
 import { useDayMenusStore } from "@/store/meals/useDayMenusStore";
 import { useSeatingConfigure } from "@/store/seating/useSeatingConfigure";
+import AuthGuard from "@/components/auth/AuthGuard";
 
 export default function Summary() {
   // Store para obtener las comidas y el menu schedule
@@ -88,7 +89,7 @@ export default function Summary() {
   ];
 
   return (
-    <>
+    <AuthGuard>
       <Title title={"Summary"} observations={observations} />
       <MealBar />
       <Wraper>
@@ -129,6 +130,6 @@ export default function Summary() {
           </TableBody>
         </Table>
       </Wraper>
-    </>
+    </AuthGuard>
   );
 }

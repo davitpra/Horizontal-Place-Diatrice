@@ -3,6 +3,7 @@ import "./globals.css";
 import { Message } from "../components/ui/Footer";
 import { Sidebar } from "../components/ui/Sidebar";
 import { InitialDataProvider } from "@/components/providers/InitialDataProvider";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -30,12 +31,14 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-full`}
       >
-        <InitialDataProvider>
-          <Sidebar>
-            {children}
-            {/* <Message title={footerTitle} message={footerMessage}/> */}
-          </Sidebar>
-        </InitialDataProvider>
+        <AuthProvider>
+          <InitialDataProvider>
+            <Sidebar>
+              {children}
+              {/* <Message title={footerTitle} message={footerMessage}/> */}
+            </Sidebar>
+          </InitialDataProvider>
+        </AuthProvider>
       </body>
     </html>
   );

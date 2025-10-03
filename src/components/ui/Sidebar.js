@@ -21,6 +21,8 @@ import { useSeatingConfigure } from "../../store/seating/useSeatingConfigure";
 import { ORDERSEATINGS } from "../../constants/orderseatings";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { useAuth } from "@/hooks/auth/useAuth";
+import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
 
 const navigation = [
   { name: "Serving", href: "/" },
@@ -45,6 +47,7 @@ export function Sidebar({ children }) {
   const [showSeating, setShowSeating] = useState(false);
   const [seatingLabel, setSeatingLabel] = useState(ORDERSEATINGS[0].name);
   const pathname = usePathname();
+  const { user, logout } = useAuth();
 
   // Set seating label
   useEffect(() => {
@@ -127,14 +130,25 @@ export function Sidebar({ children }) {
                       </ul>
                     </li>
                     <li className="-mx-6 mt-auto">
-                      <a
-                        href="#"
-                        className="flex items-center gap-x-4 px-6 py-3 text-sm/6 font-semibold text-gray-900 hover:bg-gray-50"
-                      >
+                      <div className="flex items-center gap-x-4 px-6 py-3 text-sm/6 font-semibold text-gray-900">
                         <UserIcon className="size-8" />
                         <span className="sr-only">Your profile</span>
-                        <span aria-hidden="true">Davit Prado</span>
-                      </a>
+                        <div className="flex-1">
+                          <span aria-hidden="true">
+                            {user?.username || user?.email || 'Usuario'}
+                          </span>
+                          <div className="text-xs text-gray-500">
+                            {user?.role?.name || 'Usuario'}
+                          </div>
+                        </div>
+                        <button
+                          onClick={logout}
+                          className="p-1 text-gray-400 hover:text-gray-600"
+                          title="Cerrar sesión"
+                        >
+                          <ArrowRightOnRectangleIcon className="size-5" />
+                        </button>
+                      </div>
                     </li>
                   </ul>
                 </nav>

@@ -8,6 +8,7 @@ import { useSeatingConfigure } from "@/store/seating/useSeatingConfigure";
 import { useMealBar } from "@/store/mealBar/useMealBar";
 import { useMealsStore } from "@/store/meals/useMealsStore";
 import { useSeatingFilters } from "@/hooks/utils/useSeatingFilters";
+import AuthGuard from "@/components/auth/AuthGuard";
 
 const MEAL_TYPES = {
   BREAKFAST: 'breakfast',
@@ -49,6 +50,7 @@ export default function Serving() {
 
   return (
     <>
+    <AuthGuard>
       <ServingModal
         residentsOnSeating={residentsInSeating}
         menusOnSeating={menusInSeating}
@@ -61,6 +63,7 @@ export default function Serving() {
         observations={["The chair positions may not be correct"]} 
         className="mb-4" 
       />
+    </AuthGuard>
     </>
   );
 }

@@ -20,6 +20,7 @@ import CheckboxCell from "@/components/features/tableResident/CheckboxCell";
 import ResidentInfo from "@/components/features/tableResident/ResidentInfo";
 import ActionButtons from "@/components/features/tableResident/ActionButtons";
 import { useMarkAsOut } from "@/hooks/utils/useMarkAsOut";
+import AuthGuard from "@/components/auth/AuthGuard";
 
 const MEAL_TYPES = {
   BREAKFAST: 'breakfast',
@@ -183,6 +184,7 @@ export default function Tables() {
   ];
 
   return (
+    <AuthGuard>
     <div className="h-screen overflow-y-auto">
       <div className="sticky top-0 z-10 bg-white pb-4">
         <Title
@@ -279,5 +281,6 @@ export default function Tables() {
         mealNumber={selectedMealNumber}
       />
     </div>
+    </AuthGuard>
   );
 }
