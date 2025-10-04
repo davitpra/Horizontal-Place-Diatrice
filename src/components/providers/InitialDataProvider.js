@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getAllResidents } from "@/strapi/residents/getAllResidents";
 import { residents as rawData } from "@/data/residents";
 import { useCreateMenus } from "@/hooks/meals/useCreateMenus";
@@ -12,8 +12,11 @@ import { useMealsStore } from "@/store/meals/useMealsStore";
 import { useResidentsStore } from "@/store/residents/useResidentsStore";
 import { useDayMenusStore } from "@/store/meals/useDayMenusStore";
 import { useMenuScheduleStore } from "@/store/meals/useMenuScheduleStore";
+import { Loading } from "@/components/ui/Loading";
 
 export function InitialDataProvider({ children }) {
+  const [isLoading, setIsLoading] = useState(true);
+  
   // Get store setters
   const setMeal = useMealsStore((state) => state.setMeal);
   const setResidents = useResidentsStore((state) => state.setResidents);
@@ -23,6 +26,8 @@ export function InitialDataProvider({ children }) {
   useEffect(() => {
     async function loadInitialData() {
       try {
+        setIsLoading(true);
+        
         // Get all initial data
         const residents = await getAllResidents();
         const menus = await useCreateMenus(residents, date);
@@ -43,11 +48,17 @@ export function InitialDataProvider({ children }) {
         console.error("Error loading initial data:", error);
         // Set fallback data if available
         setResidents(rawData);
+      } finally {
+        setIsLoading(false);
       }
     }
 
     loadInitialData();
   }, [setResidents, setDayMenus, setMenuSchedule, setMeal]);
+
+  if (isLoading) {
+    return <Loading message="Loading initial data..." />;
+  }
 
   return children;
 }

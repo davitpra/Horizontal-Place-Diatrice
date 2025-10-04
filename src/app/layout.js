@@ -7,6 +7,7 @@ import { Sidebar } from "../components/ui/Sidebar";
 import { InitialDataProvider } from "@/components/providers/InitialDataProvider";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { useAuth } from "@/hooks/auth/useAuth";
+import { Loading } from "@/components/ui/Loading";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -25,14 +26,7 @@ const AuthenticatedLayout = ({ children }) => {
 
   // Mostrar loading mientras se verifica la autenticación
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Verificando autenticación...</p>
-        </div>
-      </div>
-    );
+    return <Loading message="Verifying authentication..." />;
   }
 
   // Si no está autenticado, mostrar solo el contenido sin sidebar ni providers
