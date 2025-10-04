@@ -1,69 +1,351 @@
 "use client";
-import { useEffect, useState } from "react";
-import { ServingModal } from "@/components/features/servingModals/ServingModal";
-import { MealBar } from "@/components/ui/MealBar";
-import { TableMap } from "@/components/features/serving/TableMap";
-import Title from "@/components/ui/Title";
-import { useSeatingConfigure } from "@/store/seating/useSeatingConfigure";
-import { useMealBar } from "@/store/mealBar/useMealBar";
-import { useMealsStore } from "@/store/meals/useMealsStore";
-import { useSeatingFilters } from "@/hooks/utils/useSeatingFilters";
-import AuthGuard from "@/components/auth/AuthGuard";
 
-const MEAL_TYPES = {
-  BREAKFAST: 'breakfast',
-  LUNCH: 'lunch',
-  SUPPER: 'supper'
-};
+import {
+  UserGroupIcon,
+  MapIcon,
+  ClipboardDocumentListIcon,
+  ChartBarIcon,
+  HomeIcon,
+  TableCellsIcon,
+  ArrowRightIcon,
+  ArrowRightOnRectangleIcon
+} from "@heroicons/react/24/outline";
+import Link from "next/link";
+import { useAuth } from "@/hooks/auth/useAuth";
 
-const MEAL_TYPE_BY_NUMBER = [
-  MEAL_TYPES.BREAKFAST,
-  MEAL_TYPES.LUNCH,
-  MEAL_TYPES.SUPPER
+const features = [
+  {
+    name: "Serving Management",
+    description: "Manage meal serving for different seating areas with real-time resident information and meal preferences.",
+    icon: MapIcon,
+    href: "/serving",
+    color: "bg-blue-50 text-blue-600"
+  },
+  {
+    name: "Resident Directory",
+    description: "View all residents by room with their seating arrangements and dietary observations.",
+    icon: UserGroupIcon,
+    href: "/room",
+    color: "bg-green-50 text-green-600"
+  },
+  {
+    name: "Table Management",
+    description: "Organize and manage table arrangements for efficient meal service.",
+    icon: TableCellsIcon,
+    href: "/table",
+    color: "bg-purple-50 text-purple-600"
+  },
+  {
+    name: "Tray Management",
+    description: "Track and manage meal trays for organized service delivery.",
+    icon: ClipboardDocumentListIcon,
+    href: "/trays",
+    color: "bg-orange-50 text-orange-600"
+  },
+  {
+    name: "Dashboard",
+    description: "Overview and analytics of meal service operations and resident preferences.",
+    icon: ChartBarIcon,
+    href: "/dashboard",
+    color: "bg-indigo-50 text-indigo-600"
+  },
+  {
+    name: "Summary Reports",
+    description: "Generate comprehensive reports on meal service and resident satisfaction.",
+    icon: ClipboardDocumentListIcon,
+    href: "/summary",
+    color: "bg-pink-50 text-pink-600"
+  }
 ];
 
-export default function Serving() {
-  // Get data from stores
-  const { meals } = useMealsStore();
-  
-  // Get UI state from stores
-  const selectedSeating = useSeatingConfigure((state) => state.seating);
-  const selectedMealNumber = useMealBar((state) => state.mealNumber);
+// Componente para usuarios autenticados (Dashboard)
+const DashboardContent = ({ user, handleLogout }) => (
+  <div className="min-h-screen bg-gray-50">
+    {/* Header */}
+    <header className="bg-white shadow">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center py-6">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">
+              Horizontal Place
+            </h1>
+            <p className="text-gray-600">
+              Sistema de Gestión de Residentes
+            </p>
+          </div>
+          
+          <div className="flex items-center space-x-4">
+            <div className="text-right">
+              <p className="text-sm font-medium text-gray-900">
+                {user?.username || user?.email}
+              </p>
+              <p className="text-xs text-gray-500">
+                {user?.role?.name || 'Usuario'}
+              </p>
+            </div>
+            
+            <button
+              onClick={handleLogout}
+              className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            >
+              <ArrowRightOnRectangleIcon className="h-4 w-4 mr-2" />
+              Cerrar Sesión
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
 
-  // Local state
-  const [currentMealType, setCurrentMealType] = useState(MEAL_TYPES.BREAKFAST);
-  const [currentMeals, setCurrentMeals] = useState(meals[MEAL_TYPES.BREAKFAST]);
+    {/* Main Content */}
+    <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <div className="px-4 py-6 sm:px-0">
+        <div className="border-4 border-dashed border-gray-200 rounded-lg p-8">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              ¡Bienvenido al Dashboard!
+            </h2>
+            <p className="text-gray-600 mb-8">
+              Has iniciado sesión correctamente. Aquí puedes acceder a todas las funcionalidades del sistema.
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Navigation Cards */}
+              <div className="bg-white p-6 rounded-lg shadow">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Gestión de Residentes
+                </h3>
+                <p className="text-gray-600 mb-4">
+                  Administra la información de los residentes y sus preferencias.
+                </p>
+                <Link
+                  href="/room"
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+                >
+                  Ir a Residentes
+                </Link>
+              </div>
 
-  // Get filtered data based on seating
-  const { residentsInSeating, menusInSeating, mealsInSeating } = useSeatingFilters({
-    meals: currentMeals,
-    selectedSeating,
-    currentMealType,
-  });
+              <div className="bg-white p-6 rounded-lg shadow">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Servicio de Comidas
+                </h3>
+                <p className="text-gray-600 mb-4">
+                  Gestiona el servicio de desayunos, almuerzos y cenas.
+                </p>
+                <Link
+                  href="/serving"
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+                >
+                  Ir a Comidas
+                </Link>
+              </div>
 
-  // Update current meal type and meals when meal number changes
-  useEffect(() => {
-    const newMealType = MEAL_TYPE_BY_NUMBER[selectedMealNumber] || MEAL_TYPES.BREAKFAST;
-    setCurrentMealType(newMealType);
-    setCurrentMeals(meals[newMealType] || []);
-  }, [selectedMealNumber, meals]);
+              <div className="bg-white p-6 rounded-lg shadow">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Resumen
+                </h3>
+                <p className="text-gray-600 mb-4">
+                  Revisa reportes y estadísticas del sistema.
+                </p>
+                <Link
+                  href="/summary"
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+                >
+                  Ver Resumen
+                </Link>
+              </div>
+            </div>
 
-  return (
-    <>
-    <AuthGuard>
-      <ServingModal
-        residentsOnSeating={residentsInSeating}
-        menusOnSeating={menusInSeating}
-        mealsOnSeating={mealsInSeating}
-        condition={currentMealType}
-      />
-      <MealBar />
-      <TableMap meal={mealsInSeating} />
-      <Title 
-        observations={["The chair positions may not be correct"]} 
-        className="mb-4" 
-      />
-    </AuthGuard>
-    </>
-  );
+            {/* User Info */}
+            <div className="mt-8 bg-white p-6 rounded-lg shadow">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Información del Usuario
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+                <div>
+                  <p className="text-sm text-gray-500">ID:</p>
+                  <p className="font-medium text-gray-900">{user?.id}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Usuario:</p>
+                  <p className="font-medium text-gray-900">{user?.username}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Email:</p>
+                  <p className="font-medium text-gray-900">{user?.email}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Rol:</p>
+                  <p className="font-medium text-gray-900">
+                    {user?.role?.name || 'Usuario'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+);
+
+// Componente para usuarios no autenticados (Página de bienvenida)
+const WelcomeContent = () => (
+  <div className="min-h-screen bg-gray-50 absolute left-0 top-0 w-full z-51">
+      {/* Hero Section */}
+      <div className="bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="text-center">
+            <div className="flex justify-center mb-8">
+              <img
+                alt="Horizon Place"
+                src="https://levanteliving.com/wp-content/uploads/2023/08/Horizon-Place-color-8.png"
+                className="h-20 w-auto"
+              />
+            </div>
+            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
+              Dietitian Guide
+            </h1>
+            <p className="mt-6 max-w-3xl mx-auto text-xl text-gray-600">
+              A comprehensive guide to help you get familiar with the residents and their meal preferences.
+              Streamline meal service management with real-time information and organized workflows.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Features Section */}
+      <div className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
+              Application Features
+            </h2>
+            <p className="mt-4 text-lg text-gray-600">
+              Access all the tools you need to manage meal service efficiently
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {features.map((feature) => {
+              const IconComponent = feature.icon;
+              return (
+                <Link
+                  key={feature.name}
+                  href={feature.href}
+                  className="group relative bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-200 hover:border-gray-300"
+                >
+                  <div className="flex items-center mb-4">
+                    <div className={`p-3 rounded-lg ${feature.color}`}>
+                      <IconComponent className="h-6 w-6" aria-hidden="true" />
+                    </div>
+                    <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-400 group-hover:text-gray-600 transition-colors duration-200" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    {feature.name}
+                  </h3>
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                    {feature.description}
+                  </p>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Start Section */}
+      <div className="bg-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
+              Quick Start Guide
+            </h2>
+            <p className="mt-4 text-lg text-gray-600">
+              Get started with these essential steps
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+            <div className="text-center">
+              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-blue-600">1</span>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Select Seating Area
+              </h3>
+              <p className="text-gray-600">
+                Choose between different seating areas using the dropdown in the top navigation bar.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-green-600">2</span>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Access Serving Tools
+              </h3>
+              <p className="text-gray-600">
+                Navigate to the Serving page to manage meals, view resident information, and organize table maps.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-purple-600">3</span>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Review Resident Info
+              </h3>
+              <p className="text-gray-600">
+                Check resident preferences and dietary requirements in the Room directory or Dashboard.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="bg-gray-900 text-white py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <p className="text-gray-400">
+              © 2024 Horizon Place - Dietitian Guide Application
+            </p>
+            <p className="mt-2 text-sm text-gray-500">
+              Designed to streamline meal service management and enhance resident care
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+);
+
+export default function HomePage() {
+  const { user, logout, loading } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+  };
+
+  // Mostrar loading mientras se verifica la autenticación
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Verificando autenticación...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Si el usuario está autenticado, mostrar el dashboard
+  if (user) {
+    return <DashboardContent user={user} handleLogout={handleLogout} />;
+  }
+
+  // Si no está autenticado, mostrar la página de bienvenida
+  return <WelcomeContent />;
 }

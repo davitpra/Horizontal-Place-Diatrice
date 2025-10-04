@@ -1,4 +1,3 @@
-import roomId from "../app/room/[roomId]/page";
 
 export const residents = [
   {

@@ -25,11 +25,11 @@ import { useAuth } from "@/hooks/auth/useAuth";
 import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
 
 const navigation = [
-  { name: "Serving", href: "/" },
-  { name: "By Room", href: "/room" },
+  { name: "Tables", href: "/table" },
+  { name: "Serving", href: "/serving" },
   { name: "Trays", href: "/trays" },
   { name: "Summary", href: "/summary" },
-  { name: "Tables", href: "/table" },
+  { name: "Dashboard", href: "/dashboard" },
 ];
 
 const Serving = [
