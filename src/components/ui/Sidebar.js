@@ -29,7 +29,7 @@ const navigation = [
   { name: "Serving", href: "/serving" },
   { name: "Trays", href: "/trays" },
   { name: "Summary", href: "/summary" },
-  { name: "Dashboard", href: "/dashboard" },
+  { name: "Dashboard", href: "/" },
 ];
 
 const Serving = [

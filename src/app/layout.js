@@ -1,9 +1,12 @@
+"use client";
+
 import localFont from "next/font/local";
 import "./globals.css";
 import { Message } from "../components/ui/Footer";
 import { Sidebar } from "../components/ui/Sidebar";
 import { InitialDataProvider } from "@/components/providers/InitialDataProvider";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { useAuth } from "@/hooks/auth/useAuth";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -16,28 +19,47 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-export const metadata = {
-  title: "Dietitian Guide",
-  description: "A guide to help you get familiar with the residents and their preferences",
+// Componente interno que maneja la lógica de autenticación
+const AuthenticatedLayout = ({ children }) => {
+  const { user, loading } = useAuth();
+
+  // Mostrar loading mientras se verifica la autenticación
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Verificando autenticación...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Si no está autenticado, mostrar solo el contenido sin sidebar ni providers
+  if (!user) {
+    return children;
+  }
+
+  // Si está autenticado, mostrar el layout completo con sidebar y providers
+  return (
+    <InitialDataProvider>
+      <Sidebar>
+        {children}
+      </Sidebar>
+    </InitialDataProvider>
+  );
 };
 
 export default function RootLayout({ children }) {
-
-  let footerTitle = "IMPORTANT NOTE";
-  let footerMessage = "This information is only to help you get familiar with the residents and their preferences. There is no harm in asking them and offering other choices (especially their drink choices can change from time to time)";
-
   return (
     <html lang="en" className="h-full">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-full`}
       >
         <AuthProvider>
-          <InitialDataProvider>
-            <Sidebar>
-              {children}
-              {/* <Message title={footerTitle} message={footerMessage}/> */}
-            </Sidebar>
-          </InitialDataProvider>
+          <AuthenticatedLayout>
+            {children}
+          </AuthenticatedLayout>
         </AuthProvider>
       </body>
     </html>
