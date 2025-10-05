@@ -18,7 +18,7 @@ const ResidentInfo = ({ resident, mealInfo }) => {
       </div>
       <div className="ml-4">
         <div className="font-medium text-gray-900">{resident.full_name}</div>
-        <div className="mt-1 text-gray-500 text-center">Room {resident.roomId}
+        <div className="mt-1 text-gray-500">Room {resident.roomId}
           {mealInfo?.onTray && !mealInfo?.went_out_to_eat &&<span className="ml-2 rounded-md bg-yellow-50 px-1.5 py-0.5 text-xs font-medium text-yellow-800 inset-ring inset-ring-yellow-600/20 dark:bg-yellow-400/10 dark:text-yellow-500 dark:inset-ring-yellow-400/20">
             on tray
           </span>}

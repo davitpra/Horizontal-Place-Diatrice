@@ -14,8 +14,10 @@ import { useHandleComplete } from "@/hooks/utils/useHandleComplete";
 import { useTrayManagement } from "@/hooks/utils/useTrayManagement";
 import { useMoreInfoModal } from "@/store/modals/useMoreInfoModal";
 import { useSelectionModal } from "@/store/modals/useSelectionModal";
+import { useWeeklyMenuModal } from "@/store/modals/useWeeklyMenuModal";
 import { MoreInfoModal } from "@/components/features/servingModals/MoreInfoModal";
 import { SelectionModal } from "@/components/features/servingModals/SelectionModal";
+import WeeklyMenuModal from "@/components/features/weeklyMenu/WeeklyMenuModal";
 import CheckboxCell from "@/components/features/tableResident/CheckboxCell";
 import ResidentInfo from "@/components/features/tableResident/ResidentInfo";
 import ActionButtons from "@/components/features/tableResident/ActionButtons";
@@ -51,6 +53,11 @@ export default function Tables() {
   // Modal stores
   const InfoModal = useMoreInfoModal();
   const SelecModal = useSelectionModal();
+  const weeklyMenuModal = useWeeklyMenuModal();
+
+  const handleOpenWeeklyMenuModal = () => {
+    weeklyMenuModal.onOpen();
+  };
 
   const handleOpenMoreInfo = (resident, index) => {
     if (!resident) return;
@@ -193,7 +200,9 @@ export default function Tables() {
           button="Change to Tray"
           buttonAction={() => handleChangeToTray(residentsToTray)}
           button2="Mark as Out"
-          button2Action={() => handleMarkAsOut(residentsToTray)} />
+          button2Action={() => handleMarkAsOut(residentsToTray)}
+          button3="Select weekly menu"
+          button3Action={() => handleOpenWeeklyMenuModal()} />
         <MealBar />
       </div>
       <Wraper>
@@ -280,6 +289,7 @@ export default function Tables() {
         setMealOnTable={setMealOnTable}
         mealNumber={selectedMealNumber}
       />
+      <WeeklyMenuModal />
     </div>
     </AuthGuard>
   );

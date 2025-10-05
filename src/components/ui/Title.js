@@ -1,6 +1,6 @@
 import { Wraper } from "./Wraper";
 
-export default function Title({ title, observations = [], className = "", buttonAction, button2Action, button, button2 }) {
+export default function Title({ title, observations = [], className = "", buttonAction, button2Action, button, button2, button3Action, button3 }) {
   return (
     <div className={`px-4 sm:px-6 lg:px-8 xl:px-32`}>
       <div className={`sm:flex sm:items-center  ${className} my-4`}>
@@ -36,6 +36,18 @@ export default function Title({ title, observations = [], className = "", button
             >
               {button2}
             </button>
+            )}
+            {button3 && (
+              <button
+                type="button"
+                className="relative inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                onClick={() => {
+                  button3Action();
+                }
+                }
+              >
+                {button3}
+              </button>
             )}
           </div>
         </div>
