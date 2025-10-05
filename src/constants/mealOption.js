@@ -1,11 +1,5 @@
 const BREAKFAST = [
-  { key: "water", options: ["none", "with ice", "no ice"] },
-  { key: "Hotdrink", options: ["none", "Coffee", "Tea"] },
-  {
-    key: "Cereals",
-    options: ["none", "Bran Flakes", "Corn Flakes", "Rice Crispy", "Oatmeal"],
-  },
-  { key: "Juice", options: ["none", "Tomato", "Orange", "Cramberry", "Apple"] },
+
   { key: "Milk", options: ["none", "regular", "lactose free"] },
   {
     key: "eggs",
@@ -17,6 +11,13 @@ const BREAKFAST = [
   { key: "Muffing", options: ["none", "Add"] },
   { key: "additionals", options: [""] },
   { key: "Comment", options: [""] },
+  { key: "water", options: ["none", "with ice", "no ice"] },
+  { key: "Hotdrink", options: ["none", "Coffee", "Tea"] },
+  {
+    key: "Cereals",
+    options: ["none", "Bran Flakes", "Corn Flakes", "Rice Crispy", "Oatmeal"],
+  },
+  { key: "Juice", options: ["none", "Tomato", "Orange", "Cramberry", "Apple"] },
 ];
 //GET DAY OF WEEK
 let today = new Date();
@@ -40,6 +41,7 @@ const LUNCH = [
   { key: "dessert", options: ["none", "Add"] },
   { key: "additionals", options: [""] },
   { key: "Comment", options: [""] },
+
   { key: "water", options: ["none", "with ice", "no ice"] },
   { key: "Hotdrink", options: ["none", "Coffee", "Tea"] },
   { key: "Juice", options: ["none", "Tomato", "Orange", "Cramberry", "Apple"] },

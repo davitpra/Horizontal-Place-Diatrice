@@ -222,9 +222,9 @@ export default function Tables() {
                         const index = residentsInSeating.findIndex(r => r.documentId === resident.documentId);
                         return (
                           <tr key={resident.documentId}>
-                            <td className="relative px-7 sm:w-12 sm:px-6">
+                            <td className="relative px-6 text-center">
                               <div className="absolute inset-y-0 left-0 hidden w-0.5 bg-indigo-600 group-has-checked:block" />
-                              <div className="absolute top-1/2 left-4 -mt-2 grid size-4 grid-cols-1">
+                              <div className="flex justify-center items-center h-full">
                                 <CheckboxCell
                                   checked={residentsToTray.some(({ documentId, onTray }) => documentId === updateMealOnTable[index]?.documentId && onTray === updateMealOnTable[index]?.onTray)}
                                   onChange={() => handleSelectItem(updateMealOnTable[index])}
@@ -233,14 +233,14 @@ export default function Tables() {
                                 />
                               </div>
                             </td>
-                            <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
+                            <td className="whitespace-nowrap py-5 pl-0 pr-3 text-sm">
                               <ResidentInfo resident={resident} mealInfo={updateMealOnTable[index]} />
                             </td>
-                            <td className="hidden sm:block whitespace-nowrap px-3 py-2 text-sm text-gray-500">
+                            <td className="hidden sm:block whitespace-nowrap px-3 py-2 text-sm text-gray-500 text-center">
                               {Object.entries(updateMealOnTable[index]?.filterDrinks || {}).map(([key, value]) => (
-                                <div key={key} className="py-0 grid grid-cols-2 gap-0 px-0">
-                                  <dt className="text-sm/6 font-medium text-gray-900 block">{key}</dt>
-                                  <dd className="text-sm/6 text-gray-700 mt-0 overflow-hidden text-ellipsis whitespace-nowrap text-left">
+                                <div key={key} className="py-0 grid grid-cols-2 gap-0 px-0 items-center justify-center">
+                                  <dt className="text-sm/6 font-medium text-gray-900 block text-center">{key}</dt>
+                                  <dd className="text-sm/6 text-gray-700 mt-0 overflow-hidden text-ellipsis whitespace-nowrap text-center">
                                     {typeof value === "boolean" ? (value ? "Add" : "none") : value}
                                   </dd>
                                 </div>
