@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 
 // Rutas que requieren autenticación
 const protectedRoutes = [
-  '/dashboard',
   '/room',
   '/summary',
   '/table',
@@ -56,7 +55,7 @@ export function middleware(request) {
       // Verificar el token
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       if (decoded) {
-        return NextResponse.redirect(new URL('/dashboard', request.url));
+        return NextResponse.redirect(new URL('/', request.url));
       }
     } catch (error) {
       // Token inválido, continuar normalmente

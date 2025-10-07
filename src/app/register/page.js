@@ -12,7 +12,7 @@ const RegisterPage = () => {
   useEffect(() => {
     // Redirect if already authenticated
     if (!loading && user) {
-      router.push('/dashboard');
+      router.push('/');
     }
   }, [user, loading, router]);
 

@@ -46,7 +46,7 @@ const features = [
     name: "Dashboard",
     description: "Overview and analytics of meal service operations and resident preferences.",
     icon: ChartBarIcon,
-    href: "/dashboard",
+    href: "/",
     color: "bg-indigo-50 text-indigo-600"
   },
   {

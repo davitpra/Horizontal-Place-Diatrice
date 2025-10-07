@@ -42,7 +42,7 @@ const LoginForm = () => {
       await login(formData.identifier, formData.password);
       
       // Redirect to dashboard or intended page
-      router.push('/dashboard');
+      router.push('/');
     } catch (error) {
       setError(error.message || 'Error al iniciar sesión');
     } finally {

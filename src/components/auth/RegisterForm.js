@@ -63,7 +63,7 @@ const RegisterForm = () => {
       await register(formData.username, formData.email, formData.password);
       
       // Redirect to dashboard
-      router.push('/dashboard');
+      router.push('/');
     } catch (error) {
       setError(error.message || 'Error al registrarse');
     } finally {
