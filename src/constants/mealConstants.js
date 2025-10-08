@@ -16,8 +16,6 @@ export const BREAKFAST_ITEMS = {
   FRUIT_PLATE: 'FruitPlate',
   YOGURT: 'Yogurt',
   MUFFIN: 'Muffing',
-  BACON: 'Bacon',
-  PANCAKE: 'Pancake'
 };
 
 export const LUNCH_SUPPER_ITEMS = {

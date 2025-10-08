@@ -92,10 +92,8 @@ Authorization: Bearer xxx
       "Yogurt": true,
       "Muffing": true,
       "Comment": null,
-      "Pancake": false,
       "onTray": false,
       "additionals": null,
-      "Bacon": null,
       "went_out_to_eat": false
     },
     "menu": "zm6bvp6r4n16fwrcmvzjzh8p"
