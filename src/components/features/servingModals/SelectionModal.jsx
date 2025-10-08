@@ -24,7 +24,7 @@ export function SelectionModal({ resident, order = [{}], index = 0 }) {
   // Store hooks
   const mealNumber = useMealBar((state) => state.mealNumber);
   const selectionModal = useSelectionModal();
-  const [lunchMenu, supperMenu] = useMenuScheduleStore(
+  const [breakfastMenu, lunchMenu, supperMenu] = useMenuScheduleStore(
     (state) => state.menuSchedule
   );
   const updateMealItem = useMealsStore((state) => state.updateMealItem);
@@ -43,8 +43,13 @@ export function SelectionModal({ resident, order = [{}], index = 0 }) {
   useEffect(() => {
     const getUpdatedOptions = () => {
       // Default to breakfast options
-      if (mealNumber === 0) {
-        return [...MEAL_OPTIONS[0]];
+      if (mealNumber === 0 && breakfastMenu?.data) {
+        return [...MEAL_OPTIONS[0]].map((item) => {
+          const menuItem = breakfastMenu.data[item.key];
+          return menuItem
+            ? { ...item, options: [MEAL_VALUES.NONE, menuItem] }
+            : item;
+        });
       }
 
       // Handle lunch options

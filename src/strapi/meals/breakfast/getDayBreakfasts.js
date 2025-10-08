@@ -1,6 +1,8 @@
 import { query } from "../../strapi";
+import { getMenuSchedule } from "../../menuSchedule/getMenuSchedule";
 
 export async function getDayBreakfasts(date) {
+  let [breakfastMenu] = await getMenuSchedule(date) 
   return query(
     `breakfasts?filters[Date][$eq]=${date}`
   ).then((res) => {
@@ -34,6 +36,7 @@ export async function getDayBreakfasts(date) {
           Milk: breakFast?.Milk,
           eggs: breakFast?.eggs,
           toast: breakFast?.toast,
+          feature: breakFast?.feature ? breakfastMenu?.data.feature : breakFast?.feature,
           FruitPlate: breakFast?.FruitPlate,
           Yogurt: breakFast?.Yogurt,
           Muffing: breakFast?.Muffing,
@@ -41,25 +44,6 @@ export async function getDayBreakfasts(date) {
           Comment: breakFast?.Comment,
         }),
       ];
-
-      // if it is Thursday, add pancakes to breakFast
-      if (dayOfWeek === 4) {
-        if (breakFast?.Pancake) {
-          meals[0].Pancake = true;
-        } else {
-          meals[0].Pancake = false;
-        }
-      }
-
-      // if it is Sunday or Wednesday, add bacon to breakFast
-      if (dayOfWeek === 0 || dayOfWeek === 3) {
-        if (breakFast?.Bacon) {
-          meals[0].Bacon = true;
-        } else {
-          meals[0].Bacon = false;
-        }
-      }
-
       const onTray = breakFast?.onTray;
 
       return {

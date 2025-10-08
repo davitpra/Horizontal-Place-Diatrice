@@ -65,7 +65,6 @@ export const useTableFilters = ({
         Hotdrink,
         Juice,
         Cereals,
-        Comment,
         ...filteredPreference
       } = meals;
       return filteredPreference;

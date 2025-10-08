@@ -6,6 +6,7 @@ const BREAKFAST = [
     options: ["none", "over easy", "scramble", "pouched", "boiled"],
   },
   { key: "toast", options: ["none", "brown", "white", "raisen", "rye"] },
+  { key: "feature", options: ["none", "Add"] },
   { key: "FruitPlate", options: ["none", "Add"] },
   { key: "Yogurt", options: ["none", "Add"] },
   { key: "Muffing", options: ["none", "Add"] },
@@ -19,19 +20,6 @@ const BREAKFAST = [
   },
   { key: "Juice", options: ["none", "Tomato", "Orange", "Cramberry", "Apple"] },
 ];
-//GET DAY OF WEEK
-let today = new Date();
-const dayOfWeek = today.getDay();
-
-// if it is Thursday, add pancakes to breakfast
-if (dayOfWeek === 4) {
-  BREAKFAST.push({ key: "Pancake", options: ["none", "Add"] });
-}
-
-// if it is Sunday or Wednesday, add bacon to breakfast
-if (dayOfWeek === 0 || dayOfWeek === 3) {
-  BREAKFAST.push({ key: "Bacon", options: ["none", "Add"] });
-}
 
 const LUNCH = [
   { key: "soup", options: ["none", "Add"] },
