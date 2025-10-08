@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect, useMemo, useCallback, Fragment } from "react";
 import Title from "../../components/ui/Title";
 import { MealBar } from "../../components/ui/MealBar";
 import { Wraper } from "@/components/ui/Wraper";
@@ -37,8 +37,8 @@ const MEAL_TYPE_BY_NUMBER = [
 ];
 
 export default function Tables() {
-  // Get data from stores
-  const { meals } = useMealsStore();
+  // Get data from stores with proper Zustand selector
+  const meals = useMealsStore((state) => state.meals);
 
   // Get UI state from stores
   const selectedSeating = useSeatingConfigure((state) => state.seating);
@@ -46,32 +46,33 @@ export default function Tables() {
 
   // Local state
   const [currentMealType, setCurrentMealType] = useState(MEAL_TYPES.BREAKFAST);
-  const [currentMeals, setCurrentMeals] = useState(meals[MEAL_TYPES.BREAKFAST]);
+  const [currentMeals, setCurrentMeals] = useState([]);
   const [residentInfo, setResidentInfo] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(null);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   // Modal stores
   const InfoModal = useMoreInfoModal();
   const SelecModal = useSelectionModal();
   const weeklyMenuModal = useWeeklyMenuModal();
 
-  const handleOpenWeeklyMenuModal = () => {
+  const handleOpenWeeklyMenuModal = useCallback(() => {
     weeklyMenuModal.onOpen();
-  };
+  }, [weeklyMenuModal]);
 
-  const handleOpenMoreInfo = (resident, index) => {
+  const handleOpenMoreInfo = useCallback((resident, index) => {
     if (!resident) return;
     setResidentInfo(resident);
     setSelectedIndex(index);
     InfoModal.onOpen();
-  };
+  }, [InfoModal]);
 
-  const handleSelectionModal = (resident, index) => {
+  const handleSelectionModal = useCallback((resident, index) => {
     if (!resident) return;
     setResidentInfo(resident);
     setSelectedIndex(index);
     SelecModal.onOpen();
-  };
+  }, [SelecModal]);
 
   // Reset resident info when modals close
   useEffect(() => {
@@ -81,9 +82,30 @@ export default function Tables() {
     }
   }, [InfoModal.isOpen, SelecModal.isOpen]);
 
+  // Get filtered data based on seating (needs to be before useTableFilters)
+  const { residentsInSeating, menusInSeating, mealsInSeating } = useSeatingFilters({
+    meals: currentMeals,
+    selectedSeating,
+    currentMealType,
+  });
+
+  // Ordena los residentes por mesa, menús y comidas (needs to be before callbacks that use setMealOnTable)
+  const {
+    residentsOnTable,
+    mealOnTable,
+    updateMealOnTable,
+    setMealOnTable,
+  } = useTableFilters({
+    residentsOnSeating: residentsInSeating,
+    mealsOnSeating: mealsInSeating,
+    menusOnSeating: menusInSeating,
+    condition: currentMealType,
+  });
+
+  // Now we can safely create callbacks that depend on setMealOnTable
   const { handleComplete: handleCompleteAction } = useHandleComplete();
 
-  const handleComplete = async (meals, index) => {
+  const handleComplete = useCallback(async (meals, index) => {
     const documentId = meals[index]?.documentId;
     const mealType = MEAL_TYPE_BY_NUMBER[selectedMealNumber];
 
@@ -106,59 +128,53 @@ export default function Tables() {
         )
       );
     }
-  };
+  }, [selectedMealNumber, handleCompleteAction, currentMealType, setMealOnTable]);
+
+  // Initialize checkbox selection (uses updateMealOnTable from useTableFilters)
+  const {
+    checkbox,
+    checked,
+    indeterminate,
+    selectedItems: residentsToTray,
+    handleSelectAll,
+    handleSelectItem,
+    resetSelection,
+  } = useCheckboxSelection(updateMealOnTable);
+
+  // Memoize callbacks
+  const handleTraySuccess = useCallback(() => {
+    resetSelection();
+  }, [resetSelection]);
 
   // Initialize tray management
   const { handleChangeToTray } = useTrayManagement({
     condition: currentMealType,
     mealNumber: selectedMealNumber,
-    onSuccess: () => {
-      resetSelection();
-    },
+    onSuccess: handleTraySuccess,
   });
 
-  
   const { handleMarkAsOut } = useMarkAsOut({
     condition: currentMealType,
     mealNumber: selectedMealNumber,
-    onSuccess: () => {
-      resetSelection();
-    },
+    onSuccess: handleTraySuccess,
   });
 
-  // Get filtered data based on seating
-  const { residentsInSeating, menusInSeating, mealsInSeating } = useSeatingFilters({
-    meals: currentMeals,
-    selectedSeating,
-    currentMealType,
-  });
+  // Agrupar residentes por mesa (memoizado para evitar recalcular)
+  const groupedResidents = useMemo(() => {
+    return residentsOnTable.reduce((acc, resident) => {
+      const tableNumber = resident.table;
+      if (!acc[tableNumber]) {
+        acc[tableNumber] = [];
+      }
+      acc[tableNumber].push(resident);
+      return acc;
+    }, {});
+  }, [residentsOnTable]);
 
-
-  // Ordena los residentes por mesa, menús y comidas
-  const {
-    residentsOnTable,
-    mealOnTable,
-    updateMealOnTable,
-    setMealOnTable,
-  } = useTableFilters({
-    residentsOnSeating: residentsInSeating,
-    mealsOnSeating: mealsInSeating,
-    menusOnSeating: menusInSeating,
-    condition: currentMealType,
-  });
-
-  // Agrupar residentes por mesa
-  const groupedResidents = residentsOnTable.reduce((acc, resident) => {
-    const tableNumber = resident.table;
-    if (!acc[tableNumber]) {
-      acc[tableNumber] = [];
-    }
-    acc[tableNumber].push(resident);
-    return acc;
-  }, {});
-
-  // Ordenar las mesas por número
-  const sortedTables = Object.keys(groupedResidents).sort((a, b) => Number(a) - Number(b));
+  // Ordenar las mesas por número (memoizado)
+  const sortedTables = useMemo(() => {
+    return Object.keys(groupedResidents).sort((a, b) => Number(a) - Number(b));
+  }, [groupedResidents]);
 
   // Update current meal type when meal number changes
   useEffect(() => {
@@ -169,22 +185,20 @@ export default function Tables() {
 
   // Update current meals when meal type or meals data changes
   useEffect(() => {
-    if (meals[currentMealType]) {
+    if (meals && meals[currentMealType]) {
       const initialMeals = meals[currentMealType];
       setCurrentMeals(initialMeals);
+      console.log(`✅ Meals loaded for ${currentMealType}: ${initialMeals.length}`);
+      
+      // Mark initial load as complete once we have data
+      if (isInitialLoad && initialMeals.length > 0) {
+        setIsInitialLoad(false);
+      }
+    } else {
+      setCurrentMeals([]);
+      console.warn(`⚠️ No meals found for type: ${currentMealType}`);
     }
-  }, [currentMealType, meals]);
-
-  // Initialize checkbox selection
-  const {
-    checkbox,
-    checked,
-    indeterminate,
-    selectedItems: residentsToTray,
-    handleSelectAll,
-    handleSelectItem,
-    resetSelection,
-  } = useCheckboxSelection(updateMealOnTable);
+  }, [currentMealType, meals, isInitialLoad]);
 
   const observations = [
     "A list of all residents including their name, room, seating and observation.",
@@ -216,59 +230,85 @@ export default function Tables() {
                   disabled={residentsInSeating.length === 0}
                 />
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {sortedTables.map((tableNumber) => (
-                    <Fragment key={tableNumber}>
-                      <tr className="border-t border-gray-200">
-                        <th
-                          scope="colgroup"
-                          colSpan={5}
-                          className="bg-gray-50 py-2 pr-3 pl-4 text-center text-sm font-semibold text-gray-900 sm:pl-3"
-                        >
-                          Table {tableNumber}
-                        </th>
-                      </tr>
-                      {groupedResidents[tableNumber].map((resident) => {
-                        const index = residentsInSeating.findIndex(r => r.documentId === resident.documentId);
-                        return (
-                          <tr key={resident.documentId}>
-                            <td className="relative px-6 text-center">
-                              <div className="absolute inset-y-0 left-0 hidden w-0.5 bg-indigo-600 group-has-checked:block" />
-                              <div className="flex justify-center items-center h-full">
-                                <CheckboxCell
-                                  checked={residentsToTray.some(({ documentId, onTray }) => documentId === updateMealOnTable[index]?.documentId && onTray === updateMealOnTable[index]?.onTray)}
-                                  onChange={() => handleSelectItem(updateMealOnTable[index])}
-                                  disabled={residentsInSeating.length === 0}
-                                  label={`Select ${resident.full_name}`}
-                                />
-                              </div>
-                            </td>
-                            <td className="whitespace-nowrap py-5 pl-0 pr-3 text-sm">
-                              <ResidentInfo resident={resident} mealInfo={updateMealOnTable[index]} />
-                            </td>
-                            <td className="hidden sm:block whitespace-nowrap px-3 py-2 text-sm text-gray-500 text-center">
-                              {Object.entries(updateMealOnTable[index]?.filterDrinks || {}).map(([key, value]) => (
-                                <div key={key} className="py-0 grid grid-cols-2 gap-0 px-0 items-center justify-center">
-                                  <dt className="text-sm/6 font-medium text-gray-900 block text-center">{key}</dt>
-                                  <dd className="text-sm/6 text-gray-700 mt-0 overflow-hidden text-ellipsis whitespace-nowrap text-center">
-                                    {typeof value === "boolean" ? (value ? "Add" : "none") : value}
-                                  </dd>
-                                </div>
-                              ))}
-                            </td>
-                            <ActionButtons
-                              key={resident.documentId}
-                              resident={resident}
-                              index={index}
-                              isComplete={updateMealOnTable[index]?.complete}
-                              onComplete={() => handleComplete(updateMealOnTable, index)}
-                              onOpenInfo={handleOpenMoreInfo}
-                              onChangeSelection={handleSelectionModal}
-                            />
+                  {isInitialLoad ? (
+                    <tr>
+                      <td colSpan={5} className="py-12 text-center">
+                        <div className="flex flex-col items-center justify-center">
+                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mb-2" />
+                          <p className="text-gray-500 text-sm">Loading residents...</p>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : sortedTables.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="py-12 text-center text-gray-500">
+                        No residents found for the selected seating
+                      </td>
+                    </tr>
+                  ) : (
+                    sortedTables.map((tableNumber) => {
+                      const residentsAtTable = groupedResidents[tableNumber];
+                      return (
+                        <Fragment key={tableNumber}>
+                          <tr className="border-t border-gray-200">
+                            <th
+                              scope="colgroup"
+                              colSpan={5}
+                              className="bg-gray-50 py-2 pr-3 pl-4 text-center text-sm font-semibold text-gray-900 sm:pl-3"
+                            >
+                              Table {tableNumber}
+                            </th>
                           </tr>
-                        );
-                      })}
-                    </Fragment>
-                  ))}
+                          {residentsAtTable.map((resident) => {
+                            const index = residentsInSeating.findIndex(r => r.documentId === resident.documentId);
+                            const mealData = updateMealOnTable[index];
+                            const isChecked = residentsToTray.some(
+                              ({ documentId, onTray }) => 
+                                documentId === mealData?.documentId && onTray === mealData?.onTray
+                            );
+                            
+                            return (
+                              <tr key={resident.documentId}>
+                                <td className="relative px-6 text-center">
+                                  <div className="absolute inset-y-0 left-0 hidden w-0.5 bg-indigo-600 group-has-checked:block" />
+                                  <div className="flex justify-center items-center h-full">
+                                    <CheckboxCell
+                                      checked={isChecked}
+                                      onChange={() => handleSelectItem(mealData)}
+                                      disabled={residentsInSeating.length === 0}
+                                      label={`Select ${resident.full_name}`}
+                                    />
+                                  </div>
+                                </td>
+                                <td className="whitespace-nowrap py-5 pl-0 pr-3 text-sm">
+                                  <ResidentInfo resident={resident} mealInfo={mealData} />
+                                </td>
+                                <td className="hidden sm:block whitespace-nowrap px-3 py-2 text-sm text-gray-500 text-center">
+                                  {Object.entries(mealData?.filterDrinks || {}).map(([key, value]) => (
+                                    <div key={key} className="py-0 grid grid-cols-2 gap-0 px-0 items-center justify-center">
+                                      <dt className="text-sm/6 font-medium text-gray-900 block text-center">{key}</dt>
+                                      <dd className="text-sm/6 text-gray-700 mt-0 overflow-hidden text-ellipsis whitespace-nowrap text-center">
+                                        {typeof value === "boolean" ? (value ? "Add" : "none") : value}
+                                      </dd>
+                                    </div>
+                                  ))}
+                                </td>
+                                <ActionButtons
+                                  key={resident.documentId}
+                                  resident={resident}
+                                  index={index}
+                                  isComplete={mealData?.complete}
+                                  onComplete={() => handleComplete(updateMealOnTable, index)}
+                                  onOpenInfo={handleOpenMoreInfo}
+                                  onChangeSelection={handleSelectionModal}
+                                />
+                              </tr>
+                            );
+                          })}
+                        </Fragment>
+                      );
+                    })
+                  )}
                 </tbody>
               </table>
             </div>
