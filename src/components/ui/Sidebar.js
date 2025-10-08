@@ -29,6 +29,7 @@ const navigation = [
   { name: "Serving", href: "/serving" },
   { name: "Trays", href: "/trays" },
   { name: "Summary", href: "/summary" },
+  { name: "Weekly Menu", href: "/weekly-menu" },
   { name: "Dashboard", href: "/" },
 ];
 

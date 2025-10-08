@@ -1,27 +1,4 @@
-import { getWeeklyMenu } from "@/strapi/menuSchedule/getWeeklyMenu";
-import { useEffect, useState } from "react";
-
-export default function WeeklyMenuGridNew() {
-    const [menuData, setMenuData] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    useEffect(() => {
-        const fetchMenu = async () => {
-            try {
-                setLoading(true);
-                setError(null);
-                const data = await getWeeklyMenu();
-                console.log(data);
-                setMenuData(data);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchMenu();
-    }, []);
+export default function WeeklyMenuGrid({ menuData = [], loading = false, error = null }) {
 
     // Create date mapping for easy lookup
     const dateToSchedule = menuData.reduce((acc, item) => {

@@ -20,6 +20,7 @@ const TableHeader = ({ checked, onSelectAll, disabled = false }) => {
         <th className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">
           To Serve
         </th>
+        <th/>
         <th className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">
           Status
         </th>
