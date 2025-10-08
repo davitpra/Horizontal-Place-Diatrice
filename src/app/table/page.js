@@ -35,6 +35,8 @@ const MEAL_TYPE_BY_NUMBER = [
   MEAL_TYPES.SUPPER
 ];
 
+const TABLE_COLUMNS = 5; // Checkbox + Name + To Serve + Status + Actions
+
 export default function Tables() {
   // Get data from stores with proper Zustand selector
   const meals = useMealsStore((state) => state.meals);
@@ -46,8 +48,7 @@ export default function Tables() {
   // Local state - Initialize with actual data to avoid empty first render
   const [currentMealType, setCurrentMealType] = useState(MEAL_TYPES.BREAKFAST);
   const [currentMeals, setCurrentMeals] = useState(meals[MEAL_TYPES.BREAKFAST] || []);
-  const [residentInfo, setResidentInfo] = useState(null);
-  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [selectedResident, setSelectedResident] = useState(null);
 
   // Modal stores
   const InfoModal = useMoreInfoModal();
@@ -60,23 +61,20 @@ export default function Tables() {
 
   const handleOpenMoreInfo = useCallback((resident, index) => {
     if (!resident) return;
-    setResidentInfo(resident);
-    setSelectedIndex(index);
+    setSelectedResident({ resident, index });
     InfoModal.onOpen();
   }, [InfoModal]);
 
   const handleSelectionModal = useCallback((resident, index) => {
     if (!resident) return;
-    setResidentInfo(resident);
-    setSelectedIndex(index);
+    setSelectedResident({ resident, index });
     SelecModal.onOpen();
   }, [SelecModal]);
 
   // Reset resident info when modals close
   useEffect(() => {
     if (!InfoModal.isOpen && !SelecModal.isOpen) {
-      setResidentInfo(null);
-      setSelectedIndex(null);
+      setSelectedResident(null);
     }
   }, [InfoModal.isOpen, SelecModal.isOpen]);
 
@@ -87,7 +85,7 @@ export default function Tables() {
     currentMealType,
   });
 
-  // Ordena los residentes por mesa, menús y comidas (needs to be before callbacks that use setMealOnTable)
+  // Sort residents by table, menus and meals (needs to be before callbacks that use setMealOnTable)
   const {
     residentsOnTable,
     mealOnTable,
@@ -130,16 +128,14 @@ export default function Tables() {
 
   // Initialize checkbox selection (uses updateMealOnTable from useTableFilters)
   const {
-    checkbox,
     checked,
-    indeterminate,
     selectedItems: residentsToTray,
     handleSelectAll,
     handleSelectItem,
     resetSelection,
   } = useCheckboxSelection(updateMealOnTable);
 
-  // Memoize callbacks
+  // Memoize callbacks for better performance
   const handleTraySuccess = useCallback(() => {
     resetSelection();
   }, [resetSelection]);
@@ -157,7 +153,34 @@ export default function Tables() {
     onSuccess: handleTraySuccess,
   });
 
-  // Agrupar residentes por mesa (memoizado para evitar recalcular)
+  // Memoize button click handlers (after hooks initialization)
+  const handleChangeToTrayClick = useCallback(() => {
+    handleChangeToTray(residentsToTray);
+  }, [handleChangeToTray, residentsToTray]);
+
+  const handleMarkAsOutClick = useCallback(() => {
+    handleMarkAsOut(residentsToTray);
+  }, [handleMarkAsOut, residentsToTray]);
+
+  // Create lookup maps for O(1) access instead of O(n) findIndex/some operations
+  const residentIndexMap = useMemo(() => {
+    const map = new Map();
+    residentsInSeating.forEach((resident, index) => {
+      map.set(resident.documentId, index);
+    });
+    return map;
+  }, [residentsInSeating]);
+
+  const selectedResidentsMap = useMemo(() => {
+    const map = new Map();
+    residentsToTray.forEach((item) => {
+      const key = `${item.documentId}-${item.onTray}`;
+      map.set(key, true);
+    });
+    return map;
+  }, [residentsToTray]);
+
+  // Group residents by table (memoized to avoid recalculation)
   const groupedResidents = useMemo(() => {
     return residentsOnTable.reduce((acc, resident) => {
       const tableNumber = resident.table;
@@ -169,7 +192,7 @@ export default function Tables() {
     }, {});
   }, [residentsOnTable]);
 
-  // Ordenar las mesas por número (memoizado)
+  // Sort tables by number (memoized)
   const sortedTables = useMemo(() => {
     return Object.keys(groupedResidents).sort((a, b) => Number(a) - Number(b));
   }, [groupedResidents]);
@@ -182,12 +205,11 @@ export default function Tables() {
     
     setCurrentMealType(newMealType);
     setCurrentMeals(newMeals);
-    console.log(`✅ Meals loaded for ${newMealType}: ${newMeals.length}`);
   }, [selectedMealNumber, meals]);
 
-  const observations = [
+  const observations = useMemo(() => [
     "A list of all residents including their name, room, seating and observation.",
-  ];
+  ], []);
 
   return (
     <div className="h-screen overflow-y-auto">
@@ -196,11 +218,11 @@ export default function Tables() {
           title={"Residents"}
           observations={observations}
           button="Change to Tray"
-          buttonAction={() => handleChangeToTray(residentsToTray)}
+          buttonAction={handleChangeToTrayClick}
           button2="Mark as Out"
-          button2Action={() => handleMarkAsOut(residentsToTray)}
+          button2Action={handleMarkAsOutClick}
           button3="Select weekly menu"
-          button3Action={() => handleOpenWeeklyMenuModal()} />
+          button3Action={handleOpenWeeklyMenuModal} />
         <MealBar />
       </div>
       <Wraper>
@@ -216,7 +238,7 @@ export default function Tables() {
                 <tbody className="divide-y divide-gray-200 bg-white">
                   {sortedTables.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="py-12 text-center text-gray-500">
+                      <td colSpan={TABLE_COLUMNS} className="py-12 text-center text-gray-500">
                         No residents found for the selected seating
                       </td>
                     </tr>
@@ -228,19 +250,18 @@ export default function Tables() {
                           <tr className="border-t border-gray-200">
                             <th
                               scope="colgroup"
-                              colSpan={5}
+                              colSpan={TABLE_COLUMNS}
                               className="bg-gray-50 py-2 pr-3 pl-4 text-center text-sm font-semibold text-gray-900 sm:pl-3"
                             >
                               Table {tableNumber}
                             </th>
                           </tr>
                           {residentsAtTable.map((resident) => {
-                            const index = residentsInSeating.findIndex(r => r.documentId === resident.documentId);
+                            const index = residentIndexMap.get(resident.documentId);
                             const mealData = updateMealOnTable[index];
-                            const isChecked = residentsToTray.some(
-                              ({ documentId, onTray }) => 
-                                documentId === mealData?.documentId && onTray === mealData?.onTray
-                            );
+                            const checkKey = `${mealData?.documentId}-${mealData?.onTray}`;
+                            const isChecked = selectedResidentsMap.has(checkKey);
+                            const drinkEntries = mealData?.filterDrinks ? Object.entries(mealData.filterDrinks) : [];
                             
                             return (
                               <tr key={resident.documentId}>
@@ -258,8 +279,8 @@ export default function Tables() {
                                 <td className="whitespace-nowrap py-5 pl-0 pr-3 text-sm">
                                   <ResidentInfo resident={resident} mealInfo={mealData} />
                                 </td>
-                                <td className="hidden sm:block whitespace-nowrap px-3 py-2 text-sm text-gray-500 text-center">
-                                  {Object.entries(mealData?.filterDrinks || {}).map(([key, value]) => (
+                                <td className="hidden md:table-cell whitespace-nowrap px-3 py-2 text-sm text-gray-500 text-center">
+                                  {drinkEntries.map(([key, value]) => (
                                     <div key={key} className="py-0 grid grid-cols-2 gap-0 px-0 items-center justify-center">
                                       <dt className="text-sm/6 font-medium text-gray-900 block text-center">{key}</dt>
                                       <dd className="text-sm/6 text-gray-700 mt-0 overflow-hidden text-ellipsis whitespace-nowrap text-center">
@@ -269,7 +290,6 @@ export default function Tables() {
                                   ))}
                                 </td>
                                 <ActionButtons
-                                  key={resident.documentId}
                                   resident={resident}
                                   index={index}
                                   isComplete={mealData?.complete}
@@ -291,16 +311,16 @@ export default function Tables() {
         </div>
       </Wraper>
       <MoreInfoModal
-        resident={residentInfo}
+        resident={selectedResident?.resident}
         order={mealOnTable}
-        index={selectedIndex}
+        index={selectedResident?.index}
         setMealOnTable={setMealOnTable}
-        complete={updateMealOnTable[selectedIndex]?.complete}
+        complete={updateMealOnTable[selectedResident?.index]?.complete}
       />
       <SelectionModal
-        resident={residentInfo}
+        resident={selectedResident?.resident}
         order={mealOnTable}
-        index={selectedIndex}
+        index={selectedResident?.index}
         setMealOnTable={setMealOnTable}
         mealNumber={selectedMealNumber}
       />
