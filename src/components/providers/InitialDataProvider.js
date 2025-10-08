@@ -8,10 +8,12 @@ import { useCreateLunch } from "@/hooks/meals/useCreateLunch";
 import { useCreateSupper } from "@/hooks/meals/useCreateSupper";
 import { date } from "@/constants/date";
 import { getMenuSchedule } from "@/strapi/menuSchedule/getMenuSchedule";
+import { getWeeklyMenu } from "@/strapi/menuSchedule/getWeeklyMenu";
 import { useMealsStore } from "@/store/meals/useMealsStore";
 import { useResidentsStore } from "@/store/residents/useResidentsStore";
 import { useDayMenusStore } from "@/store/meals/useDayMenusStore";
 import { useMenuScheduleStore } from "@/store/meals/useMenuScheduleStore";
+import { useWeeklyMenuStore } from "@/store/meals/useWeeklyMenuStore";
 import { Loading } from "@/components/ui/Loading";
 
 // Helper function to add delay
@@ -28,6 +30,7 @@ export function InitialDataProvider({ children }) {
   const setResidents = useResidentsStore((state) => state.setResidents);
   const setDayMenus = useDayMenusStore((state) => state.setDayMenus);
   const setMenuSchedule = useMenuScheduleStore((state) => state.setMenuSchedule);
+  const setWeeklyMenu = useWeeklyMenuStore((state) => state.setWeeklyMenu);
   
   // Get store data to check if we already have data
   const existingMeals = useMealsStore((state) => state.meals);
@@ -82,13 +85,21 @@ export function InitialDataProvider({ children }) {
         setLoadingProgress(40);
         console.log(`[InitialDataProvider] ✅ Menus ready: ${menus.length}`);
         
-        // Step 3: Get menu schedule (50% progress) - can run in parallel with meals
+        // Step 3: Get menu schedule and weekly menu (50% progress) - can run in parallel with meals
         const menuSchedulePromise = getMenuSchedule(date).then(schedule => {
           if (isMounted) {
             setMenuSchedule(schedule);
             console.log(`[InitialDataProvider] ✅ Menu schedule loaded`);
           }
           return schedule;
+        });
+
+        const weeklyMenuPromise = getWeeklyMenu().then(weeklyMenu => {
+          if (isMounted) {
+            setWeeklyMenu(weeklyMenu);
+            console.log(`[InitialDataProvider] ✅ Weekly menu loaded: ${weeklyMenu.length} items`);
+          }
+          return weeklyMenu;
         });
         
         // Step 4: Create meals in parallel (50-90% progress)
@@ -113,8 +124,8 @@ export function InitialDataProvider({ children }) {
         setLoadingProgress(90);
         console.log(`[InitialDataProvider] ✅ Meals loaded - B:${breakFast.length} L:${lunch.length} S:${supper.length}`);
         
-        // Wait for menu schedule if not done
-        await menuSchedulePromise;
+        // Wait for menu schedule and weekly menu if not done
+        await Promise.all([menuSchedulePromise, weeklyMenuPromise]);
         
         setLoadingProgress(100);
         console.log(`[InitialDataProvider] 🎉 All data loaded successfully`);
@@ -153,7 +164,7 @@ export function InitialDataProvider({ children }) {
     };
     // Remove 'date' from dependencies as it's a constant
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setResidents, setDayMenus, setMenuSchedule, setMeal]);
+  }, [setResidents, setDayMenus, setMenuSchedule, setWeeklyMenu, setMeal]);
 
   // Show error state with option to retry
   if (error && !isLoading) {

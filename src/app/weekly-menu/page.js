@@ -1,43 +1,31 @@
 "use client";
-import { useState, useEffect } from "react";
-import { getWeeklyMenu } from "@/strapi/menuSchedule/getWeeklyMenu";
+import { useWeeklyMenuStore } from "@/store/meals/useWeeklyMenuStore";
 import WeeklyMenuGrid from "@/components/features/weeklyMenu/WeeklyMenuGrid";
 import { Wraper } from "@/components/ui/Wraper";
-
+import Title from "@/components/ui/Title";
 
 export default function WeeklyMenuPage() {
-  const [menuData, setMenuData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchMenu = async () => {
-      
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await getWeeklyMenu();
-        setMenuData(data);
-      } catch (err) {
-        console.error("Error fetching weekly menu:", err);
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchMenu();
-  }, []);
+  const weeklyMenu = useWeeklyMenuStore((state) => state.weeklyMenu);
+  
+  // Loading and error states are handled by InitialDataProvider
+  const loading = false;
+  const error = null;
 
   return (
-    <Wraper>
-        <h1>Weekly Menu</h1>
-        <div className="flex h-full flex-col">September 2025</div>
-        <WeeklyMenuGrid 
-          menuData={menuData}
-          loading={loading}
-          error={error}
-        />
-    </Wraper>
+    <>
+      <Title
+        title={"September 2025"}
+        observations={["Un calendario con las fechas de los menus de la semana", "los desayunos son opcionales a elegir"]}
+      />
+
+      <WeeklyMenuGrid
+        menuData={weeklyMenu}
+        loading={loading}
+        error={error}
+      />
+      <Wraper>
+
+      </Wraper>
+    </>
   );
 }
