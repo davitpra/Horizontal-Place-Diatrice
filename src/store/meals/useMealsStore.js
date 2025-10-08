@@ -1,11 +1,14 @@
 import { create } from 'zustand'
+import { persist, createJSONStorage } from 'zustand/middleware'
 
-export const useMealsStore = create((set) => ({
-  meals: {
-    breakfast: [],
-    lunch: [],
-    supper: []
-  },
+export const useMealsStore = create(
+  persist(
+    (set) => ({
+      meals: {
+        breakfast: [],
+        lunch: [],
+        supper: []
+      },
   setMeal: (type, meals) => 
     set((state) => ({
       meals: {
@@ -74,5 +77,12 @@ export const useMealsStore = create((set) => ({
           [type]: updatedMeals
         }
       };
-    })
-}))
+    }),
+    }),
+    {
+      name: 'meals-storage',
+      storage: createJSONStorage(() => sessionStorage),
+      partialize: (state) => ({ meals: state.meals }),
+    }
+  )
+)

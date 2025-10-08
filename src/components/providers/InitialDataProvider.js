@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { getAllResidents } from "@/strapi/residents/getAllResidents";
 import { residents as rawData } from "@/data/residents";
 import { useCreateMenus } from "@/hooks/meals/useCreateMenus";
@@ -20,24 +20,51 @@ const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 export function InitialDataProvider({ children }) {
   const [isLoading, setIsLoading] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
+  const [error, setError] = useState(null);
+  const hasLoadedOnce = useRef(false);
   
   // Get store setters
   const setMeal = useMealsStore((state) => state.setMeal);
   const setResidents = useResidentsStore((state) => state.setResidents);
   const setDayMenus = useDayMenusStore((state) => state.setDayMenus);
   const setMenuSchedule = useMenuScheduleStore((state) => state.setMenuSchedule);
+  
+  // Get store data to check if we already have data
+  const existingMeals = useMealsStore((state) => state.meals);
+  const existingResidents = useResidentsStore((state) => state.residents);
 
   useEffect(() => {
     let isMounted = true;
     
+    // Check if we already have valid data in stores (from sessionStorage)
+    const hasValidData = 
+      existingResidents.length > 0 && 
+      (existingMeals.breakfast.length > 0 || 
+       existingMeals.lunch.length > 0 || 
+       existingMeals.supper.length > 0);
+    
+    // Skip loading if we already loaded once and have valid data
+    if (hasLoadedOnce.current && hasValidData) {
+      console.log('[InitialDataProvider] ✅ Using cached data from stores');
+      setIsLoading(false);
+      return;
+    }
+    
     async function loadInitialData() {
       try {
         console.log(`[InitialDataProvider] 🚀 Starting data load for date: ${date}`);
+        setError(null);
         
         // Step 1: Get residents (20% progress)
         setLoadingProgress(10);
         const residents = await getAllResidents();
         if (!isMounted) return;
+        
+        // Validate residents data
+        if (!Array.isArray(residents) || residents.length === 0) {
+          throw new Error('No residents data received from API');
+        }
+        
         setResidents(residents);
         setLoadingProgress(20);
         console.log(`[InitialDataProvider] ✅ Residents loaded: ${residents.length}`);
@@ -45,6 +72,12 @@ export function InitialDataProvider({ children }) {
         // Step 2: Create/get menus (40% progress)
         const menus = await useCreateMenus(residents, date);
         if (!isMounted) return;
+        
+        // Validate menus data
+        if (!Array.isArray(menus)) {
+          throw new Error('Invalid menus data received');
+        }
+        
         setDayMenus(menus);
         setLoadingProgress(40);
         console.log(`[InitialDataProvider] ✅ Menus ready: ${menus.length}`);
@@ -68,6 +101,11 @@ export function InitialDataProvider({ children }) {
 
         if (!isMounted) return;
         
+        // Validate meals data
+        if (!Array.isArray(breakFast) || !Array.isArray(lunch) || !Array.isArray(supper)) {
+          throw new Error('Invalid meals data structure received');
+        }
+        
         // Update meal stores
         setMeal('breakfast', breakFast);
         setMeal('lunch', lunch);
@@ -80,12 +118,22 @@ export function InitialDataProvider({ children }) {
         
         setLoadingProgress(100);
         console.log(`[InitialDataProvider] 🎉 All data loaded successfully`);
+        
+        // Mark that we've successfully loaded once
+        hasLoadedOnce.current = true;
 
       } catch (error) {
         console.error("[InitialDataProvider] ❌ Error loading initial data:", error);
-        // Set fallback data if available
+        
+        // Set error state for UI feedback
         if (isMounted) {
-          setResidents(rawData);
+          setError(error.message || 'Failed to load initial data');
+          
+          // Set fallback data if available
+          if (rawData && Array.isArray(rawData) && rawData.length > 0) {
+            console.log('[InitialDataProvider] 📦 Using fallback data');
+            setResidents(rawData);
+          }
         }
       } finally {
         if (isMounted) {
@@ -103,7 +151,32 @@ export function InitialDataProvider({ children }) {
     return () => {
       isMounted = false;
     };
-  }, [date, setResidents, setDayMenus, setMenuSchedule, setMeal]);
+    // Remove 'date' from dependencies as it's a constant
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setResidents, setDayMenus, setMenuSchedule, setMeal]);
+
+  // Show error state with option to retry
+  if (error && !isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center max-w-md w-full px-4">
+          <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+            <svg className="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+            </svg>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Failed to Load Data</h3>
+          <p className="text-gray-600 text-sm mb-6">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (

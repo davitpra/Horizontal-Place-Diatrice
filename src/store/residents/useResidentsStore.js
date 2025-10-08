@@ -1,11 +1,20 @@
 import { create } from "zustand";
+import { persist, createJSONStorage } from 'zustand/middleware'
 
-export const useResidentsStore = create((set) => {
-  return {
-    residents: [],
-    setResidents: (residents) => set({ residents: changeFormat(residents) }),
-  };
-});
+export const useResidentsStore = create(
+  persist(
+    (set) => {
+      return {
+        residents: [],
+        setResidents: (residents) => set({ residents: changeFormat(residents) }),
+      };
+    },
+    {
+      name: 'residents-storage',
+      storage: createJSONStorage(() => sessionStorage),
+    }
+  )
+);
 
 function changeFormat(residents) {
   return residents.map((resident) => {
