@@ -1,6 +1,9 @@
 import { createLunch } from "@/strapi/meals/lunch/createLunch";
 import { getDayLunchs } from "@/strapi/meals/lunch/getDayLunchs";
 
+// Helper to add delay
+const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 export const useCreateLunch = async (residents, date, menus) => {
   if (!residents || !Array.isArray(residents)) {
     throw new Error("Invalid residents array");
@@ -15,15 +18,18 @@ export const useCreateLunch = async (residents, date, menus) => {
   }
 
   try {
-    // Obtener los desayunos existentes para la fecha
+    // Obtener los almuerzos existentes para la fecha
     let dayLunchs = await getDayLunchs(date);
-    // Filtrar los menús que no tienen un desayuno asociado
-    const menusWithoutBreakfast = menus.filter((menu) => menu.lunch === null);
+    
+    // Filtrar los menús que no tienen un almuerzo asociado
+    const menusWithoutLunch = menus.filter((menu) => menu.lunch === null);
 
-    if (menusWithoutBreakfast.length > 0) {
-      // Crear desayunos para los menús que no tienen
+    if (menusWithoutLunch.length > 0) {
+      console.log(`Creating lunch for ${menusWithoutLunch.length} menus...`);
+      
+      // Crear almuerzos para los menús que no tienen
       await Promise.all(
-        menusWithoutBreakfast.map(async (menu) => {
+        menusWithoutLunch.map(async (menu) => {
           const resident = residents.find(
             (resident) => resident.documentId === menu.resident.documentId
           );
@@ -34,7 +40,6 @@ export const useCreateLunch = async (residents, date, menus) => {
             );
             return;
           }
-
 
           await createLunch({
             date,
@@ -48,13 +53,21 @@ export const useCreateLunch = async (residents, date, menus) => {
         })
       );
 
-      // Obtener la lista actualizada de desayunos
+      // Wait for Strapi to process ONLY when we created new lunches
+      console.log('Waiting for Strapi to process new lunches...');
+      await wait(500);
+
+      // Obtener la lista actualizada de almuerzos
       dayLunchs = await getDayLunchs(date);
+      
+      console.log(`Total lunches available: ${dayLunchs.length}`);
+    } else {
+      console.log(`All lunches already exist. Total: ${dayLunchs.length}`);
     } 
 
     return dayLunchs;
   } catch (error) {
-    console.error("Error in useCreateBreakfast:", error);
+    console.error("Error in useCreateLunch:", error);
     throw error;
   }
 };

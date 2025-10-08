@@ -101,9 +101,12 @@ export const useTableFilters = ({
     }
   }, [mealOnTable]);
 
+  // Remove this useEffect and set directly in useMemo
   useEffect(() => {
-    setUpdatedMealOnTable(ordersWithoutDrinks);
-  }, [ordersWithoutDrinks]);
+    if (ordersWithoutDrinks.length > 0 || mealOnTable.length === 0) {
+      setUpdatedMealOnTable(ordersWithoutDrinks);
+    }
+  }, [ordersWithoutDrinks, mealOnTable.length]);
 
   return {
     residentsOnTable,

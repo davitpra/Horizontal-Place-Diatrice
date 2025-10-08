@@ -1,6 +1,9 @@
 import { createBreakfast } from "@/strapi/meals/breakfast/createBreakfast";
 import { getDayBreakfasts } from "@/strapi/meals/breakfast/getDayBreakfasts";
 
+// Helper to add delay
+const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 export const useCreateBreakfast = async (residents, date, menus) => {
   if (!residents || !Array.isArray(residents)) {
     throw new Error("Invalid residents array");
@@ -22,6 +25,8 @@ export const useCreateBreakfast = async (residents, date, menus) => {
     const menusWithoutBreakfast = menus.filter((menu) => menu.breakfast === null);
 
     if (menusWithoutBreakfast.length > 0) {
+      console.log(`Creating breakfast for ${menusWithoutBreakfast.length} menus...`);
+      
       // Crear desayunos para los menús que no tienen
       await Promise.all(
         menusWithoutBreakfast.map(async (menu) => {
@@ -51,8 +56,16 @@ export const useCreateBreakfast = async (residents, date, menus) => {
         })
       );
 
+      // Wait for Strapi to process ONLY when we created new breakfasts
+      console.log('Waiting for Strapi to process new breakfasts...');
+      await wait(500);
+
       // Obtener la lista actualizada de desayunos
       dayBreakfast = await getDayBreakfasts(date);
+      
+      console.log(`Total breakfasts available: ${dayBreakfast.length}`);
+    } else {
+      console.log(`All breakfasts already exist. Total: ${dayBreakfast.length}`);
     } 
     return dayBreakfast;
   } catch (error) {
