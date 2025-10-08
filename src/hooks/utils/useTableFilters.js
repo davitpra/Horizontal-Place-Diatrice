@@ -57,7 +57,7 @@ export const useTableFilters = ({
     setMealOnTable(orderedMealsByTable);
   }, [selectTable, residentsOnSeating, mealsOnSeating, menusOnSeating, condition]);
 
-  // Filtrar las bebidas de los pedidos
+  // Filtrar las bebidas de los pedidos - Combined with state update to prevent extra re-render
   const ordersWithoutDrinks = useMemo(() => {
     const filterDrinks = (meals) => {
       const {
@@ -101,12 +101,10 @@ export const useTableFilters = ({
     }
   }, [mealOnTable]);
 
-  // Remove this useEffect and set directly in useMemo
+  // Sync updateMealOnTable with ordersWithoutDrinks - single update
   useEffect(() => {
-    if (ordersWithoutDrinks.length > 0 || mealOnTable.length === 0) {
-      setUpdatedMealOnTable(ordersWithoutDrinks);
-    }
-  }, [ordersWithoutDrinks, mealOnTable.length]);
+    setUpdatedMealOnTable(ordersWithoutDrinks);
+  }, [ordersWithoutDrinks]);
 
   return {
     residentsOnTable,

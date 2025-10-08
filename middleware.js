@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 // Rutas que requieren autenticación
 const protectedRoutes = [
   '/room',
+  '/serving',
   '/summary',
   '/table',
   '/trays'

@@ -43,12 +43,11 @@ export default function Tables() {
   const selectedSeating = useSeatingConfigure((state) => state.seating);
   const selectedMealNumber = useMealBar((state) => state.mealNumber);
 
-  // Local state
+  // Local state - Initialize with actual data to avoid empty first render
   const [currentMealType, setCurrentMealType] = useState(MEAL_TYPES.BREAKFAST);
-  const [currentMeals, setCurrentMeals] = useState([]);
+  const [currentMeals, setCurrentMeals] = useState(meals[MEAL_TYPES.BREAKFAST] || []);
   const [residentInfo, setResidentInfo] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(null);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   // Modal stores
   const InfoModal = useMoreInfoModal();
@@ -175,41 +174,16 @@ export default function Tables() {
     return Object.keys(groupedResidents).sort((a, b) => Number(a) - Number(b));
   }, [groupedResidents]);
 
-  // Update current meal type when meal number changes
+  // Update current meal type and meals when meal number or meals data changes
+  // Combined into single useEffect to prevent cascading re-renders
   useEffect(() => {
     const newMealType = MEAL_TYPE_BY_NUMBER[selectedMealNumber] || MEAL_TYPES.BREAKFAST;
+    const newMeals = meals[newMealType] || [];
+    
     setCurrentMealType(newMealType);
-  }, [selectedMealNumber]);
-
-
-  // Update current meals when meal type or meals data changes
-  useEffect(() => {
-    if (meals && meals[currentMealType]) {
-      const initialMeals = meals[currentMealType];
-      setCurrentMeals(initialMeals);
-      console.log(`✅ Meals loaded for ${currentMealType}: ${initialMeals.length}`);
-      
-      // Mark initial load as complete once we have data
-      if (isInitialLoad && initialMeals.length > 0) {
-        setIsInitialLoad(false);
-      }
-    } else {
-      setCurrentMeals([]);
-      console.warn(`⚠️ No meals found for type: ${currentMealType}`);
-    }
-  }, [currentMealType, meals, isInitialLoad]);
-
-  // Safety timeout: prevent infinite loading state
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (isInitialLoad) {
-        console.warn('⏰ Initial load timeout - forcing load completion');
-        setIsInitialLoad(false);
-      }
-    }, 10000); // 10 second timeout
-
-    return () => clearTimeout(timeoutId);
-  }, [isInitialLoad]);
+    setCurrentMeals(newMeals);
+    console.log(`✅ Meals loaded for ${newMealType}: ${newMeals.length}`);
+  }, [selectedMealNumber, meals]);
 
   const observations = [
     "A list of all residents including their name, room, seating and observation.",
@@ -240,16 +214,7 @@ export default function Tables() {
                   disabled={residentsInSeating.length === 0}
                 />
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {isInitialLoad ? (
-                    <tr>
-                      <td colSpan={5} className="py-12 text-center">
-                        <div className="flex flex-col items-center justify-center">
-                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mb-2" />
-                          <p className="text-gray-500 text-sm">Loading residents...</p>
-                        </div>
-                      </td>
-                    </tr>
-                  ) : sortedTables.length === 0 ? (
+                  {sortedTables.length === 0 ? (
                     <tr>
                       <td colSpan={5} className="py-12 text-center text-gray-500">
                         No residents found for the selected seating
