@@ -4,21 +4,34 @@ import WeeklyMenuGrid from "@/components/features/weeklyMenu/WeeklyMenuGrid";
 import { Wraper } from "@/components/ui/Wraper";
 import { useResidentsStore } from "@/store/residents/useResidentsStore";
 import ResidentSearch from "@/components/features/search/ResidentSearch";
+import { getResidentWeeklyMenus } from "@/strapi/menus/getResidentWeeklyMenus";
+import { useState } from "react";
 
 export default function WeeklyMenuPage() {
   const weeklyMenu = useWeeklyMenuStore((state) => state.weeklyMenu);
   const residents = useResidentsStore((state) => state.residents);
+
+  const [weeklyMenuSelected, setWeeklyMenuSelected] = useState(null);
   
   // Loading and error states are handled by InitialDataProvider
   const loading = false;
   const error = null;
 
   // Handle resident selection
-  const handleResidentSelect = (resident) => {
-    // Here you can add any additional logic when a resident is selected
-    // For example, filtering the weekly menu by resident
-    console.log("Selected resident:", resident.full_name);
-    console.log("Selected id:", resident.documentId);
+  const handleResidentSelect = async (resident) => {
+    try {
+      const menuData = await getResidentWeeklyMenus(resident.documentId);      
+      // Update the state with the fetched menu data
+      setWeeklyMenuSelected(menuData);
+      
+      // Additional verification
+      if (!menuData || menuData.length === 0) {
+        console.warn("No menus found for this resident");
+      }
+    } catch (error) {
+      console.error("Error fetching weekly menu:", error);
+      setWeeklyMenuSelected([]);
+    }
   };
 
   return (
@@ -38,6 +51,7 @@ export default function WeeklyMenuPage() {
 
         <WeeklyMenuGrid
           menuData={weeklyMenu}
+          menuDataSelected={weeklyMenuSelected}
           loading={loading}
           error={error}
         />

@@ -1,4 +1,6 @@
-export default function WeeklyMenuGrid({ menuData = [], loading = false, error = null }) {
+export default function WeeklyMenuGrid({ menuData = [], loading = false, error = null, menuDataSelected = [] }) {
+
+    console.log("menuDataSelected", menuDataSelected);
 
     // Create date mapping for easy lookup
     const dateToSchedule = menuData.reduce((acc, item) => {
