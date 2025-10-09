@@ -19,6 +19,12 @@ export default function WeeklyMenuPage() {
 
   // Handle resident selection
   const handleResidentSelect = async (resident) => {
+    // Early return if no resident is selected (cleared search)
+    if (!resident) {
+      setWeeklyMenuSelected(null);
+      return;
+    }
+
     try {
       const menuData = await getResidentWeeklyMenus(resident.documentId);      
       // Update the state with the fetched menu data

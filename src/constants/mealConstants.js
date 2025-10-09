@@ -44,3 +44,15 @@ export const MEAL_VALUES = {
   ADD: 'Add',
   NONE: 'none'
 };
+
+// Week days constants
+export const DAY_NAMES = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+export const DAY_NAMES_SHORT = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+// Meal sections configuration for weekly menu grid
+export const MEAL_SECTIONS = {
+  Breakfast: ['feature'],
+  Lunch: ['soup', 'salad', 'option_1', 'option_2', 'dessert'],
+  Supper: ['option_1', 'option_2', 'side_1', 'side_2', 'side_3', 'side_4']
+};

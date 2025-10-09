@@ -1,6 +1,6 @@
-export default function WeeklyMenuGrid({ menuData = [], loading = false, error = null, menuDataSelected = [] }) {
+import { DAY_NAMES, DAY_NAMES_SHORT, MEAL_SECTIONS } from '@/constants/mealConstants';
 
-    console.log("menuDataSelected", menuDataSelected);
+export default function WeeklyMenuGrid({ menuData = [], loading = false, error = null, menuDataSelected = [] }) {
 
     // Create date mapping for easy lookup
     const dateToSchedule = menuData.reduce((acc, item) => {
@@ -8,14 +8,34 @@ export default function WeeklyMenuGrid({ menuData = [], loading = false, error =
         return acc;
     }, {});
 
+
+    // Create date mapping for selected menu items
+    const dateToSelected = menuDataSelected?.reduce((acc, item) => {
+        acc[item.Date] = item;
+        return acc;
+    }, {}) || {};
+
     // Get dates for header (Monday to Sunday)
     const dates = menuData.map(item => new Date(item.Date));
-    const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-    const dayNamesShort = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+    // Helper function to check if a field is selected
+    const isFieldSelected = (date, mealType, field) => {
+        const selected = dateToSelected?.[date];
+        if (!selected) return false;
+
+        if (mealType === 'Breakfast') {
+            return selected.breakfast?.[field] !== null && selected.breakfast?.[field] !== undefined;
+        } else if (mealType === 'Lunch') {
+            return selected.lunch?.[field] !== null && selected.lunch?.[field] !== undefined;
+        } else if (mealType === 'Supper') {
+            return selected.supper?.[field] !== null && selected.supper?.[field] !== undefined;
+        }
+        return false;
+    };
 
     // Helper function to get meal data
     const getMealData = (date, mealType, field) => {
-        const schedule = dateToSchedule[date];
+        const schedule = dateToSchedule?.[date];
         if (!schedule) return '';
 
         if (mealType === 'Breakfast') {
@@ -26,13 +46,6 @@ export default function WeeklyMenuGrid({ menuData = [], loading = false, error =
             return schedule.Dinner?.[field] || '';
         }
         return '';
-    };
-
-    // Define meal sections with their fields
-    const mealSections = {
-        Breakfast: ['feature'],
-        Lunch: ['soup', 'salad', 'option_1', 'option_2', 'dessert'],
-        Supper: ['option_1', 'option_2', 'side_1', 'side_2', 'side_3', 'side_4']
     };
 
     if (loading) {
@@ -69,20 +82,20 @@ export default function WeeklyMenuGrid({ menuData = [], loading = false, error =
             <div className="block lg:hidden space-y-4">
                 {dates.map((date, index) => {
                     const dateStr = date.toISOString().split('T')[0];
-                    const schedule = dateToSchedule[dateStr];
+                    const schedule = dateToSchedule?.[dateStr];
                     
                     return (
                         <div key={index} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
                             {/* Day Header */}
                             <div className="bg-indigo-50 text-indigo-900 px-4 py-3">
                                 <h3 className="text-lg font-semibold">
-                                    {dayNames[date.getDay() === 0 ? 0 : date.getDay()]} / {date.getDate() + 1}
+                                    {DAY_NAMES[date.getDay() === 0 ? 0 : date.getDay()]} / {date.getDate() + 1}
                                 </h3>
                             </div>
 
                             {/* Meals for the day */}
                             <div className="p-4 space-y-4">
-                                {Object.entries(mealSections).map(([mealType, fields]) => (
+                                {Object.entries(MEAL_SECTIONS).map(([mealType, fields]) => (
                                     <div key={mealType} className="border-b border-gray-100 last:border-b-0 pb-4 last:pb-0">
                                         <h4 className="text-sm font-semibold text-indigo-900 mb-2 uppercase tracking-wide">
                                             {mealType}
@@ -90,12 +103,24 @@ export default function WeeklyMenuGrid({ menuData = [], loading = false, error =
                                         <div className="space-y-2">
                                             {fields.map((field) => {
                                                 const content = getMealData(dateStr, mealType, field);
+                                                const isSelected = isFieldSelected(dateStr, mealType, field);
                                                 return (
-                                                    <div key={field} className="flex justify-between items-start">
-                                                        <span className="text-xs font-medium text-gray-600 capitalize min-w-[80px]">
+                                                    <div 
+                                                        key={field} 
+                                                        className={`flex justify-between items-start p-2 rounded transition-colors ${
+                                                            isSelected 
+                                                                ? 'bg-green-100 border-l-4 border-green-500' 
+                                                                : 'bg-transparent'
+                                                        }`}
+                                                    >
+                                                        <span className={`text-xs font-medium capitalize min-w-[80px] ${
+                                                            isSelected ? 'text-green-800' : 'text-gray-600'
+                                                        }`}>
                                                             {field.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}:
                                                         </span>
-                                                        <span className="text-sm text-gray-900 text-right flex-1 ml-2">
+                                                        <span className={`text-sm text-right flex-1 ml-2 ${
+                                                            isSelected ? 'text-green-900 font-semibold' : 'text-gray-900'
+                                                        }`}>
                                                             {content || '-'}
                                                         </span>
                                                     </div>
@@ -122,14 +147,14 @@ export default function WeeklyMenuGrid({ menuData = [], loading = false, error =
                             {dates.map((date, index) => (
                                 <div key={index} className="px-3 py-3 text-center border-r border-gray-200 last:border-r-0">
                                     <div className="text-sm font-medium text-gray-900">
-                                        {dayNamesShort[date.getDay() === 0 ? 0 : date.getDay()]} / {date.getDate() + 1}
+                                        {DAY_NAMES_SHORT[date.getDay() === 0 ? 0 : date.getDay()]} / {date.getDate() + 1}
                                     </div>
                                 </div>
                             ))}
                         </div>
 
                         {/* Meal Sections */}
-                        {Object.entries(mealSections).map(([mealType, fields]) => (
+                        {Object.entries(MEAL_SECTIONS).map(([mealType, fields]) => (
                             <div key={mealType}>
                                 {/* Meal Type Header */}
                                 <div className="grid grid-cols-8 border-b border-gray-200 bg-indigo-50">
@@ -152,11 +177,16 @@ export default function WeeklyMenuGrid({ menuData = [], loading = false, error =
                                         {dates.map((date, index) => {
                                             const dateStr = date.toISOString().split('T')[0];
                                             const content = getMealData(dateStr, mealType, field);
+                                            const isSelected = isFieldSelected(dateStr, mealType, field);
 
                                             return (
                                                 <div
                                                     key={index}
-                                                    className="px-2 py-2 text-xs text-gray-900 border-r border-gray-200 last:border-r-0 min-h-[40px] flex items-center justify-center"
+                                                    className={`px-2 py-2 text-xs border-r border-gray-200 last:border-r-0 min-h-[40px] flex items-center justify-center transition-colors ${
+                                                        isSelected 
+                                                            ? 'bg-green-100 border-l-4 border-green-500 font-semibold text-green-900' 
+                                                            : 'text-gray-900'
+                                                    }`}
                                                 >
                                                     <span className="text-center break-words">
                                                         {content || '-'}

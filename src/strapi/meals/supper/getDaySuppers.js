@@ -2,7 +2,7 @@ import { getMenuSchedule } from "../../menuSchedule/getMenuSchedule";
 import { query } from "../../strapi";
 
 export async function getDaySuppers(date) {
-  let [lunchMenu, supperMenu] = await getMenuSchedule(date) 
+  let [breakfastMenu, lunchMenu, supperMenu] = await getMenuSchedule(date)
   return query(
     `dinners?filters[Date][$eq]=${date}&populate=*`
   ).then((res) => {
