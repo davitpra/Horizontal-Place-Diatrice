@@ -22,7 +22,6 @@ export default function WeeklyMenuPage() {
   }, []);
   // Handle resident selection
   const handleResidentSelect = async (resident) => {
-    const dummyDocumentId = 'shabj0yjyzmebdrsds145bg6';
     // Early return if no resident is selected (cleared search)
     if (!resident) {
       setWeeklyMenuSelected(null);
@@ -30,9 +29,7 @@ export default function WeeklyMenuPage() {
     }
 
     try {
-      //const menuData = await getResidentWeeklyMenus(resident.documentId);
-      const menuData = await getResidentWeeklyMenus(dummyDocumentId);
-      console.log("menuData", menuData);      
+      const menuData = await getResidentWeeklyMenus(resident.documentId); 
       // Update the state with the fetched menu data
       setWeeklyMenuSelected(menuData);
       

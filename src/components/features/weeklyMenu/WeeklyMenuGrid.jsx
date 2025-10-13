@@ -23,14 +23,8 @@ export default function WeeklyMenuGrid({ menuData = [], loading = false, error =
         const selected = dateToSelected?.[date];
         if (!selected) return false;
 
-        if (mealType === 'Breakfast') {
-            return selected.breakfast?.[field] !== null && selected.breakfast?.[field] !== undefined;
-        } else if (mealType === 'Lunch') {
-            return selected.lunch?.[field] !== null && selected.lunch?.[field] !== undefined;
-        } else if (mealType === 'Supper') {
-            return selected.supper?.[field] !== null && selected.supper?.[field] !== undefined;
-        }
-        return false;
+        const mealKey = mealType.toLowerCase();
+        return Boolean(selected[mealKey]?.[field]);
     };
 
     // Helper function to get meal data
