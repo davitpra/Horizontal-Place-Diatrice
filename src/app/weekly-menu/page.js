@@ -5,7 +5,7 @@ import { Wraper } from "@/components/ui/Wraper";
 import { useResidentsStore } from "@/store/residents/useResidentsStore";
 import ResidentSearch from "@/components/features/search/ResidentSearch";
 import { getResidentWeeklyMenus } from "@/strapi/menus/getResidentWeeklyMenus";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function WeeklyMenuPage() {
   const weeklyMenu = useWeeklyMenuStore((state) => state.weeklyMenu);
@@ -17,8 +17,12 @@ export default function WeeklyMenuPage() {
   const loading = false;
   const error = null;
 
+  useEffect(() => {
+    handleResidentSelect(residents[0]);
+  }, []);
   // Handle resident selection
   const handleResidentSelect = async (resident) => {
+    const dummyDocumentId = 'shabj0yjyzmebdrsds145bg6';
     // Early return if no resident is selected (cleared search)
     if (!resident) {
       setWeeklyMenuSelected(null);
@@ -26,7 +30,9 @@ export default function WeeklyMenuPage() {
     }
 
     try {
-      const menuData = await getResidentWeeklyMenus(resident.documentId);      
+      //const menuData = await getResidentWeeklyMenus(resident.documentId);
+      const menuData = await getResidentWeeklyMenus(dummyDocumentId);
+      console.log("menuData", menuData);      
       // Update the state with the fetched menu data
       setWeeklyMenuSelected(menuData);
       

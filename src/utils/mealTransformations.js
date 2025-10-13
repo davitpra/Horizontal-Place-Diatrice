@@ -95,6 +95,8 @@ export const reverseTransformOrder = (meals, mealNumber, menuData) => {
     if (mealType === MEAL_TYPES.BREAKFAST) {
       if (Object.values(BREAKFAST_ITEMS).includes(key)) {
         acc[key] = value === MEAL_VALUES.ADD ? true : value === MEAL_VALUES.NONE ? false : value;
+      } else if (key === "feature") {
+        acc[key] = value === MEAL_VALUES.NONE ? false : true;
       } else {
         acc[key] = value === MEAL_VALUES.NONE ? "" : value;
       }
