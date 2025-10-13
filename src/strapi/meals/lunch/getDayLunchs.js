@@ -4,7 +4,7 @@ import { query } from "../../strapi";
 export async function getDayLunchs(date) {
   let [breakfastMenu, lunchMenu, supperMenu] = await getMenuSchedule(date) 
   return query(
-    `lunches?filters[Date][$eq]=${date}&populate=*`
+    `lunches?filters[Date][$eq]=${date}&populate=*&pagination[pageSize]=100`
   ).then((res) => {
     return res.data.map((lunch) => {
       const { onTray, complete, Slug, documentId, went_out_to_eat, table} = lunch;

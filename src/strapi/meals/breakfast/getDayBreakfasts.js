@@ -4,7 +4,7 @@ import { getMenuSchedule } from "../../menuSchedule/getMenuSchedule";
 export async function getDayBreakfasts(date) {
   let [breakfastMenu] = await getMenuSchedule(date) 
   return query(
-    `breakfasts?filters[Date][$eq]=${date}`
+    `breakfasts?filters[Date][$eq]=${date}&pagination[pageSize]=100`
   ).then((res) => {
     return res.data.map((breakFast) => {
       const { went_out_to_eat, complete, slug, documentId, table} = breakFast;
