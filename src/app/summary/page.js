@@ -18,7 +18,6 @@ export default function Summary() {
   const { breakfast, lunch, supper } = mealStore;
   const dayMenusStore = useDayMenusStore(state => state.dayMenus);
   const menuSchedule = useMenuScheduleStore(state => state.menuSchedule);
-
   const [meals, setMeals] = useState([]); // Estado para almacenar las estadísticas de las comidas
   const [menuOptions, setMenuOptions] = useState({}); // Estado para almacenar las opciones del menu
   const [rawMeals, setRawMeals] = useState([]); // Estado para calcular las comidas completadas. 
@@ -32,7 +31,7 @@ export default function Summary() {
   }, [dayMenusStore, selectedSeating]);
 
   const mealsInSeating = useMemo(() => {
-    return menusInSeating.map(menu =>{
+    return menusInSeating.map(menu => {
       if (mealNumber === 0) {
         return menu.breakfast;
       } else if (mealNumber === 1) {
@@ -49,7 +48,7 @@ export default function Summary() {
     const meals = mealNumber === 0 ? breakfast : mealNumber === 1 ? lunch : supper;
 
     // Encontrar las comidas que coinciden con los documentIds de las comidas en el seating
-    const matchingMeals = meals.filter(meal => 
+    const matchingMeals = meals.filter(meal =>
       mealsInSeating.some(seatingMeal => seatingMeal.documentId === meal.documentId)
     );
 
@@ -63,14 +62,9 @@ export default function Summary() {
     setRawMeals(mealsWithComplete || []);
 
     // Configurar menuOptions basado en el mealNumber
-    if (mealNumber > 0) {
-      const menuOptions = menuSchedule[mealNumber - 1]?.data || {};
-      setMenuOptions(menuOptions);
-    } else {
-      // Para breakfast (mealNumber === 0), usar el primer elemento del menuSchedule
-      const breakfastOptions = menuSchedule[0]?.data || {};
-      setMenuOptions(breakfastOptions);
-    }
+    const menuOptions = menuSchedule[mealNumber]?.data || {};
+    setMenuOptions(menuOptions);
+
   }, [mealNumber, breakfast, lunch, supper, menuSchedule, dayMenusStore, selectedSeating]);
 
   // Efecto para calcular las estadísticas cuando cambian los datos
@@ -81,7 +75,6 @@ export default function Summary() {
     } else {
       setMeals([]);
     }
-    console.log("meals", meals);
   }, [mealNumber, rawMeals, menuOptions]);
 
   const observations = [
