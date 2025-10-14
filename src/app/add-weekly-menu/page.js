@@ -1,12 +1,14 @@
 "use client";
 import { useWeeklyMenuStore } from "@/store/meals/useWeeklyMenuStore";
-import WeeklyMenuGrid from "@/components/features/weeklyMenu/WeeklyMenuGrid";
+import { WeeklyMenuGrid } from "@/components/features/weeklyMenu/WeeklyMenuGrid";
 import { Wraper } from "@/components/ui/Wraper";
 import { useResidentsStore } from "@/store/residents/useResidentsStore";
 import ResidentSearch from "@/components/features/search/ResidentSearch";
 import { getResidentWeeklyMenus } from "@/strapi/menus/getResidentWeeklyMenus";
 import { useState, useEffect } from "react";
 import { saveResidentWeekSelections } from "@/strapi/menus/saveResidentWeekSelections";
+import { date } from "@/constants/date";
+import { getMonthYearFromISO } from "@/utils/date";
 
 export default function WeeklyMenuPage() {
   const weeklyMenu = useWeeklyMenuStore((state) => state.weeklyMenu);
@@ -18,7 +20,9 @@ export default function WeeklyMenuPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
   const [saveSuccess, setSaveSuccess] = useState("");
-  
+
+  const { month, year } = getMonthYearFromISO(date);
+
   // Loading and error states are handled by InitialDataProvider
   const loading = false;
   const error = null;
@@ -28,7 +32,6 @@ export default function WeeklyMenuPage() {
 
   // Handle resident selection
   const handleResidentSelect = async (resident) => {
-    console.log("resident", resident);
     // Early return if no resident is selected (cleared search)
     if (!resident) {
       setWeeklyMenuSelected(null);
@@ -44,10 +47,10 @@ export default function WeeklyMenuPage() {
 
     try {
       setSelectedResident(resident);
-      const menuData = await getResidentWeeklyMenus(resident.documentId); 
+      const menuData = await getResidentWeeklyMenus(resident.documentId);
       // Update the state with the fetched menu data
       setWeeklyMenuSelected(menuData);
-      
+
       // Additional verification
       if (!menuData || menuData.length === 0) {
         console.warn("No menus found for this resident");
@@ -76,22 +79,9 @@ export default function WeeklyMenuPage() {
         updatedMeal[opposite] = false;
       }
 
+      // Preserve false to allow deselection overrides to persist until save
       const nextDate = { ...prevDate, [mealKey]: updatedMeal };
-
-      // Clean out false values to keep state compact
-      const cleanedMeal = Object.fromEntries(Object.entries(nextDate[mealKey]).filter(([, v]) => v === true));
-      const cleanedDate = { ...nextDate, [mealKey]: cleanedMeal };
-      // If meal becomes empty, remove it
-      if (Object.keys(cleanedDate[mealKey]).length === 0) {
-        delete cleanedDate[mealKey];
-      }
-      // If date becomes empty, remove it
-      const result = { ...prev, [dateStr]: cleanedDate };
-      if (Object.keys(cleanedDate).length === 0) {
-        const { [dateStr]: _, ...rest } = result;
-        return rest;
-      }
-      return result;
+      return { ...prev, [dateStr]: nextDate };
     });
   };
 
@@ -124,52 +114,57 @@ export default function WeeklyMenuPage() {
 
   return (
 
-      <Wraper>
-        <h2 className="text-lg font-medium text-gray-900">September 2025</h2>
-        <p className="text-sm text-gray-500">Un calendario con las fechas de los menus de la semana, los desayunos son opcionales a elegir</p>
-        <br />
-        
-        {/* Search Section */}
-        <ResidentSearch
-          residents={residents}
-          onSelectResident={handleResidentSelect}
-          label="Buscar menu por residente"
-          placeholder="Buscar por nombre del residente..."
-        />
+    <Wraper>
+      <h2 className="text-lg font-medium text-gray-900">{month} {year}</h2>
+      <p className="text-sm text-gray-500">
+        A calendar showing the weekly menu dates.
+      </p>
+      <p className="text-sm text-gray-500">
+        Breakfast options are customizable — you can choose from different styles of eggs (over easy, scrambled, hard-boiled, poached, etc.) and types of toast (brown, white, raisin, rye, etc.). You can also add extras like yogurt, cereal, fruit, and more.
+        If no breakfast selection has been made, it will be served according to the resident’s preferences.
+      </p>
+      <br />
 
-        <WeeklyMenuGrid
-          menuData={weeklyMenu}
-          menuDataSelected={weeklyMenuSelected}
-          pendingSelections={pendingSelections}
-          onSelectionChange={handleSelectionChange}
-          disabled={!selectedResident}
-          loading={loading}
-          error={error}
-        />
+      {/* Search Section */}
+      <ResidentSearch
+        residents={residents}
+        onSelectResident={handleResidentSelect}
+        label="Buscar menu por residente"
+        placeholder="Buscar por nombre del residente..."
+      />
 
-        {/* Save Week Actions */}
-        <div className="mt-6 flex items-center gap-4">
-          <button
-            type="button"
-            onClick={handleSaveWeek}
-            disabled={!selectedResident || !hasPendingChanges || isSaving}
-            className={`px-4 py-2 rounded-md text-white ${
-              !selectedResident || !hasPendingChanges || isSaving
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-indigo-600 hover:bg-indigo-700"
+      <WeeklyMenuGrid
+        menuData={weeklyMenu}
+        menuDataSelected={weeklyMenuSelected}
+        pendingSelections={pendingSelections}
+        onSelectionChange={handleSelectionChange}
+        disabled={!selectedResident}
+        loading={loading}
+        error={error}
+      />
+
+      {/* Save Week Actions */}
+      <div className="mt-6 flex items-center gap-4">
+        <button
+          type="button"
+          onClick={handleSaveWeek}
+          disabled={!selectedResident || !hasPendingChanges || isSaving}
+          className={`px-4 py-2 rounded-md text-white ${!selectedResident || !hasPendingChanges || isSaving
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-indigo-600 hover:bg-indigo-700"
             }`}
-            aria-label="Guardar selecciones de la semana"
-          >
-            {isSaving ? "Guardando..." : "Guardar semana"}
-          </button>
-          {saveSuccess && (
-            <span className="text-sm text-green-700" role="status">{saveSuccess}</span>
-          )}
-          {saveError && (
-            <span className="text-sm text-red-600" role="alert">{saveError}</span>
-          )}
-        </div>
+          aria-label="Guardar selecciones de la semana"
+        >
+          {isSaving ? "Guardando..." : "Guardar semana"}
+        </button>
+        {saveSuccess && (
+          <span className="text-sm text-green-700" role="status">{saveSuccess}</span>
+        )}
+        {saveError && (
+          <span className="text-sm text-red-600" role="alert">{saveError}</span>
+        )}
+      </div>
 
-      </Wraper>
+    </Wraper>
   );
 }

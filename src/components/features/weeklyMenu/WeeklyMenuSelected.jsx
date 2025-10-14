@@ -1,6 +1,6 @@
 import { DAY_NAMES, DAY_NAMES_SHORT, MEAL_SECTIONS } from '@/constants/mealConstants';
 
-export function WeeklyMenuGrid({ menuData = [], loading = false, error = null, menuDataSelected = [], pendingSelections = {}, onSelectionChange = () => {}, disabled = false }) {
+export function WeeklyMenuSelected({ menuData = [], loading = false, error = null, menuDataSelected = [], pendingSelections = {}, onSelectionChange = () => { }, disabled = false }) {
 
     // Create date mapping for easy lookup
     const dateToSchedule = menuData.reduce((acc, item) => {
@@ -42,27 +42,6 @@ export function WeeklyMenuGrid({ menuData = [], loading = false, error = null, m
         return '';
     };
 
-    const isPendingSelected = (date, mealType, field) => {
-        const mealKey = mealType.toLowerCase();
-        return Boolean(pendingSelections?.[date]?.[mealKey]?.[field]);
-    };
-
-    // Read pending override value exactly (undefined | boolean)
-    const getPendingValue = (date, mealType, field) => {
-        const mealKey = mealType.toLowerCase();
-        const meal = pendingSelections?.[date]?.[mealKey];
-        return meal && Object.prototype.hasOwnProperty.call(meal, field)
-            ? meal[field]
-            : undefined;
-    };
-
-    const handleKeyDown = (e, handler) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            handler();
-        }
-    };
-
     if (loading) {
         return (
             <div className="flex h-full flex-col items-center justify-center p-4">
@@ -98,7 +77,7 @@ export function WeeklyMenuGrid({ menuData = [], loading = false, error = null, m
                 {dates.map((date, index) => {
                     const dateStr = date.toISOString().split('T')[0];
                     const schedule = dateToSchedule?.[dateStr];
-                    
+
                     return (
                         <div key={index} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
                             {/* Day Header */}
@@ -119,38 +98,26 @@ export function WeeklyMenuGrid({ menuData = [], loading = false, error = null, m
                                             {fields.map((field) => {
                                                 const content = getMealData(dateStr, mealType, field);
                                                 const savedSelected = isFieldSelected(dateStr, mealType, field);
-                                                const pendingValue = getPendingValue(dateStr, mealType, field);
-                                                const effectiveSelected = typeof pendingValue === 'boolean' ? pendingValue : savedSelected;
                                                 const canSelect = !disabled && Boolean(content);
-
-                                                const handleToggle = () => {
-                                                    if (!canSelect) return;
-                                                    onSelectionChange(dateStr, mealType, field, !effectiveSelected);
-                                                };
 
                                                 return (
                                                     <button
                                                         type="button"
                                                         key={field}
-                                                        onClick={handleToggle}
-                                                        onKeyDown={(e) => handleKeyDown(e, handleToggle)}
                                                         disabled={!canSelect}
-                                                        aria-pressed={effectiveSelected}
+                                                        aria-pressed={savedSelected}
                                                         aria-label={`Seleccionar ${mealType} ${field} para ${dateStr}${content ? `: ${content}` : ''}`}
-                                                        className={`w-full text-left flex justify-between items-start p-2 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-                                                            effectiveSelected
-                                                                ? 'bg-green-100 border-l-4 border-green-500'
-                                                                : 'bg-transparent'
-                                                        } ${canSelect ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
+                                                        className={`w-full text-left flex justify-between items-start p-2 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ${savedSelected
+                                                            ? 'bg-green-100 border-l-4 border-green-500'
+                                                            : 'bg-transparent'
+                                                            } ${canSelect ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
                                                     >
-                                                        <span className={`text-xs font-medium capitalize min-w-[80px] ${
-                                                            effectiveSelected ? 'text-green-800' : 'text-gray-600'
-                                                        }`}>
+                                                        <span className={`text-xs font-medium capitalize min-w-[80px] ${savedSelected ? 'text-green-800' : 'text-gray-600'
+                                                            }`}>
                                                             {field.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}:
                                                         </span>
-                                                        <span className={`text-sm text-right flex-1 ml-2 ${
-                                                            effectiveSelected ? 'text-green-900 font-semibold' : 'text-gray-900'
-                                                        }`}>
+                                                        <span className={`text-sm text-right flex-1 ml-2 ${savedSelected ? 'text-green-900 font-semibold' : 'text-gray-900'
+                                                            }`}>
                                                             {content || '-'}
                                                         </span>
                                                     </button>
@@ -208,29 +175,19 @@ export function WeeklyMenuGrid({ menuData = [], loading = false, error = null, m
                                             const dateStr = date.toISOString().split('T')[0];
                                             const content = getMealData(dateStr, mealType, field);
                                             const savedSelected = isFieldSelected(dateStr, mealType, field);
-                                            const pendingValue = getPendingValue(dateStr, mealType, field);
-                                            const effectiveSelected = typeof pendingValue === 'boolean' ? pendingValue : savedSelected;
                                             const canSelect = !disabled && Boolean(content);
-
-                                            const handleToggle = () => {
-                                                if (!canSelect) return;
-                                                onSelectionChange(dateStr, mealType, field, !effectiveSelected);
-                                            };
 
                                             return (
                                                 <button
                                                     type="button"
                                                     key={index}
-                                                    onClick={handleToggle}
-                                                    onKeyDown={(e) => handleKeyDown(e, handleToggle)}
                                                     disabled={!canSelect}
-                                                    aria-pressed={effectiveSelected}
+                                                    aria-pressed={savedSelected}
                                                     aria-label={`Seleccionar ${mealType} ${field} para ${dateStr}${content ? `: ${content}` : ''}`}
-                                                    className={`px-2 py-2 w-full h-full text-xs border-r border-gray-200 last:border-r-0 min-h-[40px] flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-                                                        effectiveSelected
-                                                            ? 'bg-green-100 border-l-4 border-green-500 font-semibold text-green-900'
-                                                            : 'text-gray-900'
-                                                    } ${canSelect ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
+                                                    className={`px-2 py-2 w-full h-full text-xs border-r border-gray-200 last:border-r-0 min-h-[40px] flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ${savedSelected
+                                                        ? 'bg-green-100 border-l-4 border-green-500 font-semibold text-green-900'
+                                                        : 'text-gray-900'
+                                                        } ${canSelect ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
                                                 >
                                                     <span className="text-center break-words">
                                                         {content || '-'}
