@@ -274,9 +274,9 @@ export default function Tables() {
                                 </td>
                                 <td className="hidden md:table-cell whitespace-nowrap px-3 py-2 text-sm text-gray-500 text-center">
                                   {drinkEntries.map(([key, value]) => (
-                                    <div key={key} className="py-0 grid grid-cols-2 gap-0 px-0 items-center justify-center">
+                                    <div key={key} className="py-0 grid grid-cols-2 gap-0 px-0 items-left justify-center">
                                       <dt className="text-sm/6 font-medium text-gray-900 block text-center">{key}</dt>
-                                      <dd className="text-sm/6 text-gray-700 mt-0 overflow-hidden text-ellipsis whitespace-nowrap text-center">
+                                      <dd className="text-sm/6 text-gray-700 mt-0 overflow-hidden text-ellipsis whitespace-nowrap text-left">
                                         {typeof value === "boolean" ? (value ? "Add" : "none") : value}
                                       </dd>
                                     </div>
@@ -285,6 +285,7 @@ export default function Tables() {
                                 <ActionButtons
                                   resident={resident}
                                   index={index}
+                                  went_out_to_eat={mealData?.went_out_to_eat}
                                   isComplete={mealData?.complete}
                                   onComplete={() => handleComplete(updateMealOnTable, index)}
                                   onOpenInfo={handleOpenMoreInfo}
