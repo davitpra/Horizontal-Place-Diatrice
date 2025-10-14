@@ -27,10 +27,6 @@ function changeFormat(residents) {
       ...rest
     } = resident;
 
-    //GET DAY OF WEEK
-    let today = new Date();
-    const dayOfWeek = today.getDay();
-
     // Helper function to filter the valid properties
     function filterValidProperties(obj) {
       return Object.fromEntries(
@@ -48,11 +44,11 @@ function changeFormat(residents) {
     // Array of meals preferences with the valid properties
     const meals = [
       filterValidProperties({
-        Water: Breakfast_preferences?.Breakfast_drink_preference?.water,
-        Hotdrink: Breakfast_preferences?.Breakfast_drink_preference?.Hotdrink,
+        Water: Breakfast_preferences?.water,
+        Hotdrink: Breakfast_preferences?.Hotdrink,
         Cereals: Breakfast_preferences?.Cereals,
-        Juice: Breakfast_preferences?.Breakfast_drink_preference?.Juice,
-        Milk: Breakfast_preferences?.Breakfast_drink_preference?.Milk,
+        Juice: Breakfast_preferences?.Juice,
+        Milk: Breakfast_preferences?.Milk,
         Eggs: Breakfast_preferences?.eggs,
         Toast: Breakfast_preferences?.toast,
         FruitPlate: Breakfast_preferences?.Fruit_plate ? "Add" : "none",
@@ -63,19 +59,19 @@ function changeFormat(residents) {
         Observation: Breakfast_preferences?.comentaries,
       }),
       filterValidProperties({
-        Water: Lunch_preferences?.Lunch_drink_preference?.water,
-        Hotdrink: Lunch_preferences?.Lunch_drink_preference?.Hotdrink,
-        Juice: Lunch_preferences?.Lunch_drink_preference?.Juice,
-        Milk: Lunch_preferences?.Lunch_drink_preference?.Milk,
+        Water: Lunch_preferences?.water,
+        Hotdrink: Lunch_preferences?.Hotdrink,
+        Juice: Lunch_preferences?.Juice,
+        Milk: Lunch_preferences?.Milk,
         onTray: Lunch_preferences?.onTray,
         Additionals: Lunch_preferences?.additionals,
         Observation: Lunch_preferences?.comentaries,
       }),
       filterValidProperties({
-        Water: Supper_preferences?.Lunch_drink_preference?.water,
-        Hotdrink: Supper_preferences?.Lunch_drink_preference?.Hotdrink,
-        Juice: Supper_preferences?.Lunch_drink_preference?.Juice,
-        Milk: Supper_preferences?.Lunch_drink_preference?.Milk,
+        Water: Supper_preferences?.water,
+        Hotdrink: Supper_preferences?.Hotdrink,
+        Juice: Supper_preferences?.Juice,
+        Milk: Supper_preferences?.Milk,
         onTray: Supper_preferences?.onTray,
         Additionals: Supper_preferences?.additionals,
         Observation: Supper_preferences?.comentaries,
