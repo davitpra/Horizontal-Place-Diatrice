@@ -3,6 +3,8 @@ import { query } from "../../strapi";
 
 export async function createBreakfast({date, table, full_name, documentId, breakFast}) {
 
+  console.log("breakFast", breakFast);
+  
   const preferences = breakFast ?? {
     went_out_to_eat: false,
     onTray: false,

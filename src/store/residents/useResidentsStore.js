@@ -6,7 +6,8 @@ export const useResidentsStore = create(
     (set) => {
       return {
         residents: [],
-        setResidents: (residents) => set({ residents: changeFormat(residents) }),
+        //setResidents: (residents) => set({ residents: changeFormat(residents) }),
+        setResidents: (residents) => set({ residents: residents }),
       };
     },
     {
