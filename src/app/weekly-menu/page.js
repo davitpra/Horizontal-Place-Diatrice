@@ -11,6 +11,7 @@ import { date } from "@/constants/date";
 import { getMonthYearFromISO } from "@/utils/date";
 import Title from "@/components/ui/Title";
 import { WeeklyMenuSelected } from "@/components/features/weeklyMenu/WeeklyMenuSelected";
+import { Loading } from "@/components/ui/Loading";
 
 export default function WeeklyMenuPage() {
   const weeklyMenu = useWeeklyMenuStore((state) => state.weeklyMenu);
@@ -119,6 +120,10 @@ export default function WeeklyMenuPage() {
   ];
 
   console.log("isEditing", isEditing);
+
+  if (isSaving) {
+    return <Loading message="Guardando selecciones..." size="md" />;
+  }
 
   return (
     <>
