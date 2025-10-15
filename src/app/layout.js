@@ -8,6 +8,7 @@ import { InitialDataProvider } from "@/components/providers/InitialDataProvider"
 import { AuthProvider } from "@/contexts/AuthContext";
 import { useAuth } from "@/hooks/auth/useAuth";
 import { Loading } from "@/components/ui/Loading";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -55,6 +56,30 @@ export default function RootLayout({ children }) {
             {children}
           </AuthenticatedLayout>
         </AuthProvider>
+        <Toaster 
+          position="top-right"
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: '#363636',
+              color: '#fff',
+            },
+            success: {
+              duration: 3000,
+              iconTheme: {
+                primary: '#10b981',
+                secondary: '#fff',
+              },
+            },
+            error: {
+              duration: 4000,
+              iconTheme: {
+                primary: '#ef4444',
+                secondary: '#fff',
+              },
+            },
+          }}
+        />
       </body>
     </html>
   );

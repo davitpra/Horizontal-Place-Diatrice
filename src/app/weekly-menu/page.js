@@ -12,6 +12,7 @@ import { getMonthYearFromISO } from "@/utils/date";
 import Title from "@/components/ui/Title";
 import { WeeklyMenuSelected } from "@/components/features/weeklyMenu/WeeklyMenuSelected";
 import { Loading } from "@/components/ui/Loading";
+import toast from "react-hot-toast";
 
 export default function WeeklyMenuPage() {
   const weeklyMenu = useWeeklyMenuStore((state) => state.weeklyMenu);
@@ -21,8 +22,6 @@ export default function WeeklyMenuPage() {
   const [selectedResident, setSelectedResident] = useState(null);
   const [pendingSelections, setPendingSelections] = useState({});
   const [isSaving, setIsSaving] = useState(false);
-  const [saveError, setSaveError] = useState("");
-  const [saveSuccess, setSaveSuccess] = useState("");
   const [isEditing, setIsEditing] = useState(false);
 
   const { month, year } = getMonthYearFromISO(date);
@@ -43,7 +42,7 @@ export default function WeeklyMenuPage() {
     }
 
     if (resident.moved_out) {
-      setSaveError("This resident has moved out.");
+      toast.error("This resident has moved out.");
       return;
     }
 
@@ -65,9 +64,6 @@ export default function WeeklyMenuPage() {
 
   // Toggle selection for a given date/meal/field enforcing exclusivity where needed
   const handleSelectionChange = (dateStr, mealType, field, nextValue) => {
-    setSaveError("");
-    setSaveSuccess("");
-
     const mealKey = mealType.toLowerCase(); // breakfast | lunch | supper
 
     setPendingSelections((prev) => {
@@ -92,8 +88,6 @@ export default function WeeklyMenuPage() {
   const handleSaveWeek = async () => {
     if (!selectedResident || !hasPendingChanges) return;
     setIsSaving(true);
-    setSaveError("");
-    setSaveSuccess("");
     try {
       await saveResidentWeekSelections({
         selectedResident: selectedResident,
@@ -105,10 +99,10 @@ export default function WeeklyMenuPage() {
       const refreshed = await getResidentWeeklyMenus(selectedResident.documentId);
       setWeeklyMenuSelected(refreshed);
       setPendingSelections({});
-      setSaveSuccess("Selecciones guardadas para la semana.");
+      toast.success("Selections saved for the week.");
     } catch (e) {
       console.error(e);
-      setSaveError("No se pudieron guardar las selecciones. Inténtalo de nuevo.");
+      toast.error("Could not save selections. Please try again.");
     } finally {
       setIsSaving(false);
     }
@@ -122,7 +116,7 @@ export default function WeeklyMenuPage() {
   console.log("isEditing", isEditing);
 
   if (isSaving) {
-    return <Loading message="Guardando selecciones..." size="md" />;
+    return <Loading message="Saving selections..." size="md" />;
   }
 
   return (
@@ -145,22 +139,13 @@ export default function WeeklyMenuPage() {
           setIsEditing(!isEditing);
         }}
       />
-      {/* Save Week Actions */}
-      <div className="mt-6 flex items-center gap-4">
-        {saveSuccess && (
-          <span className="text-sm text-green-700" role="status">{saveSuccess}</span>
-        )}
-        {saveError && (
-          <span className="text-sm text-red-600" role="alert">{saveError}</span>
-        )}
-      </div>
       <Wraper>
         {/* Search Section */}
         <ResidentSearch
           residents={residents}
           onSelectResident={handleResidentSelect}
-          label="Buscar menu por residente"
-          placeholder="Buscar por nombre del residente..."
+          label="Search menu by resident"
+          placeholder="Search by resident name..."
         />
         {isEditing && (
         <WeeklyMenuGrid
