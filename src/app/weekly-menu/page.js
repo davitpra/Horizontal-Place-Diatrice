@@ -96,8 +96,8 @@ export default function WeeklyMenuPage() {
       });
 
       // Refresh resident selections and clear pending
-      const refreshed = await getResidentWeeklyMenus(selectedResident.documentId);
-      setWeeklyMenuSelected(refreshed);
+      setWeeklyMenuSelected(null);
+      setSelectedResident(null);
       setPendingSelections({});
       toast.success("Selections saved for the week.");
     } catch (e) {
@@ -105,6 +105,7 @@ export default function WeeklyMenuPage() {
       toast.error("Could not save selections. Please try again.");
     } finally {
       setIsSaving(false);
+      setIsEditing(false); // Exit edit mode to show the updated view
     }
   };
 
@@ -135,8 +136,14 @@ export default function WeeklyMenuPage() {
         button2={isEditing ? "Cancel" : "Edit Menu"}
         button2ClassName={!selectedResident ? "hidden" : "block"}
         button2Action={() => {
-          console.log("Edit Menu");
-          setIsEditing(!isEditing);
+          if (isEditing) {
+            // Cancel editing: discard pending changes
+            setPendingSelections({});
+            setIsEditing(false);
+          } else {
+            // Enter edit mode
+            setIsEditing(true);
+          }
         }}
       />
       <Wraper>
