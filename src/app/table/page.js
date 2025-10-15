@@ -33,7 +33,7 @@ const MEAL_TYPE_BY_NUMBER = [
   MEAL_TYPES.SUPPER
 ];
 
-const TABLE_COLUMNS = 5; // Checkbox + Name + To Serve + Status + Actions
+const TABLE_COLUMNS = 6; // Checkbox + Name + To Serve + Status + Actions
 
 export default function Tables() {
   // Get data from stores with proper Zustand selector
@@ -242,9 +242,8 @@ export default function Tables() {
                         <Fragment key={tableNumber}>
                           <tr className="border-t border-gray-200">
                             <th
-                              scope="colgroup"
                               colSpan={TABLE_COLUMNS}
-                              className="bg-gray-50 py-2 pr-3 pl-4 text-center text-sm font-semibold text-gray-900 sm:pl-3"
+                              className="bg-gray-50 py-2 text-center text-sm font-semibold text-gray-900"
                             >
                               Table {tableNumber}
                             </th>

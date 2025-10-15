@@ -14,18 +14,15 @@ const TableHeader = ({ checked, onSelectAll, disabled = false }) => {
             aria-label="Select all residents"
           />
         </th>
-        <th className="py-3.5 pr-3 text-center text-sm font-semibold text-gray-900 pl-0">
+        <th className="py-3.5 pr-3 text-left text-sm font-semibold text-gray-900 pl-0">
           Name
         </th>
-        <th className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">
+        <th className="py-3.5 text-center text-sm font-semibold text-gray-900 md:pr-40">
           To Serve
         </th>
-        <th/>
+        <th className="hidden md:block"/>
         <th className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">
           Status
-        </th>
-        <th className="relative py-3.5 pl-3 pr-4 pr-0 text-center">
-          <span className="sr-only">Edit</span>
         </th>
       </tr>
     </thead>
