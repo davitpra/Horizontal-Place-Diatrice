@@ -21,9 +21,6 @@ export default function WeeklyMenuPage() {
   const loading = false;
   const error = null;
 
-  useEffect(() => {
-    handleResidentSelect(residents[0]);
-  }, []);
   // Handle resident selection
   const handleResidentSelect = async (resident) => {
     // Early return if no resident is selected (cleared search)

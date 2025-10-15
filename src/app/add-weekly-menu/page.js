@@ -26,9 +26,7 @@ export default function WeeklyMenuPage() {
   // Loading and error states are handled by InitialDataProvider
   const loading = false;
   const error = null;
-  useEffect(() => {
-    handleResidentSelect(residents[0]);
-  }, [residents]);
+
 
   // Handle resident selection
   const handleResidentSelect = async (resident) => {
