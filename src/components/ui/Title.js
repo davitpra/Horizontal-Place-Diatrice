@@ -1,6 +1,6 @@
 import { Wraper } from "./Wraper";
 
-export default function Title({ title, observations = [], className = "", buttonAction, button2Action, button, button2, button3Action, button3 }) {
+export default function Title({ title, observations = [], className = "", buttonAction, button2Action, button, button2, button3Action, button3, button1ClassName, button2ClassName, button3ClassName, button1Disabled, button2Disabled, button3Disabled}) {
   return (
     <div className={`px-4 sm:px-6 lg:px-8 xl:px-32`}>
       <div className={`md:flex md:items-center  ${className} my-4`}>
@@ -17,22 +17,24 @@ export default function Title({ title, observations = [], className = "", button
             <div className="mt-2 shrink-0 flex space-x-4">
               <button
                 type="button"
-                className="relative inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className={`relative inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${button1ClassName}`}
                 onClick={() => {
                   buttonAction();
                 }
                 }
+                disabled={button1Disabled}
               >
                 {button}
               </button>
               {button2 && (
                 <button
                   type="button"
-                  className="relative inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  className={`relative inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${button2ClassName}`}
                   onClick={() => {
                     button2Action();
                   }
                   }
+                  disabled={button2Disabled}
                 >
                   {button2}
                 </button>
@@ -40,11 +42,12 @@ export default function Title({ title, observations = [], className = "", button
               {button3 && (
                 <button
                   type="button"
-                  className="relative inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  className={`relative inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${button3ClassName}`}
                   onClick={() => {
                     button3Action();
                   }
                   }
+                  disabled={button3Disabled}
                 >
                   {button3}
                 </button>

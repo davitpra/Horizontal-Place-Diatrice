@@ -10,6 +10,7 @@ import { saveResidentWeekSelections } from "@/strapi/menus/saveResidentWeekSelec
 import { date } from "@/constants/date";
 import { getMonthYearFromISO } from "@/utils/date";
 import Title from "@/components/ui/Title";
+import { WeeklyMenuSelected } from "@/components/features/weeklyMenu/WeeklyMenuSelected";
 
 export default function WeeklyMenuPage() {
   const weeklyMenu = useWeeklyMenuStore((state) => state.weeklyMenu);
@@ -21,6 +22,7 @@ export default function WeeklyMenuPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
   const [saveSuccess, setSaveSuccess] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
 
   const { month, year } = getMonthYearFromISO(date);
 
@@ -116,6 +118,8 @@ export default function WeeklyMenuPage() {
     "If no breakfast selection has been made, it will be served according to the resident’s preferences.",
   ];
 
+  console.log("isEditing", isEditing);
+
   return (
     <>
       <Title
@@ -123,16 +127,17 @@ export default function WeeklyMenuPage() {
         observations={observations}
         className="mb-8"
         button={isSaving ? "Saving..." : "Save Week"}
+        button1ClassName={!isEditing ? "hidden" : "block"}
+        button1Disabled={!selectedResident || !hasPendingChanges || isSaving}
         buttonAction={() => {
           console.log("Save Week");
           handleSaveWeek();
         }}
-        button2="Edit Menu"
+        button2={isEditing ? "Close Adding" : "Add Menu"}
         button2Action={() => {
-
           console.log("Edit Menu");
+          setIsEditing(!isEditing);
         }}
-        button2Disabled={!selectedResident || !hasPendingChanges || isSaving}
       />
       {/* Save Week Actions */}
       <div className="mt-6 flex items-center gap-4">
@@ -151,7 +156,7 @@ export default function WeeklyMenuPage() {
           label="Buscar menu por residente"
           placeholder="Buscar por nombre del residente..."
         />
-
+        {isEditing && (
         <WeeklyMenuGrid
           menuData={weeklyMenu}
           menuDataSelected={weeklyMenuSelected}
@@ -159,8 +164,17 @@ export default function WeeklyMenuPage() {
           onSelectionChange={handleSelectionChange}
           disabled={!selectedResident}
           loading={loading}
+        error={error}
+        />
+        ) }
+        {!isEditing && (
+        <WeeklyMenuSelected
+          menuData={weeklyMenu}
+          menuDataSelected={weeklyMenuSelected}
+          loading={loading}
           error={error}
         />
+        )}
       </Wraper>
     </>
   );
