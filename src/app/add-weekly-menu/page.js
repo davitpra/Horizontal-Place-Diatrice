@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import { saveResidentWeekSelections } from "@/strapi/menus/saveResidentWeekSelections";
 import { date } from "@/constants/date";
 import { getMonthYearFromISO } from "@/utils/date";
+import Title from "@/components/ui/Title";
 
 export default function WeeklyMenuPage() {
   const weeklyMenu = useWeeklyMenuStore((state) => state.weeklyMenu);
@@ -110,51 +111,31 @@ export default function WeeklyMenuPage() {
     }
   };
 
+  const observations = [
+    "A calendar showing the weekly menu dates.",
+    "If no breakfast selection has been made, it will be served according to the resident’s preferences.",
+  ];
+
   return (
+    <>
+      <Title
+        title={`${month} ${year}`}
+        observations={observations}
+        className="mb-8"
+        button={isSaving ? "Saving..." : "Save Week"}
+        buttonAction={() => {
+          console.log("Save Week");
+          handleSaveWeek();
+        }}
+        button2="Edit Menu"
+        button2Action={() => {
 
-    <Wraper>
-      <h2 className="text-lg font-medium text-gray-900">{month} {year}</h2>
-      <p className="text-sm text-gray-500">
-        A calendar showing the weekly menu dates.
-      </p>
-      <p className="text-sm text-gray-500">
-        Breakfast options are customizable — you can choose from different styles of eggs (over easy, scrambled, hard-boiled, poached, etc.) and types of toast (brown, white, raisin, rye, etc.). You can also add extras like yogurt, cereal, fruit, and more.
-        If no breakfast selection has been made, it will be served according to the resident’s preferences.
-      </p>
-      <br />
-
-      {/* Search Section */}
-      <ResidentSearch
-        residents={residents}
-        onSelectResident={handleResidentSelect}
-        label="Buscar menu por residente"
-        placeholder="Buscar por nombre del residente..."
+          console.log("Edit Menu");
+        }}
+        button2Disabled={!selectedResident || !hasPendingChanges || isSaving}
       />
-
-      <WeeklyMenuGrid
-        menuData={weeklyMenu}
-        menuDataSelected={weeklyMenuSelected}
-        pendingSelections={pendingSelections}
-        onSelectionChange={handleSelectionChange}
-        disabled={!selectedResident}
-        loading={loading}
-        error={error}
-      />
-
       {/* Save Week Actions */}
       <div className="mt-6 flex items-center gap-4">
-        <button
-          type="button"
-          onClick={handleSaveWeek}
-          disabled={!selectedResident || !hasPendingChanges || isSaving}
-          className={`px-4 py-2 rounded-md text-white ${!selectedResident || !hasPendingChanges || isSaving
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-indigo-600 hover:bg-indigo-700"
-            }`}
-          aria-label="Guardar selecciones de la semana"
-        >
-          {isSaving ? "Guardando..." : "Guardar semana"}
-        </button>
         {saveSuccess && (
           <span className="text-sm text-green-700" role="status">{saveSuccess}</span>
         )}
@@ -162,7 +143,25 @@ export default function WeeklyMenuPage() {
           <span className="text-sm text-red-600" role="alert">{saveError}</span>
         )}
       </div>
+      <Wraper>
+        {/* Search Section */}
+        <ResidentSearch
+          residents={residents}
+          onSelectResident={handleResidentSelect}
+          label="Buscar menu por residente"
+          placeholder="Buscar por nombre del residente..."
+        />
 
-    </Wraper>
+        <WeeklyMenuGrid
+          menuData={weeklyMenu}
+          menuDataSelected={weeklyMenuSelected}
+          pendingSelections={pendingSelections}
+          onSelectionChange={handleSelectionChange}
+          disabled={!selectedResident}
+          loading={loading}
+          error={error}
+        />
+      </Wraper>
+    </>
   );
 }
