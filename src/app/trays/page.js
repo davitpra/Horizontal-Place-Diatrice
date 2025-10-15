@@ -230,6 +230,7 @@ export default function Tables() {
                             key={resident.documentId}
                             resident={resident}
                             index={index}
+                            onOpenInfo={handleOpenMoreInfo}
                             isComplete={mealOnTray[index]?.complete}
                             onComplete={() => handleComplete(mealOnTray, index)}
                             onChangeSelection={handleSelectionModal}
