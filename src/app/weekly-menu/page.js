@@ -13,6 +13,7 @@ import Title from "@/components/ui/Title";
 import { WeeklyMenuSelected } from "@/components/features/weeklyMenu/WeeklyMenuSelected";
 import { Loading } from "@/components/ui/Loading";
 import toast from "react-hot-toast";
+import AuthGuard from "@/components/auth/AuthGuard";
 
 export default function WeeklyMenuPage() {
   const weeklyMenu = useWeeklyMenuStore((state) => state.weeklyMenu);
@@ -121,7 +122,7 @@ export default function WeeklyMenuPage() {
   }
 
   return (
-    <>
+    <AuthGuard>
       <Title
         title={`${month} ${year}`}
         observations={observations}
@@ -155,25 +156,25 @@ export default function WeeklyMenuPage() {
           placeholder="Search by resident name..."
         />
         {isEditing && (
-        <WeeklyMenuGrid
-          menuData={weeklyMenu}
-          menuDataSelected={weeklyMenuSelected}
-          pendingSelections={pendingSelections}
-          onSelectionChange={handleSelectionChange}
-          disabled={!selectedResident}
-          loading={loading}
-        error={error}
-        />
-        ) }
+          <WeeklyMenuGrid
+            menuData={weeklyMenu}
+            menuDataSelected={weeklyMenuSelected}
+            pendingSelections={pendingSelections}
+            onSelectionChange={handleSelectionChange}
+            disabled={!selectedResident}
+            loading={loading}
+            error={error}
+          />
+        )}
         {!isEditing && (
-        <WeeklyMenuSelected
-          menuData={weeklyMenu}
-          menuDataSelected={weeklyMenuSelected}
-          loading={loading}
-          error={error}
-        />
+          <WeeklyMenuSelected
+            menuData={weeklyMenu}
+            menuDataSelected={weeklyMenuSelected}
+            loading={loading}
+            error={error}
+          />
         )}
       </Wraper>
-    </>
+    </AuthGuard>
   );
 }

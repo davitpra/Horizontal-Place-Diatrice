@@ -23,6 +23,9 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/hooks/auth/useAuth";
 import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
+import { SyncIndicator } from "@/components/ui/SyncIndicator";
+import { SyncSettings } from "@/components/ui/SyncSettings";
+import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 
 const navigation = [
   { name: "Tables", href: "/table" },
@@ -47,6 +50,7 @@ export function Sidebar({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showSeating, setShowSeating] = useState(false);
   const [seatingLabel, setSeatingLabel] = useState(ORDERSEATINGS[0].name);
+  const [showSyncSettings, setShowSyncSettings] = useState(false);
   const pathname = usePathname();
   const { user, logout } = useAuth();
 
@@ -223,13 +227,20 @@ export function Sidebar({ children }) {
               />
             </form>
             <div className="flex items-center gap-x-4 lg:gap-x-6">
-              {/* Notification button */}
+              {/* Sync Indicator */}
+              <div className="hidden lg:block">
+                <SyncIndicator />
+              </div>
+
+              {/* Sync Settings button */}
               <button
                 type="button"
+                onClick={() => setShowSyncSettings(true)}
                 className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500"
+                title="Sync settings"
               >
-                <span className="sr-only">View notifications</span>
-                <BellIcon aria-hidden="true" className="size-6" />
+                <span className="sr-only">Sync settings</span>
+                <Cog6ToothIcon aria-hidden="true" className="size-6" />
               </button>
 
               {/* Separator */}
@@ -253,7 +264,13 @@ export function Sidebar({ children }) {
         <main>
           <div className="px-4 py-4 sm:px-6 lg:px-8">{children}</div>
         </main>
-      </div> 
+      </div>
+
+      {/* Sync Settings Modal */}
+      <SyncSettings 
+        isOpen={showSyncSettings} 
+        onClose={() => setShowSyncSettings(false)} 
+      />
     </>
   );
 }

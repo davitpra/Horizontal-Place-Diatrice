@@ -5,6 +5,7 @@ import "./globals.css";
 import { Message } from "../components/ui/Footer";
 import { Sidebar } from "../components/ui/Sidebar";
 import { InitialDataProvider } from "@/components/providers/InitialDataProvider";
+import { SyncProvider } from "@/components/providers/SyncProvider";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { useAuth } from "@/hooks/auth/useAuth";
 import { Loading } from "@/components/ui/Loading";
@@ -38,9 +39,11 @@ const AuthenticatedLayout = ({ children }) => {
   // Si está autenticado, mostrar el layout completo con sidebar y providers
   return (
     <InitialDataProvider>
-      <Sidebar>
-        {children}
-      </Sidebar>
+      <SyncProvider>
+        <Sidebar>
+          {children}
+        </Sidebar>
+      </SyncProvider>
     </InitialDataProvider>
   );
 };
