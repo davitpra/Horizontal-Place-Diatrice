@@ -18,7 +18,6 @@ import {
 
 const SyncContext = createContext({
   isSyncing: false,
-  lastSync: null,
   forceSync: () => {},
   enableSync: () => {},
   disableSync: () => {},
@@ -46,7 +45,6 @@ export const SyncProvider = ({ children }) => {
   // Sync residents data
   const {
     isSyncing: isSyncingResidents,
-    lastSync: lastSyncResidents,
     forceSync: forceSyncResidents,
   } = useSyncData(
     getAllResidents,
@@ -73,7 +71,6 @@ export const SyncProvider = ({ children }) => {
   // Sync weekly menu data
   const {
     isSyncing: isSyncingWeeklyMenu,
-    lastSync: lastSyncWeeklyMenu,
     forceSync: forceSyncWeeklyMenu,
   } = useSyncData(
     getWeeklyMenu,
@@ -100,7 +97,6 @@ export const SyncProvider = ({ children }) => {
   // Sync breakfast data
   const {
     isSyncing: isSyncingBreakfast,
-    lastSync: lastSyncBreakfast,
     forceSync: forceSyncBreakfast,
   } = useSyncData(
     () => getDayBreakfasts(date),
@@ -121,7 +117,6 @@ export const SyncProvider = ({ children }) => {
   // Sync lunch data
   const {
     isSyncing: isSyncingLunch,
-    lastSync: lastSyncLunch,
     forceSync: forceSyncLunch,
   } = useSyncData(
     () => getDayLunchs(date),
@@ -142,7 +137,6 @@ export const SyncProvider = ({ children }) => {
   // Sync supper data
   const {
     isSyncing: isSyncingSupper,
-    lastSync: lastSyncSupper,
     forceSync: forceSyncSupper,
   } = useSyncData(
     () => getDaySuppers(date),
@@ -189,10 +183,9 @@ export const SyncProvider = ({ children }) => {
         clearTimeout(notificationTimeoutRef.current);
       }
     };
-  }, [lastSyncBreakfast, lastSyncLunch, lastSyncSupper, showSyncNotifications]);
+  }, [isSyncingBreakfast, isSyncingLunch, isSyncingSupper, showSyncNotifications]);
 
   const isSyncing = isSyncingResidents || isSyncingWeeklyMenu || isSyncingBreakfast || isSyncingLunch || isSyncingSupper;
-  const lastSync = lastSyncResidents || lastSyncWeeklyMenu || lastSyncBreakfast || lastSyncLunch || lastSyncSupper;
 
   const forceSync = () => {
     forceSyncResidents();
@@ -224,7 +217,6 @@ export const SyncProvider = ({ children }) => {
 
   const contextValue = {
     isSyncing,
-    lastSync,
     forceSync,
     enableSync,
     disableSync,

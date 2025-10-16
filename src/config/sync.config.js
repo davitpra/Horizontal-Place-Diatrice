@@ -14,9 +14,9 @@ export const SYNC_CONFIG = {
 
   // Intervalo de sincronización para meals (en milisegundos)
   // Cambian frecuentemente durante el servicio, sincronización más rápida
-  BREAKFAST_INTERVAL: 30000, // 30 segundos
-  LUNCH_INTERVAL: 30000, // 30 segundos
-  SUPPER_INTERVAL: 30000, // 30 segundos
+  BREAKFAST_INTERVAL: 15000, // 15 segundos
+  LUNCH_INTERVAL: 15000, // 15 segundos
+  SUPPER_INTERVAL: 15000, // 15 segundos
 
   // Pausar sincronización cuando la pestaña está inactiva
   PAUSE_ON_INACTIVE: true,

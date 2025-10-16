@@ -20,13 +20,7 @@ export const SyncSettings = ({ isOpen, onClose }) => {
     showSyncNotifications,
     setShowSyncNotifications,
     forceSync,
-    lastSync,
   } = useSyncContext();
-
-  const formatLastSync = (date) => {
-    if (!date) return 'Never';
-    return date.toLocaleString();
-  };
 
   const handleToggleSync = () => {
     if (syncEnabled) {
@@ -83,13 +77,6 @@ export const SyncSettings = ({ isOpen, onClose }) => {
                   >
                     <XMarkIcon className="h-6 w-6" />
                   </button>
-                </div>
-
-                {/* Last Sync Info */}
-                <div className="mb-6 p-3 bg-gray-50 rounded-lg">
-                  <p className="text-sm text-gray-600">
-                    Last sync: <span className="font-medium text-gray-900">{formatLastSync(lastSync)}</span>
-                  </p>
                 </div>
 
                 {/* Settings */}

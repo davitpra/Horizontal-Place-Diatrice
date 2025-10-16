@@ -8,7 +8,7 @@ import { useEffect, useRef, useCallback, useState } from 'react';
  * @param {number} options.interval - Polling interval in milliseconds (default: 30000 = 30s)
  * @param {boolean} options.enabled - Whether polling is enabled (default: true)
  * @param {boolean} options.pauseOnInactive - Pause when tab is inactive (default: true)
- * @returns {Object} - { isSyncing, lastSync, forceSync }
+ * @returns {Object} - { isSyncing, forceSync }
  */
 export const useSyncData = (fetchFunction, onDataUpdate, options = {}) => {
   const {
@@ -18,7 +18,6 @@ export const useSyncData = (fetchFunction, onDataUpdate, options = {}) => {
   } = options;
 
   const [isSyncing, setIsSyncing] = useState(false);
-  const [lastSync, setLastSync] = useState(null);
   const intervalRef = useRef(null);
   const isActiveRef = useRef(true);
 
@@ -59,8 +58,6 @@ export const useSyncData = (fetchFunction, onDataUpdate, options = {}) => {
       if (newData && onDataUpdate) {
         onDataUpdate(newData);
       }
-      
-      setLastSync(new Date());
     } catch (error) {
       console.error('[useSyncData] Error syncing data:', error);
     } finally {
@@ -100,7 +97,6 @@ export const useSyncData = (fetchFunction, onDataUpdate, options = {}) => {
 
   return {
     isSyncing,
-    lastSync,
     forceSync,
   };
 };

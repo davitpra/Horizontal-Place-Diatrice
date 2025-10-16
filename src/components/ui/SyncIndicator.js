@@ -6,19 +6,7 @@ import { ArrowPathIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
  * SyncIndicator - Shows sync status and provides manual sync button
  */
 export const SyncIndicator = ({ className = '' }) => {
-  const { isSyncing, lastSync, forceSync, syncEnabled } = useSyncContext();
-
-  const formatLastSync = (date) => {
-    if (!date) return 'Never';
-    
-    const now = new Date();
-    const diff = Math.floor((now - date) / 1000); // seconds
-    
-    if (diff < 60) return `${diff}s ago`;
-    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-    if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
-    return date.toLocaleTimeString();
-  };
+  const { isSyncing, forceSync, syncEnabled } = useSyncContext();
 
   if (!syncEnabled) {
     return null;
@@ -36,9 +24,6 @@ export const SyncIndicator = ({ className = '' }) => {
         ) : (
           <>
             <CheckCircleIcon className="h-4 w-4 text-green-600" />
-            <span className="text-gray-500">
-              {formatLastSync(lastSync)}
-            </span>
           </>
         )}
       </div>
