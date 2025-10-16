@@ -85,6 +85,12 @@ export const reverseTransformOrder = (meals, mealNumber, menuData) => {
   }
 
   return Object.entries(meals).reduce((acc, [key, value]) => {
+    // Handle Milk special case first (before common items)
+    if (key === "Milk") {
+      acc[key] = value === MEAL_VALUES.NONE ? "none" : value;
+      return acc;
+    }
+
     // Handle common items
     if (Object.values(COMMON_ITEMS).includes(key)) {
       acc[key] = value === MEAL_VALUES.NONE ? "" : value;
