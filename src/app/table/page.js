@@ -159,11 +159,11 @@ export default function Tables() {
   // Create lookup maps for O(1) access instead of O(n) findIndex/some operations
   const residentIndexMap = useMemo(() => {
     const map = new Map();
-    residentsInSeating.forEach((resident, index) => {
+    residentsOnTable.forEach((resident, index) => {
       map.set(resident.documentId, index);
     });
     return map;
-  }, [residentsInSeating]);
+  }, [residentsOnTable]);
 
   const selectedResidentsMap = useMemo(() => {
     const map = new Map();
@@ -250,6 +250,12 @@ export default function Tables() {
                           </tr>
                           {residentsAtTable.map((resident) => {
                             const index = residentIndexMap.get(resident.documentId);
+                            
+                            // Skip if index is undefined or mealData doesn't exist
+                            if (index === undefined || !updateMealOnTable[index]) {
+                              return null;
+                            }
+                            
                             const mealData = updateMealOnTable[index];
                             const checkKey = `${mealData?.documentId}-${mealData?.onTray}`;
                             const isChecked = selectedResidentsMap.has(checkKey);

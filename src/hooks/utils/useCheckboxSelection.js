@@ -1,12 +1,14 @@
 import { useRef, useState, useEffect } from 'react';
 
-export const useCheckboxSelection = (items) => {
+export const useCheckboxSelection = (items = []) => {
   const checkbox = useRef();
   const [checked, setChecked] = useState(false);
   const [indeterminate, setIndeterminate] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
 
   useEffect(() => {
+    if (!items || !Array.isArray(items)) return;
+    
     const isAllSelected = items.length > 0 && selectedItems.length === items.length;
     const isIndeterminate = selectedItems.length > 0 && !isAllSelected;
     
@@ -16,9 +18,11 @@ export const useCheckboxSelection = (items) => {
     if (checkbox.current) {
       checkbox.current.indeterminate = isIndeterminate;
     }
-  }, [selectedItems.length, items.length]);
+  }, [selectedItems.length, items, items.length]);
 
   const handleSelectAll = () => {
+    if (!items || !Array.isArray(items)) return;
+    
     if (checked) {
       setSelectedItems([]);
       setChecked(false);
