@@ -1,12 +1,12 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 
 /**
- * Hook for synchronizing data with backend using intelligent polling
+ * Hook for synchronizing data with backend using intelligent polling or manual sync
  * @param {Function} fetchFunction - Function to fetch data from backend
  * @param {Function} onDataUpdate - Callback when new data is received
  * @param {Object} options - Configuration options
  * @param {number} options.interval - Polling interval in milliseconds (default: 30000 = 30s)
- * @param {boolean} options.enabled - Whether polling is enabled (default: true)
+ * @param {boolean} options.enabled - Whether auto-polling is enabled (default: true). forceSync works regardless of this flag.
  * @param {boolean} options.pauseOnInactive - Pause when tab is inactive (default: true)
  * @returns {Object} - { isSyncing, forceSync }
  */
@@ -40,7 +40,7 @@ export const useSyncData = (fetchFunction, onDataUpdate, options = {}) => {
     };
   }, [pauseOnInactive, enabled]);
 
-  // Main sync function
+  // Main sync function (respects enabled flag for auto-sync)
   const syncData = useCallback(async () => {
     // Don't sync if tab is inactive and pauseOnInactive is true
     if (pauseOnInactive && !isActiveRef.current) {
@@ -65,11 +65,25 @@ export const useSyncData = (fetchFunction, onDataUpdate, options = {}) => {
     }
   }, [fetchFunction, onDataUpdate, enabled, pauseOnInactive]);
 
-  // Force sync function (can be called manually)
-  const forceSync = useCallback(() => {
-    console.log('[useSyncData] Force sync triggered');
-    syncData();
-  }, [syncData]);
+  // Force sync function (works regardless of enabled flag for manual sync)
+  const forceSync = useCallback(async () => {
+    if (!fetchFunction) {
+      return;
+    }
+
+    try {
+      setIsSyncing(true);
+      const newData = await fetchFunction();
+      
+      if (newData && onDataUpdate) {
+        onDataUpdate(newData);
+      }
+    } catch (error) {
+      console.error('[useSyncData] Error syncing data:', error);
+    } finally {
+      setIsSyncing(false);
+    }
+  }, [fetchFunction, onDataUpdate]);
 
   // Setup polling interval
   useEffect(() => {

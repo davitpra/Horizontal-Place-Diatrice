@@ -6,11 +6,7 @@ import { ArrowPathIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
  * SyncIndicator - Shows sync status and provides manual sync button
  */
 export const SyncIndicator = ({ className = '' }) => {
-  const { isSyncing, forceSync, syncEnabled } = useSyncContext();
-
-  if (!syncEnabled) {
-    return null;
-  }
+  const { isSyncing, forceSync } = useSyncContext();
 
   return (
     <div className={`flex items-center gap-2 ${className}`}>

@@ -10,25 +10,14 @@ import {
 } from '@heroicons/react/24/outline';
 
 /**
- * SyncSettings - Modal for configuring sync settings
+ * SyncSettings - Modal for manual sync and notification settings
  */
 export const SyncSettings = ({ isOpen, onClose }) => {
   const { 
-    syncEnabled, 
-    enableSync, 
-    disableSync,
     showSyncNotifications,
     setShowSyncNotifications,
     forceSync,
   } = useSyncContext();
-
-  const handleToggleSync = () => {
-    if (syncEnabled) {
-      disableSync();
-    } else {
-      enableSync();
-    }
-  };
 
   const handleToggleNotifications = () => {
     setShowSyncNotifications(!showSyncNotifications);
@@ -81,33 +70,6 @@ export const SyncSettings = ({ isOpen, onClose }) => {
 
                 {/* Settings */}
                 <div className="space-y-4">
-                  {/* Enable/Disable Auto-Sync */}
-                  <div className="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg">
-                    <div className="flex-1">
-                      <h4 className="text-sm font-medium text-gray-900">
-                        Auto-Sync
-                      </h4>
-                      <p className="text-sm text-gray-500">
-                        Automatically sync data with backend
-                      </p>
-                    </div>
-                    <button
-                      onClick={handleToggleSync}
-                      className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 ${
-                        syncEnabled ? 'bg-indigo-600' : 'bg-gray-200'
-                      }`}
-                      role="switch"
-                      aria-checked={syncEnabled}
-                      tabIndex={0}
-                    >
-                      <span
-                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                          syncEnabled ? 'translate-x-5' : 'translate-x-0'
-                        }`}
-                      />
-                    </button>
-                  </div>
-
                   {/* Enable/Disable Notifications */}
                   <div className="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg">
                     <div className="flex-1">
@@ -154,7 +116,7 @@ export const SyncSettings = ({ isOpen, onClose }) => {
                 {/* Info */}
                 <div className="mt-4 p-3 bg-blue-50 rounded-lg">
                   <p className="text-xs text-blue-700">
-                    💡 Auto-sync keeps your data updated across all devices. Data is checked every 30-45 seconds when enabled.
+                    💡 Use the Sync Now button to manually update your data from the backend.
                   </p>
                 </div>
               </Dialog.Panel>

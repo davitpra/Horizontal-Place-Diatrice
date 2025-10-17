@@ -19,19 +19,15 @@ import {
 const SyncContext = createContext({
   isSyncing: false,
   forceSync: () => {},
-  enableSync: () => {},
-  disableSync: () => {},
-  syncEnabled: true,
 });
 
 export const useSyncContext = () => useContext(SyncContext);
 
 /**
- * SyncProvider - Manages real-time synchronization across devices
- * Wraps the application and keeps data in sync with backend
+ * SyncProvider - Manages manual synchronization across devices
+ * Wraps the application and provides manual sync functionality via button
  */
 export const SyncProvider = ({ children }) => {
-  const [syncEnabled, setSyncEnabled] = useState(SYNC_CONFIG.ENABLED_BY_DEFAULT);
   const [showSyncNotifications, setShowSyncNotifications] = useState(SYNC_CONFIG.SHOW_NOTIFICATIONS);
 
   const setResidents = useResidentsStore((state) => state.setResidents);
@@ -42,7 +38,7 @@ export const SyncProvider = ({ children }) => {
   const mealsSyncedRef = useRef({ breakfast: false, lunch: false, supper: false });
   const notificationTimeoutRef = useRef(null);
 
-  // Sync residents data
+  // Sync residents data (manual only)
   const {
     isSyncing: isSyncingResidents,
     forceSync: forceSyncResidents,
@@ -59,16 +55,13 @@ export const SyncProvider = ({ children }) => {
           icon: '🔄',
         });
       }
-      console.log('[SyncProvider] Residents synced:', newResidents.length);
     },
     {
-      interval: SYNC_CONFIG.RESIDENTS_INTERVAL,
-      enabled: syncEnabled,
-      pauseOnInactive: SYNC_CONFIG.PAUSE_ON_INACTIVE,
+      enabled: false, // No auto-sync, manual only
     }
   );
 
-  // Sync weekly menu data
+  // Sync weekly menu data (manual only)
   const {
     isSyncing: isSyncingWeeklyMenu,
     forceSync: forceSyncWeeklyMenu,
@@ -85,16 +78,13 @@ export const SyncProvider = ({ children }) => {
           icon: '📅',
         });
       }
-      console.log('[SyncProvider] Weekly menu synced:', newWeeklyMenu.length);
     },
     {
-      interval: SYNC_CONFIG.WEEKLY_MENU_INTERVAL,
-      enabled: syncEnabled,
-      pauseOnInactive: SYNC_CONFIG.PAUSE_ON_INACTIVE,
+      enabled: false, // No auto-sync, manual only
     }
   );
 
-  // Sync breakfast data
+  // Sync breakfast data (manual only)
   const {
     isSyncing: isSyncingBreakfast,
     forceSync: forceSyncBreakfast,
@@ -105,16 +95,13 @@ export const SyncProvider = ({ children }) => {
       
       setMeal('breakfast', newBreakfast);
       mealsSyncedRef.current.breakfast = true;
-      console.log('[SyncProvider] Breakfast synced:', newBreakfast.length);
     },
     {
-      interval: SYNC_CONFIG.BREAKFAST_INTERVAL,
-      enabled: syncEnabled,
-      pauseOnInactive: SYNC_CONFIG.PAUSE_ON_INACTIVE,
+      enabled: false, // No auto-sync, manual only
     }
   );
 
-  // Sync lunch data
+  // Sync lunch data (manual only)
   const {
     isSyncing: isSyncingLunch,
     forceSync: forceSyncLunch,
@@ -125,16 +112,13 @@ export const SyncProvider = ({ children }) => {
       
       setMeal('lunch', newLunch);
       mealsSyncedRef.current.lunch = true;
-      console.log('[SyncProvider] Lunch synced:', newLunch.length);
     },
     {
-      interval: SYNC_CONFIG.LUNCH_INTERVAL,
-      enabled: syncEnabled,
-      pauseOnInactive: SYNC_CONFIG.PAUSE_ON_INACTIVE,
+      enabled: false, // No auto-sync, manual only
     }
   );
 
-  // Sync supper data
+  // Sync supper data (manual only)
   const {
     isSyncing: isSyncingSupper,
     forceSync: forceSyncSupper,
@@ -145,12 +129,9 @@ export const SyncProvider = ({ children }) => {
       
       setMeal('supper', newSupper);
       mealsSyncedRef.current.supper = true;
-      console.log('[SyncProvider] Supper synced:', newSupper.length);
     },
     {
-      interval: SYNC_CONFIG.SUPPER_INTERVAL,
-      enabled: syncEnabled,
-      pauseOnInactive: SYNC_CONFIG.PAUSE_ON_INACTIVE,
+      enabled: false, // No auto-sync, manual only
     }
   );
 
@@ -199,28 +180,9 @@ export const SyncProvider = ({ children }) => {
     });
   };
 
-  const enableSync = () => {
-    setSyncEnabled(true);
-    toast.success(SYNC_MESSAGES.SYNC_ENABLED, {
-      duration: 2000,
-      icon: '✅',
-    });
-  };
-
-  const disableSync = () => {
-    setSyncEnabled(false);
-    toast(SYNC_MESSAGES.SYNC_DISABLED, {
-      duration: 2000,
-      icon: 'ℹ️',
-    });
-  };
-
   const contextValue = {
     isSyncing,
     forceSync,
-    enableSync,
-    disableSync,
-    syncEnabled,
     showSyncNotifications,
     setShowSyncNotifications,
   };
