@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useMemo, useCallback, Fragment } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import Title from "../../components/ui/Title";
 import { MealBar } from "../../components/ui/MealBar";
 import { Wraper } from "@/components/ui/Wraper";
@@ -8,7 +8,7 @@ import { useMealsStore } from "@/store/meals/useMealsStore";
 import { useSeatingConfigure } from "@/store/seating/useSeatingConfigure";
 import { useMealBar } from "@/store/mealBar/useMealBar";
 import { useSeatingFilters } from "@/hooks/utils/useSeatingFilters";
-import TableHeader from "@/components/features/tableResident/TableHeader";
+import ResidentTable from "@/components/features/tableResident/ResidentTable";
 import { useTableFilters } from "@/hooks/utils/useTableFilters";
 import { useHandleComplete } from "@/hooks/utils/useHandleComplete";
 import { useTrayManagement } from "@/hooks/utils/useTrayManagement";
@@ -16,10 +16,8 @@ import { useMoreInfoModal } from "@/store/modals/useMoreInfoModal";
 import { useSelectionModal } from "@/store/modals/useSelectionModal";
 import { MoreInfoModal } from "@/components/features/servingModals/MoreInfoModal";
 import { SelectionModal } from "@/components/features/servingModals/SelectionModal";
-import CheckboxCell from "@/components/features/tableResident/CheckboxCell";
-import ResidentInfo from "@/components/features/tableResident/ResidentInfo";
-import ActionButtons from "@/components/features/tableResident/ActionButtons";
 import { useMarkAsOut } from "@/hooks/utils/useMarkAsOut";
+import { useRouter } from "next/navigation";
 
 const MEAL_TYPES = {
   BREAKFAST: 'breakfast',
@@ -47,6 +45,7 @@ export default function Tables() {
   const [currentMealType, setCurrentMealType] = useState(MEAL_TYPES.BREAKFAST);
   const [currentMeals, setCurrentMeals] = useState(meals[MEAL_TYPES.BREAKFAST] || []);
   const [selectedResident, setSelectedResident] = useState(null);
+  const [mapView, setMapView] = useState(false);
 
   // Modal stores
   const InfoModal = useMoreInfoModal();
@@ -156,40 +155,6 @@ export default function Tables() {
     handleMarkAsOut(residentsToTray);
   }, [handleMarkAsOut, residentsToTray]);
 
-  // Create lookup maps for O(1) access instead of O(n) findIndex/some operations
-  const residentIndexMap = useMemo(() => {
-    const map = new Map();
-    residentsOnTable.forEach((resident, index) => {
-      map.set(resident.documentId, index);
-    });
-    return map;
-  }, [residentsOnTable]);
-
-  const selectedResidentsMap = useMemo(() => {
-    const map = new Map();
-    residentsToTray.forEach((item) => {
-      const key = `${item.documentId}-${item.onTray}`;
-      map.set(key, true);
-    });
-    return map;
-  }, [residentsToTray]);
-
-  // Group residents by table (memoized to avoid recalculation)
-  const groupedResidents = useMemo(() => {
-    return residentsOnTable.reduce((acc, resident) => {
-      const tableNumber = resident.table;
-      if (!acc[tableNumber]) {
-        acc[tableNumber] = [];
-      }
-      acc[tableNumber].push(resident);
-      return acc;
-    }, {});
-  }, [residentsOnTable]);
-
-  // Sort tables by number (memoized)
-  const sortedTables = useMemo(() => {
-    return Object.keys(groupedResidents).sort((a, b) => Number(a) - Number(b));
-  }, [groupedResidents]);
 
   // Update current meal type and meals when meal number or meals data changes
   // Combined into single useEffect to prevent cascading re-renders
@@ -205,6 +170,8 @@ export default function Tables() {
     "A list of all residents including their name, room, seating and observation.",
   ], []);
 
+  const router = useRouter();
+
   return (
     <div className="h-screen overflow-y-auto">
       <div className="sticky top-0 z-10 bg-white pb-4">
@@ -219,95 +186,21 @@ export default function Tables() {
         <MealBar />
       </div>
       <Wraper>
-        <div className="mt-8 flow-root">
-          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-              <table className="min-w-full divide-y divide-gray-300">
-                <TableHeader
-                  checked={checked}
-                  onSelectAll={handleSelectAll}
-                  disabled={residentsInSeating.length === 0}
-                />
-                <tbody className="divide-y divide-gray-200 bg-white">
-                  {sortedTables.length === 0 ? (
-                    <tr>
-                      <td colSpan={TABLE_COLUMNS} className="py-12 text-center text-gray-500">
-                        No residents found for the selected seating
-                      </td>
-                    </tr>
-                  ) : (
-                    sortedTables.map((tableNumber) => {
-                      const residentsAtTable = groupedResidents[tableNumber];
-                      return (
-                        <Fragment key={tableNumber}>
-                          <tr className="border-t border-gray-200">
-                            <th
-                              colSpan={TABLE_COLUMNS}
-                              className="bg-gray-50 py-2 text-center text-sm font-semibold text-gray-900"
-                            >
-                              Table {tableNumber}
-                            </th>
-                          </tr>
-                          {residentsAtTable.map((resident) => {
-                            const index = residentIndexMap.get(resident.documentId);
-                            
-                            // Skip if index is undefined or mealData doesn't exist
-                            if (index === undefined || !updateMealOnTable[index]) {
-                              return null;
-                            }
-                            
-                            const mealData = updateMealOnTable[index];
-                            const checkKey = `${mealData?.documentId}-${mealData?.onTray}`;
-                            const isChecked = selectedResidentsMap.has(checkKey);
-                            const drinkEntries = mealData?.filterDrinks ? Object.entries(mealData.filterDrinks) : [];
-                            
-                            return (
-                              <tr key={resident.documentId}>
-                                <td className="relative px-6 text-center">
-                                  <div className="absolute inset-y-0 left-0 hidden w-0.5 bg-indigo-600 group-has-checked:block" />
-                                  <div className="flex justify-center items-center h-full">
-                                    <CheckboxCell
-                                      checked={isChecked}
-                                      onChange={() => handleSelectItem(mealData)}
-                                      disabled={residentsInSeating.length === 0}
-                                      label={`Select ${resident.full_name}`}
-                                    />
-                                  </div>
-                                </td>
-                                <td className="whitespace-nowrap py-5 pl-0 pr-3 text-sm">
-                                  <ResidentInfo resident={resident} mealInfo={mealData} />
-                                </td>
-                                <td className="hidden md:table-cell whitespace-nowrap px-3 py-2 text-sm text-gray-500 text-center">
-                                  {drinkEntries.map(([key, value]) => (
-                                    <div key={key} className="py-0 grid grid-cols-2 gap-0 px-0 items-left justify-center">
-                                      <dt className="text-sm/6 font-medium text-gray-900 block text-center">{key}</dt>
-                                      <dd className="text-sm/6 text-gray-700 mt-0 overflow-hidden text-ellipsis whitespace-nowrap text-left">
-                                        {typeof value === "boolean" ? (value ? "Add" : "none") : value}
-                                      </dd>
-                                    </div>
-                                  ))}
-                                </td>
-                                <ActionButtons
-                                  resident={resident}
-                                  index={index}
-                                  went_out_to_eat={mealData?.went_out_to_eat}
-                                  isComplete={mealData?.complete}
-                                  onComplete={() => handleComplete(updateMealOnTable, index)}
-                                  onOpenInfo={handleOpenMoreInfo}
-                                  onChangeSelection={handleSelectionModal}
-                                />
-                              </tr>
-                            );
-                          })}
-                        </Fragment>
-                      );
-                    })
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+        <ResidentTable
+          residents={residentsOnTable}
+          mealData={updateMealOnTable}
+          selectedResidents={residentsToTray}
+          checked={checked}
+          onSelectAll={handleSelectAll}
+          onSelectItem={handleSelectItem}
+          onComplete={handleComplete}
+          onOpenInfo={handleOpenMoreInfo}
+          onChangeSelection={handleSelectionModal}
+          showTableGroups={true}
+          disabled={residentsInSeating.length === 0}
+          emptyMessage="No residents found for the selected seating"
+          tableColumnCount={TABLE_COLUMNS}
+        />
       </Wraper>
       <MoreInfoModal
         resident={selectedResident?.resident}

@@ -8,10 +8,7 @@ import { useSelectionModal } from "@/store/modals/useSelectionModal";
 import { useMealBar } from "@/store/mealBar/useMealBar";
 import { MoreInfoModal } from "./MoreInfoModal";
 import { SelectionModal } from "./SelectionModal";
-import TableHeader from "@/components/features/tableResident/TableHeader";
-import ResidentInfo from "@/components/features/tableResident/ResidentInfo";
-import CheckboxCell from "@/components/features/tableResident/CheckboxCell";
-import ActionButtons from "@/components/features/tableResident/ActionButtons";
+import ResidentTable from "@/components/features/tableResident/ResidentTable";
 import { useHandleComplete } from "@/hooks/utils/useHandleComplete";
 import { useCheckboxSelection } from "@/hooks/utils/useCheckboxSelection";
 import { useTableFilters } from "@/hooks/utils/useTableFilters";
@@ -127,66 +124,40 @@ export function ServingModal({
       button2="Mark as Out"
       button2Action={() => handleMarkAsOut(residentsToTray)}
     >
-      <div className="mt-8 flow-root">
-        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-            <table className="min-w-full divide-y divide-gray-300">
-              <TableHeader
-                checked={checked}
-                onSelectAll={handleSelectAll}
-                disabled={residentsOnTable.length === 0}
-              />
-              <tbody className="divide-y divide-gray-200 bg-white">
-                {residentsOnTable.map((resident, index) => (
-                  <tr key={resident.documentId}>
-                    <td className="relative px-7 sm:w-12 sm:px-6">
-                      <div className="absolute inset-y-0 left-0 hidden w-0.5 bg-indigo-600 group-has-checked:block" />
-                      <CheckboxCell
-                        checked={residentsToTray.some(({ documentId, onTray }) => documentId === updateMealOnTable[index]?.documentId && onTray === updateMealOnTable[index]?.onTray)}
-                        onChange={() => handleSelectItem(updateMealOnTable[index])}
-                        disabled={residentsOnTable.length === 0}
-                        label={`Select ${resident.full_name}`}
-                      />
-                    </td>
-                    <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
-                      <ResidentInfo resident={resident} mealInfo={updateMealOnTable[index]} />
-                    </td>
-                    <td className="hidden sm:block whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                      {Object.entries(
-                        updateMealOnTable[index]?.filterDrinks || {}
-                      ).map(([key, value]) => (
-                        <div
-                          key={key}
-                          className="py-0 grid grid-cols-2 gap-0 px-0"
-                        >
-                          <dt className="text-sm/6 font-medium text-gray-900 block">
-                            {key}
-                          </dt>
-                          <dd className="text-sm/6 text-gray-700 mt-0 overflow-hidden text-ellipsis whitespace-nowrap text-left">
-                            {typeof value === "boolean"
-                              ? value
-                                ? "Add"
-                                : "none"
-                              : value}
-                          </dd>
-                        </div>
-                      ))}
-                    </td>
-                    <ActionButtons
-                      resident={resident}
-                      index={index}
-                      isComplete={updateMealOnTable[index]?.complete}
-                      onComplete={() => handleComplete(updateMealOnTable, index)}
-                      onOpenInfo={handleOpenMoreInfo}
-                      onChangeSelection={handleSelectionModal}
-                    />
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+      <ResidentTable
+        residents={residentsOnTable}
+        mealData={updateMealOnTable}
+        selectedResidents={residentsToTray}
+        checked={checked}
+        onSelectAll={handleSelectAll}
+        onSelectItem={handleSelectItem}
+        onComplete={handleComplete}
+        onOpenInfo={handleOpenMoreInfo}
+        onChangeSelection={handleSelectionModal}
+        showTableGroups={false}
+        disabled={residentsOnTable.length === 0}
+        emptyMessage="No residents found for this table"
+        wrapperClassName="mt-8 flow-root"
+        customRenderDrinksColumn={(mealItem) => 
+          Object.entries(mealItem?.filterDrinks || {}).map(([key, value]) => (
+            <div
+              key={key}
+              className="py-0 grid grid-cols-2 gap-0 px-0"
+            >
+              <dt className="text-sm/6 font-medium text-gray-900 block">
+                {key}
+              </dt>
+              <dd className="text-sm/6 text-gray-700 mt-0 overflow-hidden text-ellipsis whitespace-nowrap text-left">
+                {typeof value === "boolean"
+                  ? value
+                    ? "Add"
+                    : "none"
+                  : value}
+              </dd>
+            </div>
+          ))
+        }
+      />
       <MoreInfoModal
         resident={residentInfo}
         order={mealOnTable}

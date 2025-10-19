@@ -1,20 +1,17 @@
 "use client";
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect } from "react";
 import Title from "../../components/ui/Title";
 import { MealBar } from "../../components/ui/MealBar";
 import { Wraper } from "@/components/ui/Wraper";
 import { useCheckboxSelection } from "@/hooks/utils/useCheckboxSelection";
 import { useMealsStore } from "@/store/meals/useMealsStore";
 import { useMealBar } from "@/store/mealBar/useMealBar";
-import TableHeader from "@/components/features/tableResident/TableHeader";
+import ResidentTable from "@/components/features/tableResident/ResidentTable";
 import { useTrayFilters } from "@/hooks/utils/useTrayFilters";
 import { useHandleComplete } from "@/hooks/utils/useHandleComplete";
 import { useTrayManagement } from "@/hooks/utils/useTrayManagement";
 import { useSelectionModal } from "@/store/modals/useSelectionModal";
 import { SelectionModal } from "@/components/features/servingModals/SelectionModal";
-import CheckboxCell from "@/components/features/tableResident/CheckboxCell";
-import ResidentInfo from "@/components/features/tableResident/ResidentInfo";
-import ActionButtons from "@/components/features/tableResident/ActionButtons";
 import { useMarkAsOut } from "@/hooks/utils/useMarkAsOut";
 import AuthGuard from "@/components/auth/AuthGuard";
 
@@ -165,84 +162,39 @@ export default function Tables() {
           <MealBar />
         </div>
         <Wraper>
-          <div className="mt-8 flow-root">
-            <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-              <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                <table className="min-w-full divide-y divide-gray-300">
-                  <TableHeader
-                    checked={checked}
-                    onSelectAll={handleSelectAll}
-                    disabled={residentsOnTray.length === 0}
-                  />
-                  <tbody className="divide-y divide-gray-200 bg-white">
-                    {residentsOnTray.map((resident) => {
-                      const index = residentsOnTray.findIndex(
-                        (r) => r.documentId === resident.documentId
-                      );
-                      return (
-                        <tr key={resident.documentId}>
-                          <td className="relative px-6 text-center">
-                            <div className="absolute inset-y-0 left-0 hidden w-0.5 bg-indigo-600 group-has-checked:block" />
-                            <div className="flex justify-center items-center h-full">
-                              <CheckboxCell
-                                checked={residentsToTray.some(
-                                  ({ documentId, onTray }) =>
-                                    documentId ===
-                                      mealOnTray[index]?.documentId &&
-                                    onTray === mealOnTray[index]?.onTray
-                                )}
-                                onChange={() =>
-                                  handleSelectItem(mealOnTray[index])
-                                }
-                                disabled={residentsOnTray.length === 0}
-                                label={`Select ${resident.full_name}`}
-                              />
-                            </div>
-                          </td>
-                          <td className="whitespace-nowrap py-5 pl-0 pr-3 text-sm">
-                            <ResidentInfo
-                              resident={resident}
-                              mealInfo={mealOnTray[index]}
-                            />
-                          </td>
-                          <td className="hidden sm:block whitespace-nowrap px-3 py-2 text-sm text-gray-500 text-center">
-                            {Object.entries(
-                              mealOnTray[index]?.meals[0] || {}
-                            ).map(([key, value]) => (
-                              <div
-                                key={key}
-                                className="py-0 grid grid-cols-2 gap-0 px-0 items-center justify-center"
-                              >
-                                <dt className="text-sm/6 font-medium text-gray-900 block text-center">
-                                  {key}
-                                </dt>
-                                <dd className="text-sm/6 text-gray-700 mt-0 overflow-hidden text-ellipsis whitespace-nowrap text-center">
-                                  {typeof value === "boolean"
-                                    ? value
-                                      ? "Add"
-                                      : "none"
-                                    : value}
-                                </dd>
-                              </div>
-                            ))}
-                          </td>
-                          <ActionButtons
-                            key={resident.documentId}
-                            resident={resident}
-                            index={index}
-                            onOpenInfo={handleOpenMoreInfo}
-                            isComplete={mealOnTray[index]?.complete}
-                            onComplete={() => handleComplete(mealOnTray, index)}
-                            onChangeSelection={handleSelectionModal}
-                          />
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+          <ResidentTable
+            residents={residentsOnTray}
+            mealData={mealOnTray}
+            selectedResidents={residentsToTray}
+            checked={checked}
+            onSelectAll={handleSelectAll}
+            onSelectItem={handleSelectItem}
+            onComplete={handleComplete}
+            onOpenInfo={handleOpenMoreInfo}
+            onChangeSelection={handleSelectionModal}
+            showTableGroups={false}
+            disabled={residentsOnTray.length === 0}
+            emptyMessage="No residents found on tray"
+            customRenderDrinksColumn={(mealItem) => 
+              Object.entries(mealItem?.meals?.[0] || {}).map(([key, value]) => (
+                <div
+                  key={key}
+                  className="py-0 grid grid-cols-2 gap-0 px-0 items-center justify-center"
+                >
+                  <dt className="text-sm/6 font-medium text-gray-900 block text-center">
+                    {key}
+                  </dt>
+                  <dd className="text-sm/6 text-gray-700 mt-0 overflow-hidden text-ellipsis whitespace-nowrap text-center">
+                    {typeof value === "boolean"
+                      ? value
+                        ? "Add"
+                        : "none"
+                      : value}
+                  </dd>
+                </div>
+              ))
+            }
+          />
         </Wraper>
         <SelectionModal
           resident={residentInfo}
