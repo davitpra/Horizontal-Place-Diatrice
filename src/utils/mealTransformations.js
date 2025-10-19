@@ -85,15 +85,9 @@ export const reverseTransformOrder = (meals, mealNumber, menuData) => {
   }
 
   return Object.entries(meals).reduce((acc, [key, value]) => {
-    // Handle Milk special case first (before common items)
-    if (key === "Milk") {
-      acc[key] = value === MEAL_VALUES.NONE ? "none" : value;
-      return acc;
-    }
-
     // Handle common items
     if (Object.values(COMMON_ITEMS).includes(key)) {
-      acc[key] = value === MEAL_VALUES.NONE ? "" : value;
+      acc[key] = value === MEAL_VALUES.NONE ? MEAL_VALUES.NONE : value;
       return acc;
     }
 
@@ -104,7 +98,7 @@ export const reverseTransformOrder = (meals, mealNumber, menuData) => {
       } else if (key === "feature") {
         acc[key] = value === MEAL_VALUES.NONE ? false : true;
       } else {
-        acc[key] = value === MEAL_VALUES.NONE ? "" : value;
+        acc[key] = value === MEAL_VALUES.NONE ? MEAL_VALUES.NONE : value;
       }
     }
 
