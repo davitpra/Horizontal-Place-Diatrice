@@ -58,7 +58,7 @@ const features = [
   }
 ];
 
-// Componente para usuarios autenticados (Dashboard)
+// Component for authenticated users (Dashboard)
 const DashboardContent = ({ user, handleLogout }) => (
   <div className="min-h-screen bg-gray-50">
     {/* Header */}
@@ -70,7 +70,7 @@ const DashboardContent = ({ user, handleLogout }) => (
               Horizontal Place
             </h1>
             <p className="text-gray-600">
-              Sistema de Gestión de Residentes
+              Resident Management System
             </p>
           </div>
           
@@ -80,7 +80,7 @@ const DashboardContent = ({ user, handleLogout }) => (
                 {user?.username || user?.email}
               </p>
               <p className="text-xs text-gray-500">
-                {user?.role?.name || 'Usuario'}
+                {user?.role?.name || 'User'}
               </p>
             </div>
             
@@ -89,7 +89,7 @@ const DashboardContent = ({ user, handleLogout }) => (
               className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
             >
               <ArrowRightOnRectangleIcon className="h-4 w-4 mr-2" />
-              Cerrar Sesión
+              Logout
             </button>
           </div>
         </div>
@@ -102,56 +102,56 @@ const DashboardContent = ({ user, handleLogout }) => (
         <div className="border-4 border-dashed border-gray-200 rounded-lg p-8">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              ¡Bienvenido al Dashboard!
+              Welcome to the Dashboard!
             </h2>
             <p className="text-gray-600 mb-8">
-              Has iniciado sesión correctamente. Aquí puedes acceder a todas las funcionalidades del sistema.
+              You have successfully logged in. Here you can access all the system functionalities.
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Navigation Cards */}
               <div className="bg-white p-6 rounded-lg shadow">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Gestión de Residentes
+                  Resident Management
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  Administra la información de los residentes y sus preferencias.
+                  Manage resident information and their preferences.
                 </p>
                 <Link
                   href="/room"
                   className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
                 >
-                  Ir a Residentes
+                  Go to Residents
                 </Link>
               </div>
 
               <div className="bg-white p-6 rounded-lg shadow">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Servicio de Comidas
+                  Meal Service
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  Gestiona el servicio de desayunos, almuerzos y cenas.
+                  Manage breakfast, lunch and dinner service.
                 </p>
                 <Link
                   href="/serving"
                   className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
                 >
-                  Ir a Comidas
+                  Go to Meals
                 </Link>
               </div>
 
               <div className="bg-white p-6 rounded-lg shadow">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Resumen
+                  Summary
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  Revisa reportes y estadísticas del sistema.
+                  Review system reports and statistics.
                 </p>
                 <Link
                   href="/summary"
                   className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
                 >
-                  Ver Resumen
+                  View Summary
                 </Link>
               </div>
             </div>
@@ -159,7 +159,7 @@ const DashboardContent = ({ user, handleLogout }) => (
             {/* User Info */}
             <div className="mt-8 bg-white p-6 rounded-lg shadow">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Información del Usuario
+                User Information
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
                 <div>
@@ -167,7 +167,7 @@ const DashboardContent = ({ user, handleLogout }) => (
                   <p className="font-medium text-gray-900">{user?.id}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Usuario:</p>
+                  <p className="text-sm text-gray-500">User:</p>
                   <p className="font-medium text-gray-900">{user?.username}</p>
                 </div>
                 <div>
@@ -175,9 +175,9 @@ const DashboardContent = ({ user, handleLogout }) => (
                   <p className="font-medium text-gray-900">{user?.email}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Rol:</p>
+                  <p className="text-sm text-gray-500">Role:</p>
                   <p className="font-medium text-gray-900">
-                    {user?.role?.name || 'Usuario'}
+                    {user?.role?.name || 'User'}
                   </p>
                 </div>
               </div>
@@ -189,7 +189,7 @@ const DashboardContent = ({ user, handleLogout }) => (
   </div>
 );
 
-// Componente para usuarios no autenticados (Página de bienvenida)
+// Component for non-authenticated users (Welcome page)
 const WelcomeContent = () => (
   <div className="min-h-screen bg-gray-50 absolute left-0 top-0 w-full z-51">
       {/* Hero Section */}
@@ -329,11 +329,11 @@ export default function HomePage() {
     logout();
   };
 
-  // Si el usuario está autenticado, mostrar el dashboard
+  // If user is authenticated, show the dashboard
   if (user) {
     return <DashboardContent user={user} handleLogout={handleLogout} />;
   }
 
-  // Si no está autenticado, mostrar la página de bienvenida
+  // If not authenticated, show the welcome page
   return <WelcomeContent />;
 }
