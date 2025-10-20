@@ -5,13 +5,13 @@ import {
   MapIcon,
   ClipboardDocumentListIcon,
   ChartBarIcon,
-  HomeIcon,
   TableCellsIcon,
   ArrowRightIcon,
-  ArrowRightOnRectangleIcon
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useAuth } from "@/hooks/auth/useAuth";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const features = [
   {
@@ -57,137 +57,6 @@ const features = [
     color: "bg-pink-50 text-pink-600"
   }
 ];
-
-// Component for authenticated users (Dashboard)
-const DashboardContent = ({ user, handleLogout }) => (
-  <div className="min-h-screen bg-gray-50">
-    {/* Header */}
-    <header className="bg-white shadow">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-6">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              Horizontal Place
-            </h1>
-            <p className="text-gray-600">
-              Resident Management System
-            </p>
-          </div>
-          
-          <div className="flex items-center space-x-4">
-            <div className="text-right">
-              <p className="text-sm font-medium text-gray-900">
-                {user?.username || user?.email}
-              </p>
-              <p className="text-xs text-gray-500">
-                {user?.role?.name || 'User'}
-              </p>
-            </div>
-            
-            <button
-              onClick={handleLogout}
-              className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-            >
-              <ArrowRightOnRectangleIcon className="h-4 w-4 mr-2" />
-              Logout
-            </button>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    {/* Main Content */}
-    <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-      <div className="px-4 py-6 sm:px-0">
-        <div className="border-4 border-dashed border-gray-200 rounded-lg p-8">
-          <div className="text-center">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              Welcome to the Dashboard!
-            </h2>
-            <p className="text-gray-600 mb-8">
-              You have successfully logged in. Here you can access all the system functionalities.
-            </p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Navigation Cards */}
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Resident Management
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  Manage resident information and their preferences.
-                </p>
-                <Link
-                  href="/room"
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-                >
-                  Go to Residents
-                </Link>
-              </div>
-
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Meal Service
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  Manage breakfast, lunch and dinner service.
-                </p>
-                <Link
-                  href="/serving"
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-                >
-                  Go to Meals
-                </Link>
-              </div>
-
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Summary
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  Review system reports and statistics.
-                </p>
-                <Link
-                  href="/summary"
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-                >
-                  View Summary
-                </Link>
-              </div>
-            </div>
-
-            {/* User Info */}
-            <div className="mt-8 bg-white p-6 rounded-lg shadow">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                User Information
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-                <div>
-                  <p className="text-sm text-gray-500">ID:</p>
-                  <p className="font-medium text-gray-900">{user?.id}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">User:</p>
-                  <p className="font-medium text-gray-900">{user?.username}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Email:</p>
-                  <p className="font-medium text-gray-900">{user?.email}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Role:</p>
-                  <p className="font-medium text-gray-900">
-                    {user?.role?.name || 'User'}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
-  </div>
-);
 
 // Component for non-authenticated users (Welcome page)
 const WelcomeContent = () => (
@@ -329,9 +198,17 @@ export default function HomePage() {
     logout();
   };
 
-  // If user is authenticated, show the dashboard
+  // If user is authenticated, redirect to table page
   if (user) {
-    return <DashboardContent user={user} handleLogout={handleLogout} />;
+    // Option 1: Redirect using Next.js router
+    const router = useRouter();
+    useEffect(() => {
+      router.push('/table');
+    }, [router]);
+    return null; // or a loading spinner
+    
+    // Option 2: Import and render the table component directly
+    // return <TablesPage user={user} handleLogout={handleLogout} />;
   }
 
   // If not authenticated, show the welcome page
