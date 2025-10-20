@@ -1,6 +1,6 @@
 "use client";
 import { useSyncContext } from '@/components/providers/SyncProvider';
-import { ArrowPathIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
 
 /**
  * SyncIndicator - Shows sync status and provides manual sync button
@@ -12,16 +12,12 @@ export const SyncIndicator = ({ className = '' }) => {
     <div className={`flex items-center gap-2 ${className}`}>
       {/* Sync Status */}
       <div className="flex items-center gap-1.5 text-sm text-gray-600">
-        {isSyncing ? (
+        {isSyncing && (
           <>
             <ArrowPathIcon className="h-4 w-4 animate-spin text-blue-600" />
             <span className="text-blue-600">Syncing...</span>
           </>
-        ) : (
-          <>
-            <CheckCircleIcon className="h-4 w-4 text-green-600" />
-          </>
-        )}
+        ) }
       </div>
 
       {/* Manual Sync Button */}

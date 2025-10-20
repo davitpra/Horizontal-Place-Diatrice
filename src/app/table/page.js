@@ -19,6 +19,8 @@ import { SelectionModal } from "@/components/features/servingModals/SelectionMod
 import { useMarkAsOut } from "@/hooks/utils/useMarkAsOut";
 import { useRouter } from "next/navigation";
 import AuthGuard from "@/components/auth/AuthGuard";
+import { ServingModal } from "@/components/features/servingModals/ServingModal";
+import { TableMap } from "@/components/features/serving/TableMap";
 
 const MEAL_TYPES = {
   BREAKFAST: 'breakfast',
@@ -184,26 +186,39 @@ export default function Tables() {
             buttonAction={handleChangeToTrayClick}
             button2="Mark as Out"
             button2Action={handleMarkAsOutClick}
+            button3={mapView ? "Table": "Map"}
+            button3Action={() => setMapView(!mapView)}
           />
           <MealBar />
         </div>
-        <Wraper>
-          <ResidentTable
-            residents={residentsOnTable}
-            mealData={updateMealOnTable}
-            selectedResidents={residentsToTray}
-            checked={checked}
-            onSelectAll={handleSelectAll}
-            onSelectItem={handleSelectItem}
-            onComplete={handleComplete}
-            onOpenInfo={handleOpenMoreInfo}
-            onChangeSelection={handleSelectionModal}
-            showTableGroups={true}
-            disabled={residentsInSeating.length === 0}
-            emptyMessage="No residents found for the selected seating"
-            tableColumnCount={TABLE_COLUMNS}
-          />
-        </Wraper>
+        {mapView ?
+          (
+              <TableMap meal={mealsInSeating} />
+          ) : (
+            <Wraper>
+              <ResidentTable
+                residents={residentsOnTable}
+                mealData={updateMealOnTable}
+                selectedResidents={residentsToTray}
+                checked={checked}
+                onSelectAll={handleSelectAll}
+                onSelectItem={handleSelectItem}
+                onComplete={handleComplete}
+                onOpenInfo={handleOpenMoreInfo}
+                onChangeSelection={handleSelectionModal}
+                showTableGroups={true}
+                disabled={residentsInSeating.length === 0}
+                emptyMessage="No residents found for the selected seating"
+                tableColumnCount={TABLE_COLUMNS}
+              />
+            </Wraper>
+          )}
+        <ServingModal
+          residentsOnSeating={residentsInSeating}
+          menusOnSeating={menusInSeating}
+          mealsOnSeating={mealsInSeating}
+          condition={currentMealType}
+        />
         <MoreInfoModal
           resident={selectedResident?.resident}
           order={mealOnTable}

@@ -12,7 +12,7 @@ import {
   PopoverButton,
   PopoverPanel,
 } from "@headlessui/react";
-import { Bars3Icon, BellIcon, UserIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { ArrowRightEndOnRectangleIcon, Bars3Icon, BellIcon, CalendarDateRangeIcon, UserIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import {
   MagnifyingGlassIcon,
   ChevronDownIcon,
@@ -22,18 +22,17 @@ import { ORDERSEATINGS } from "../../constants/orderseatings";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/hooks/auth/useAuth";
-import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
 import { SyncIndicator } from "@/components/ui/SyncIndicator";
 import { SyncSettings } from "@/components/ui/SyncSettings";
 import { Cog6ToothIcon } from "@heroicons/react/24/outline";
+import { date } from "@/constants/date";
+import { getMonthYearFromISO } from "@/utils/date";
 
 const navigation = [
   { name: "Tables", href: "/table" },
-  { name: "Serving", href: "/serving" },
   { name: "Trays", href: "/trays" },
   { name: "Summary", href: "/summary" },
   { name: "Weekly Menu", href: "/weekly-menu" },
-  { name: "Dashboard", href: "/" },
 ];
 
 const Serving = [
@@ -67,6 +66,8 @@ export function Sidebar({ children }) {
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
+
+  const { month, year, day } = getMonthYearFromISO(date);
 
   return (
     <>
@@ -151,7 +152,7 @@ export function Sidebar({ children }) {
                           className="p-1 text-gray-400 hover:text-gray-600"
                           title="Cerrar sesión"
                         >
-                          <ArrowRightOnRectangleIcon className="size-5" />
+                         <ArrowRightEndOnRectangleIcon className="size-8" />
                         </button>
                       </div>
                     </li>
@@ -211,7 +212,7 @@ export function Sidebar({ children }) {
                       className="p-1 text-gray-400 hover:text-gray-600"
                       title="Cerrar sesión"
                     >
-                      <ArrowRightOnRectangleIcon className="size-5" />
+                      <ArrowRightEndOnRectangleIcon className="size-8" />
                     </button>
                   </div>
                 </li>
@@ -286,8 +287,15 @@ export function Sidebar({ children }) {
                 />
               </form>
               <div className="flex items-center gap-x-4 lg:gap-x-6">
+                <div className="flex items-center gap-x-2">
+                  <CalendarDateRangeIcon
+                    aria-hidden="true"
+                    className="size-6"
+                  />
+                  <p className="text-sm font-medium text-gray-900">{day} {month} {year}</p>
+                </div>
                 {/* Sync Indicator */}
-                <div className="hidden lg:block">
+                <div className="">
                   <SyncIndicator />
                 </div>
 
@@ -300,6 +308,14 @@ export function Sidebar({ children }) {
                 >
                   <span className="sr-only">Sync settings</span>
                   <Cog6ToothIcon aria-hidden="true" className="size-6" />
+                </button>
+                {/* Notifications button */}
+                <button
+                  type="button"
+                  className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500"
+                  title="Notifications"
+                >
+                  <BellIcon aria-hidden="true" className="size-6" />
                 </button>
 
                 {/* Separator */}

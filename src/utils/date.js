@@ -4,14 +4,15 @@ export const capitalizeFirst = (value) => {
 };
 
 export const getMonthYearFromISO = (isoString, locale = "es-ES") => {
-  if (!isoString) return { month: "", year: "" };
+  if (!isoString) return { month: "", year: "", day: "" };
   const parsed = new Date(isoString);
-  if (Number.isNaN(parsed.getTime())) return { month: "", year: "" };
+  if (Number.isNaN(parsed.getTime())) return { month: "", year: "", day: "" };
 
   const monthName = new Intl.DateTimeFormat(locale, { month: "long" }).format(parsed);
-  const year = parsed.getFullYear();
+  const year = parsed.getUTCFullYear();
+  const day = parsed.getUTCDate();
 
-  return { month: capitalizeFirst(monthName), year };
+  return { month: capitalizeFirst(monthName), year, day };
 };
 
 // Date utilities: getMonday/getSunday for a given date input (Date or ISO string)
