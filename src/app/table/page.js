@@ -18,6 +18,7 @@ import { MoreInfoModal } from "@/components/features/servingModals/MoreInfoModal
 import { SelectionModal } from "@/components/features/servingModals/SelectionModal";
 import { useMarkAsOut } from "@/hooks/utils/useMarkAsOut";
 import { useRouter } from "next/navigation";
+import AuthGuard from "@/components/auth/AuthGuard";
 
 const MEAL_TYPES = {
   BREAKFAST: 'breakfast',
@@ -161,7 +162,7 @@ export default function Tables() {
   useEffect(() => {
     const newMealType = MEAL_TYPE_BY_NUMBER[selectedMealNumber] || MEAL_TYPES.BREAKFAST;
     const newMeals = meals[newMealType] || [];
-    
+
     setCurrentMealType(newMealType);
     setCurrentMeals(newMeals);
   }, [selectedMealNumber, meals]);
@@ -173,49 +174,51 @@ export default function Tables() {
   const router = useRouter();
 
   return (
-    <div className="h-screen overflow-y-auto">
-      <div className="sticky top-0 z-10 bg-white pb-4">
-        <Title
-          title={"Residents"}
-          observations={observations}
-          button="Change to Tray"
-          buttonAction={handleChangeToTrayClick}
-          button2="Mark as Out"
-          button2Action={handleMarkAsOutClick}
+    <AuthGuard>
+      <div className="h-screen overflow-y-auto">
+        <div className="sticky top-0 z-10 bg-white pb-4">
+          <Title
+            title={"Residents"}
+            observations={observations}
+            button="Change to Tray"
+            buttonAction={handleChangeToTrayClick}
+            button2="Mark as Out"
+            button2Action={handleMarkAsOutClick}
           />
-        <MealBar />
-      </div>
-      <Wraper>
-        <ResidentTable
-          residents={residentsOnTable}
-          mealData={updateMealOnTable}
-          selectedResidents={residentsToTray}
-          checked={checked}
-          onSelectAll={handleSelectAll}
-          onSelectItem={handleSelectItem}
-          onComplete={handleComplete}
-          onOpenInfo={handleOpenMoreInfo}
-          onChangeSelection={handleSelectionModal}
-          showTableGroups={true}
-          disabled={residentsInSeating.length === 0}
-          emptyMessage="No residents found for the selected seating"
-          tableColumnCount={TABLE_COLUMNS}
+          <MealBar />
+        </div>
+        <Wraper>
+          <ResidentTable
+            residents={residentsOnTable}
+            mealData={updateMealOnTable}
+            selectedResidents={residentsToTray}
+            checked={checked}
+            onSelectAll={handleSelectAll}
+            onSelectItem={handleSelectItem}
+            onComplete={handleComplete}
+            onOpenInfo={handleOpenMoreInfo}
+            onChangeSelection={handleSelectionModal}
+            showTableGroups={true}
+            disabled={residentsInSeating.length === 0}
+            emptyMessage="No residents found for the selected seating"
+            tableColumnCount={TABLE_COLUMNS}
+          />
+        </Wraper>
+        <MoreInfoModal
+          resident={selectedResident?.resident}
+          order={mealOnTable}
+          index={selectedResident?.index}
+          setMealOnTable={setMealOnTable}
+          complete={updateMealOnTable[selectedResident?.index]?.complete}
         />
-      </Wraper>
-      <MoreInfoModal
-        resident={selectedResident?.resident}
-        order={mealOnTable}
-        index={selectedResident?.index}
-        setMealOnTable={setMealOnTable}
-        complete={updateMealOnTable[selectedResident?.index]?.complete}
-      />
-      <SelectionModal
-        resident={selectedResident?.resident}
-        order={mealOnTable}
-        index={selectedResident?.index}
-        setMealOnTable={setMealOnTable}
-        mealNumber={selectedMealNumber}
-      />
-    </div>
+        <SelectionModal
+          resident={selectedResident?.resident}
+          order={mealOnTable}
+          index={selectedResident?.index}
+          setMealOnTable={setMealOnTable}
+          mealNumber={selectedMealNumber}
+        />
+      </div>
+    </AuthGuard>
   );
 }
