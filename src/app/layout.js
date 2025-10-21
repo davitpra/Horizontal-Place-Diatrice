@@ -51,6 +51,11 @@ const AuthenticatedLayout = ({ children }) => {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className="h-full">
+      <head>
+        <link rel="icon" href="/horizon.png" sizes="any" />
+        <link rel="icon" href="/horizon.png" type="image/png" sizes="32x32" />
+        <link rel="apple-touch-icon" href="/horizon.png" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-full`}
       >
