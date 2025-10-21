@@ -56,16 +56,15 @@ export default function HomePage() {
   const router = useRouter()
 
   // If user is authenticated, redirect to table page
-  if (user) {
-    // Option 1: Redirect using Next.js router
-    const router = useRouter();
-    useEffect(() => {
+  useEffect(() => {
+    if (user) {
       router.push('/table');
-    }, [router]);
-    return null; // or a loading spinner
+    }
+  }, [user, router]);
 
-    // Option 2: Import and render the table component directly
-    // return <TablesPage user={user} handleLogout={handleLogout} />;
+  // Show loading while redirecting
+  if (user) {
+    return null; // or a loading spinner
   }
 
   // If not authenticated, show the welcome page
