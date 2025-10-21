@@ -186,14 +186,14 @@ export default function Tables() {
             buttonAction={handleChangeToTrayClick}
             button2="Mark as Out"
             button2Action={handleMarkAsOutClick}
-            button3={mapView ? "Table": "Map"}
+            button3={mapView ? "Table" : "Map"}
             button3Action={() => setMapView(!mapView)}
           />
           <MealBar />
         </div>
         {mapView ?
           (
-              <TableMap meal={mealsInSeating} />
+            <TableMap meal={mealsInSeating} />
           ) : (
             <Wraper>
               <ResidentTable

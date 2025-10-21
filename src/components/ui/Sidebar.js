@@ -287,6 +287,7 @@ export function Sidebar({ children }) {
                 />
               </form>
               <div className="flex items-center gap-x-4 lg:gap-x-6">
+                {/* Date */}
                 <div className="flex items-center gap-x-2">
                   <CalendarDateRangeIcon
                     aria-hidden="true"
