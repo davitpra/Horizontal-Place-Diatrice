@@ -2,10 +2,10 @@
 import { useEffect, useState, useRef } from "react";
 import { getAllResidents } from "@/strapi/residents/getAllResidents";
 import { residents as rawData } from "@/data/residents";
-import { useCreateMenus } from "@/hooks/meals/useCreateMenus";
-import { useCreateBreakfast } from "@/hooks/meals/useCreateBreakfast";
-import { useCreateLunch } from "@/hooks/meals/useCreateLunch";
-import { useCreateSupper } from "@/hooks/meals/useCreateSupper";
+import { getOrCreateMenus } from "@/hooks/meals/useCreateMenus";
+import { getOrCreateBreakfast } from "@/hooks/meals/useCreateBreakfast";
+import { getOrCreateLunch } from "@/hooks/meals/useCreateLunch";
+import { getOrCreateSupper } from "@/hooks/meals/useCreateSupper";
 import { date } from "@/constants/date";
 import { getMenuSchedule } from "@/strapi/menuSchedule/getMenuSchedule";
 import { getWeeklyMenu } from "@/strapi/menuSchedule/getWeeklyMenu";
@@ -73,7 +73,7 @@ export function InitialDataProvider({ children }) {
         console.log(`[InitialDataProvider] ✅ Residents loaded: ${residents.length}`);
         
         // Step 2: Create/get menus (40% progress)
-        const menus = await useCreateMenus(residents, date);
+        const menus = await getOrCreateMenus(residents, date);
         if (!isMounted) return;
         
         // Validate menus data
@@ -105,9 +105,9 @@ export function InitialDataProvider({ children }) {
         // Step 4: Create meals in parallel (50-90% progress)
         setLoadingProgress(50);
         const [breakFast, lunch, supper] = await Promise.all([
-          useCreateBreakfast(residents, date, menus),
-          useCreateLunch(residents, date, menus),
-          useCreateSupper(residents, date, menus)
+          getOrCreateBreakfast(residents, date, menus),
+          getOrCreateLunch(residents, date, menus),
+          getOrCreateSupper(residents, date, menus)
         ]);
 
         if (!isMounted) return;

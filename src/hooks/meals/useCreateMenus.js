@@ -4,7 +4,7 @@ import { getDayMenus } from "@/strapi/menus/getDayMenus";
 // Helper to add delay
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-export const useCreateMenus = async (residents, date) => {
+export const getOrCreateMenus = async (residents, date) => {
   if (!residents || !Array.isArray(residents)) {
     throw new Error("Invalid residents array");
   }
@@ -65,7 +65,7 @@ export const useCreateMenus = async (residents, date) => {
     return dayMenus;
 
   } catch (error) {
-    console.error("Error in useCreateMenus:", error);
+    console.error("Error in getOrCreateMenus:", error);
     throw error;
   }
 };

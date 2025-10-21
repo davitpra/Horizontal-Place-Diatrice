@@ -4,7 +4,7 @@ import { getDayBreakfasts } from "@/strapi/meals/breakfast/getDayBreakfasts";
 // Helper to add delay
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-export const useCreateBreakfast = async (residents, date, menus) => {
+export const getOrCreateBreakfast = async (residents, date, menus) => {
   if (!residents || !Array.isArray(residents)) {
     throw new Error("Invalid residents array");
   }
@@ -69,7 +69,7 @@ export const useCreateBreakfast = async (residents, date, menus) => {
     } 
     return dayBreakfast;
   } catch (error) {
-    console.error("Error in useCreateBreakfast:", error);
+    console.error("Error in getOrCreateBreakfast:", error);
     throw error;
   }
 };
