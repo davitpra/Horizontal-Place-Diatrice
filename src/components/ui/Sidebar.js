@@ -12,7 +12,18 @@ import {
   PopoverButton,
   PopoverPanel,
 } from "@headlessui/react";
-import { ArrowRightEndOnRectangleIcon, Bars3Icon, BellIcon, CalendarDateRangeIcon, UserIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { 
+  ArrowRightEndOnRectangleIcon, 
+  Bars3Icon, 
+  BellIcon, 
+  CalendarDateRangeIcon, 
+  UserIcon, 
+  XMarkIcon,
+  TableCellsIcon,
+  Square3Stack3DIcon,
+  ChartBarIcon,
+  CalendarDaysIcon
+} from "@heroicons/react/24/outline";
 import {
   MagnifyingGlassIcon,
   ChevronDownIcon,
@@ -29,10 +40,10 @@ import { date } from "@/constants/date";
 import { getMonthYearFromISO } from "@/utils/date";
 
 const navigation = [
-  { name: "Tables", href: "/table" },
-  { name: "Trays", href: "/trays" },
-  { name: "Summary", href: "/summary" },
-  { name: "Weekly Menu", href: "/weekly-menu" },
+  { name: "Tables", href: "/table", icon: TableCellsIcon },
+  { name: "Trays", href: "/trays", icon: Square3Stack3DIcon },
+  { name: "Summary", href: "/summary", icon: ChartBarIcon },
+  { name: "Weekly Menu", href: "/weekly-menu", icon: CalendarDaysIcon },
 ];
 
 const Serving = [
@@ -125,10 +136,19 @@ export function Sidebar({ children }) {
                                 item.href === pathname
                                   ? "bg-gray-50 text-indigo-600"
                                   : "hover:bg-gray-50",
-                                "block rounded-md py-2 pl-10 pr-2 text-sm/6 font-semibold text-gray-700"
+                                "group flex items-center gap-x-3 rounded-md py-2 px-3 text-sm/6 font-semibold text-gray-700"
                               )}
                               onClick={toggleSidebar}
                             >
+                              <item.icon
+                                className={classNames(
+                                  item.href === pathname 
+                                    ? "text-indigo-600" 
+                                    : "text-gray-400 group-hover:text-indigo-600",
+                                  "size-6 shrink-0"
+                                )}
+                                aria-hidden="true"
+                              />
                               {item.name}
                             </Link>
                           </div>
@@ -186,9 +206,18 @@ export function Sidebar({ children }) {
                             item.href === pathname
                               ? "bg-gray-50 text-indigo-600"
                               : "hover:bg-gray-50",
-                            "block rounded-md py-2 pl-10 pr-2 text-sm/6 font-semibold text-gray-700"
+                            "group flex items-center gap-x-3 rounded-md py-2 px-3 text-sm/6 font-semibold text-gray-700"
                           )}
                         >
+                          <item.icon
+                            className={classNames(
+                              item.href === pathname 
+                                ? "text-indigo-600" 
+                                : "text-gray-400 group-hover:text-indigo-600",
+                              "size-6 shrink-0"
+                            )}
+                            aria-hidden="true"
+                          />
                           {item.name}
                         </Link>
                       </li>
