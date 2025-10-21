@@ -31,7 +31,7 @@ const LoginForm = () => {
     e.preventDefault();
     
     if (!formData.identifier || !formData.password) {
-      setError('Por favor, completa todos los campos');
+      setError('Please fill in all fields');
       return;
     }
 
@@ -44,7 +44,7 @@ const LoginForm = () => {
       // Redirect to dashboard or intended page
       router.push('/');
     } catch (error) {
-      setError(error.message || 'Error al iniciar sesión');
+      setError(error.message || 'Error logging in');
     } finally {
       setIsLoading(false);
     }
@@ -62,7 +62,7 @@ const LoginForm = () => {
             Horizontal Place
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Inicia sesión en tu cuenta
+            Login to your account
           </p>
         </div>
         
@@ -70,7 +70,7 @@ const LoginForm = () => {
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
               <label htmlFor="identifier" className="sr-only">
-                Email o nombre de usuario
+                Email or username
               </label>
               <input
                 id="identifier"
@@ -79,7 +79,7 @@ const LoginForm = () => {
                 autoComplete="username"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email o nombre de usuario"
+                placeholder="Email or username"
                 value={formData.identifier}
                 onChange={handleInputChange}
                 disabled={isLoading}
@@ -88,7 +88,7 @@ const LoginForm = () => {
             
             <div className="relative">
               <label htmlFor="password" className="sr-only">
-                Contraseña
+                Password
               </label>
               <input
                 id="password"
@@ -97,7 +97,7 @@ const LoginForm = () => {
                 autoComplete="current-password"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 pr-10 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Contraseña"
+                placeholder="Password"
                 value={formData.password}
                 onChange={handleInputChange}
                 disabled={isLoading}
@@ -122,7 +122,7 @@ const LoginForm = () => {
               <div className="flex">
                 <div className="ml-3">
                   <h3 className="text-sm font-medium text-red-800">
-                    Error de autenticación
+                    Authentication error
                   </h3>
                   <div className="mt-2 text-sm text-red-700">
                     {error}
@@ -141,22 +141,22 @@ const LoginForm = () => {
               {isLoading ? (
                 <div className="flex items-center">
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Iniciando sesión...
+                  Logging in...
                 </div>
               ) : (
-                'Iniciar sesión'
+                'Login'
               )}
             </button>
           </div>
 
           <div className="text-center">
             <p className="text-sm text-gray-600">
-              ¿No tienes una cuenta?{' '}
+              Don't have an account?{' '}
               <a
                 href="/register"
                 className="font-medium text-indigo-600 hover:text-indigo-500"
               >
-                Regístrate aquí
+                Register here
               </a>
             </p>
           </div>

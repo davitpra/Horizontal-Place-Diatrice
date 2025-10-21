@@ -35,24 +35,24 @@ const RegisterForm = () => {
     
     // Validation
     if (!formData.username || !formData.email || !formData.password || !formData.confirmPassword) {
-      setError('Por favor, completa todos los campos');
+      setError('Please fill in all fields');
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setError('Las contraseñas no coinciden');
+      setError('Passwords do not match');
       return;
     }
 
     if (formData.password.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres');
+      setError('Password must be at least 6 characters');
       return;
     }
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      setError('Por favor, ingresa un email válido');
+      setError('Please enter a valid email');
       return;
     }
 
@@ -65,7 +65,7 @@ const RegisterForm = () => {
       // Redirect to dashboard
       router.push('/');
     } catch (error) {
-      setError(error.message || 'Error al registrarse');
+      setError(error.message || 'Error registering');
     } finally {
       setIsLoading(false);
     }
@@ -87,7 +87,7 @@ const RegisterForm = () => {
             Horizontal Place
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Crea una nueva cuenta
+            Create a new account
           </p>
         </div>
         
@@ -95,7 +95,7 @@ const RegisterForm = () => {
           <div className="space-y-4">
             <div>
               <label htmlFor="username" className="sr-only">
-                Nombre de usuario
+                Username
               </label>
               <input
                 id="username"
@@ -104,7 +104,7 @@ const RegisterForm = () => {
                 autoComplete="username"
                 required
                 className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder="Nombre de usuario"
+                placeholder="Username"
                 value={formData.username}
                 onChange={handleInputChange}
                 disabled={isLoading}
@@ -113,7 +113,7 @@ const RegisterForm = () => {
 
             <div>
               <label htmlFor="email" className="sr-only">
-                Email
+                Email address
               </label>
               <input
                 id="email"
@@ -122,7 +122,7 @@ const RegisterForm = () => {
                 autoComplete="email"
                 required
                 className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder="Email"
+                placeholder="Email address"
                 value={formData.email}
                 onChange={handleInputChange}
                 disabled={isLoading}
@@ -131,7 +131,7 @@ const RegisterForm = () => {
 
             <div className="relative">
               <label htmlFor="password" className="sr-only">
-                Contraseña
+                Password
               </label>
               <input
                 id="password"
@@ -140,7 +140,7 @@ const RegisterForm = () => {
                 autoComplete="new-password"
                 required
                 className="appearance-none relative block w-full px-3 py-2 pr-10 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder="Contraseña"
+                placeholder="Password"
                 value={formData.password}
                 onChange={handleInputChange}
                 disabled={isLoading}
@@ -161,7 +161,7 @@ const RegisterForm = () => {
 
             <div className="relative">
               <label htmlFor="confirmPassword" className="sr-only">
-                Confirmar contraseña
+                Confirm password
               </label>
               <input
                 id="confirmPassword"
@@ -170,7 +170,7 @@ const RegisterForm = () => {
                 autoComplete="new-password"
                 required
                 className="appearance-none relative block w-full px-3 py-2 pr-10 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder="Confirmar contraseña"
+                placeholder="Confirm password"
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
                 disabled={isLoading}
@@ -195,7 +195,7 @@ const RegisterForm = () => {
               <div className="flex">
                 <div className="ml-3">
                   <h3 className="text-sm font-medium text-red-800">
-                    Error de registro
+                    Error registering
                   </h3>
                   <div className="mt-2 text-sm text-red-700">
                     {error}
@@ -214,22 +214,22 @@ const RegisterForm = () => {
               {isLoading ? (
                 <div className="flex items-center">
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Registrando...
+                  Registering...
                 </div>
               ) : (
-                'Registrarse'
+                'Register'
               )}
             </button>
           </div>
 
           <div className="text-center">
             <p className="text-sm text-gray-600">
-              ¿Ya tienes una cuenta?{' '}
+              Already have an account?{' '}
               <a
                 href="/login"
                 className="font-medium text-indigo-600 hover:text-indigo-500"
               >
-                Inicia sesión aquí
+                Login here
               </a>
             </p>
           </div>
