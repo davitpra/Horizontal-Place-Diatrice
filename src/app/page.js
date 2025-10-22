@@ -162,7 +162,7 @@ export default function HomePage() {
         </div>
 
         {/*Steps section*/}
-        <div className="mx-auto max-w-7xl px-6 sm:mt-56 lg:px-8">
+        <div className="mx-auto max-w-7xl px-6 mt-16 sm:mt-56 lg:px-8">
           <nav aria-label="Progress">
             <ol role="list" className="space-y-4 md:flex md:space-y-0 md:space-x-8">
               {steps.map((step) => (
