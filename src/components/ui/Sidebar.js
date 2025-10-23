@@ -298,8 +298,9 @@ export function Sidebar({ children }) {
               className="h-6 w-px bg-gray-900/10 lg:hidden"
             />
 
-            <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
+            <div className="flex flex-1 gap-x-4 self-stretch justify-end lg:gap-x-6">
               {/* Search */}
+              {/*
               <form action="#" method="GET" className="relative flex flex-1">
                 <label htmlFor="search-field" className="sr-only">
                   Search
@@ -316,6 +317,7 @@ export function Sidebar({ children }) {
                   className="block size-full border-0 py-0 pl-8 pr-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm"
                 />
               </form>
+              */}
               <div className="flex items-center gap-x-4 lg:gap-x-6">
                 {/* Date */}
                 <div className="flex items-center gap-x-2">
