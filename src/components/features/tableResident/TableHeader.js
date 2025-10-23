@@ -18,7 +18,7 @@ const TableHeader = ({ checked, onSelectAll, disabled = false }) => {
           Name
         </th>
         <th className="py-3.5 text-center text-sm font-semibold text-gray-900 md:pr-40">
-          To Serve
+          Serve
         </th>
         <th className="hidden md:block"/>
         <th className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">
