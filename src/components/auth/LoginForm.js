@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/auth/useAuth';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import toast from 'react-hot-toast';
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({
@@ -12,7 +13,6 @@ const LoginForm = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const { login } = useAuth();
   const router = useRouter();
@@ -23,28 +23,27 @@ const LoginForm = () => {
       ...prev,
       [name]: value
     }));
-    // Clear error when user starts typing
-    if (error) setError('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!formData.identifier || !formData.password) {
-      setError('Please fill in all fields');
+      toast.error('Please fill in all fields');
       return;
     }
 
     try {
       setIsLoading(true);
-      setError('');
       
       await login(formData.identifier, formData.password);
+      
+      toast.success('Login successful!');
       
       // Redirect to dashboard or intended page
       router.push('/');
     } catch (error) {
-      setError(error.message || 'Error logging in');
+      toast.error(error.message || 'Error logging in');
     } finally {
       setIsLoading(false);
     }
@@ -69,7 +68,7 @@ const LoginForm = () => {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
-              <label htmlFor="identifier" className="sr-only">
+              <label htmlFor="identifier" className="text-sm">
                 Email or username
               </label>
               <input
@@ -87,7 +86,7 @@ const LoginForm = () => {
             </div>
             
             <div className="relative">
-              <label htmlFor="password" className="sr-only">
+              <label htmlFor="password" className="text-sm">
                 Password
               </label>
               <input
@@ -116,21 +115,6 @@ const LoginForm = () => {
               </button>
             </div>
           </div>
-
-          {error && (
-            <div className="rounded-md bg-red-50 p-4">
-              <div className="flex">
-                <div className="ml-3">
-                  <h3 className="text-sm font-medium text-red-800">
-                    Authentication error
-                  </h3>
-                  <div className="mt-2 text-sm text-red-700">
-                    {error}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
 
           <div>
             <button

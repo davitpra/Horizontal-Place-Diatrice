@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/auth/useAuth';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import toast from 'react-hot-toast';
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -15,7 +16,6 @@ const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const { register } = useAuth();
   const router = useRouter();
@@ -26,8 +26,6 @@ const RegisterForm = () => {
       ...prev,
       [name]: value
     }));
-    // Clear error when user starts typing
-    if (error) setError('');
   };
 
   const handleSubmit = async (e) => {
@@ -35,37 +33,38 @@ const RegisterForm = () => {
     
     // Validation
     if (!formData.username || !formData.email || !formData.password || !formData.confirmPassword) {
-      setError('Please fill in all fields');
+      toast.error('Please fill in all fields');
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+      toast.error('Passwords do not match');
       return;
     }
 
     if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters');
+      toast.error('Password must be at least 6 characters');
       return;
     }
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      setError('Please enter a valid email');
+      toast.error('Please enter a valid email');
       return;
     }
 
     try {
       setIsLoading(true);
-      setError('');
       
       await register(formData.username, formData.email, formData.password);
+      
+      toast.success('Registration successful!');
       
       // Redirect to dashboard
       router.push('/');
     } catch (error) {
-      setError(error.message || 'Error registering');
+      toast.error(error.message || 'Error registering');
     } finally {
       setIsLoading(false);
     }
@@ -189,21 +188,6 @@ const RegisterForm = () => {
               </button>
             </div>
           </div>
-
-          {error && (
-            <div className="rounded-md bg-red-50 p-4">
-              <div className="flex">
-                <div className="ml-3">
-                  <h3 className="text-sm font-medium text-red-800">
-                    Error registering
-                  </h3>
-                  <div className="mt-2 text-sm text-red-700">
-                    {error}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
 
           <div>
             <button
