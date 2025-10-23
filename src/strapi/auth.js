@@ -127,9 +127,6 @@ export const getMe = async () => {
  */
 export const logout = () => {
   Cookies.remove('jwt');
-  if (typeof window !== 'undefined') {
-    window.location.href = '/login';
-  }
 };
 
 /**

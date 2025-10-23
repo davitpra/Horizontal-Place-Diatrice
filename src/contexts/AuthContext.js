@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { login, register, getMe, logout, isAuthenticated, getToken } from '@/strapi/auth';
 
 const AuthContext = createContext({});
@@ -14,6 +15,7 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
+  const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -79,6 +81,10 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     setError(null);
     logout();
+    // Usar window.location para forzar una recarga completa
+    if (typeof window !== 'undefined') {
+      window.location.href = '/';
+    }
   };
 
   const refreshUser = async () => {
