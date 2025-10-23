@@ -76,7 +76,7 @@ const ResidentTable = ({
 
     return (
       <tr key={resident.documentId}>
-        <td className="relative px-6 text-center">
+        <td className="relative text-center">
           <div className="absolute inset-y-0 left-0 hidden w-0.5 bg-indigo-600 group-has-checked:block" />
           <div className="flex justify-center items-center h-full">
             <CheckboxCell
@@ -87,7 +87,7 @@ const ResidentTable = ({
             />
           </div>
         </td>
-        <td className="whitespace-nowrap py-5 pl-0 pr-3 text-sm">
+        <td className="whitespace-nowrap py-5 text-sm">
           <ResidentInfo resident={resident} mealInfo={mealItem} />
         </td>
         <td className="hidden md:table-cell whitespace-nowrap px-3 py-2 text-sm text-gray-500 text-center">

@@ -14,6 +14,8 @@ import { useSelectionModal } from "@/store/modals/useSelectionModal";
 import { SelectionModal } from "@/components/features/servingModals/SelectionModal";
 import { useMarkAsOut } from "@/hooks/utils/useMarkAsOut";
 import AuthGuard from "@/components/auth/AuthGuard";
+import { useMoreInfoModal } from "@/store/modals/useMoreInfoModal";
+import { MoreInfoModal } from "@/components/features/servingModals/MoreInfoModal";
 
 const MEAL_TYPES = {
   BREAKFAST: "breakfast",
@@ -42,12 +44,13 @@ export default function Tables() {
 
   // Modal stores
   const SelecModal = useSelectionModal();
+  const InfoModal = useMoreInfoModal();
 
   const handleOpenMoreInfo = (resident, index) => {
     if (!resident) return;
     setResidentInfo(resident);
     setSelectedIndex(index);
-    SelecModal.onOpen();
+    InfoModal.onOpen();
   };
 
   const handleSelectionModal = (resident, index) => {
@@ -59,11 +62,11 @@ export default function Tables() {
 
   // Reset resident info when modals close
   useEffect(() => {
-    if (!SelecModal.isOpen) {
+    if (!SelecModal.isOpen && !InfoModal.isOpen) {
       setResidentInfo(null);
       setSelectedIndex(null);
     }
-  }, [SelecModal.isOpen]);
+  }, [SelecModal.isOpen, InfoModal.isOpen]);
 
   const { handleComplete: handleCompleteAction } = useHandleComplete();
 
@@ -202,6 +205,12 @@ export default function Tables() {
           index={selectedIndex}
           setMealOnTable={setMealOnTray}
           mealNumber={selectedMealNumber}
+        />
+        <MoreInfoModal
+          resident={residentInfo}
+          order={mealOnTray}
+          index={selectedIndex}
+          complete={mealOnTray[selectedIndex]?.complete}
         />
       </div>
     </AuthGuard>

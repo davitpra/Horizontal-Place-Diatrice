@@ -195,23 +195,40 @@ export default function Tables() {
           (
             <TableMap meal={mealsInSeating} />
           ) : (
-            <Wraper>
-              <ResidentTable
-                residents={residentsOnTable}
-                mealData={updateMealOnTable}
-                selectedResidents={residentsToTray}
-                checked={checked}
-                onSelectAll={handleSelectAll}
-                onSelectItem={handleSelectItem}
-                onComplete={handleComplete}
-                onOpenInfo={handleOpenMoreInfo}
-                onChangeSelection={handleSelectionModal}
-                showTableGroups={true}
-                disabled={residentsInSeating.length === 0}
-                emptyMessage="No residents found for the selected seating"
-                tableColumnCount={TABLE_COLUMNS}
+            <>
+              <Wraper>
+                <ResidentTable
+                  residents={residentsOnTable}
+                  mealData={updateMealOnTable}
+                  selectedResidents={residentsToTray}
+                  checked={checked}
+                  onSelectAll={handleSelectAll}
+                  onSelectItem={handleSelectItem}
+                  onComplete={handleComplete}
+                  onOpenInfo={handleOpenMoreInfo}
+                  onChangeSelection={handleSelectionModal}
+                  showTableGroups={true}
+                  disabled={residentsInSeating.length === 0}
+                  emptyMessage="No residents found for the selected seating"
+                  tableColumnCount={TABLE_COLUMNS}
+                />
+              </Wraper>
+
+              <SelectionModal
+                resident={selectedResident?.resident}
+                order={mealOnTable}
+                index={selectedResident?.index}
+                setMealOnTable={setMealOnTable}
+                mealNumber={selectedMealNumber}
               />
-            </Wraper>
+              <MoreInfoModal
+                resident={selectedResident?.resident}
+                order={mealOnTable}
+                index={selectedResident?.index}
+                setMealOnTable={setMealOnTable}
+                complete={updateMealOnTable[selectedResident?.index]?.complete}
+              />
+            </>
           )}
         <ServingModal
           residentsOnSeating={residentsInSeating}
@@ -219,20 +236,7 @@ export default function Tables() {
           mealsOnSeating={mealsInSeating}
           condition={currentMealType}
         />
-        <MoreInfoModal
-          resident={selectedResident?.resident}
-          order={mealOnTable}
-          index={selectedResident?.index}
-          setMealOnTable={setMealOnTable}
-          complete={updateMealOnTable[selectedResident?.index]?.complete}
-        />
-        <SelectionModal
-          resident={selectedResident?.resident}
-          order={mealOnTable}
-          index={selectedResident?.index}
-          setMealOnTable={setMealOnTable}
-          mealNumber={selectedMealNumber}
-        />
+
       </div>
     </AuthGuard>
   );

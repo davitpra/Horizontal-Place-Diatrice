@@ -27,10 +27,10 @@ const ResidentInfo = ({ resident, mealInfo }) => {
             Out 
           </span>}
         </div>
-        <div className="flex flex-wrap gap-2 mt-2">
+        <div className="flex flex-col md:flex-row flex-wrap gap-2 mt-2">
         {resident.Guidelines &&
           guidelines.map((guideline, index) => (
-            <div key={index} className="rounded-md bg-blue-50 px-1.5 py-0.5 text-xs font-medium text-blue-800 inset-ring inset-ring-blue-600/20">
+            <div key={index} className="rounded-md bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-800 inset-ring inset-ring-blue-600/20 text-center md:text-left">
               {guideline}
             </div>
           ))}

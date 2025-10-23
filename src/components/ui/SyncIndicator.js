@@ -15,7 +15,7 @@ export const SyncIndicator = ({ className = '' }) => {
         {isSyncing && (
           <>
             <ArrowPathIcon className="h-4 w-4 animate-spin text-blue-600" />
-            <span className="text-blue-600">Syncing...</span>
+            <span className="hidden md:block text-blue-600">Syncing...</span>
           </>
         ) }
       </div>
@@ -29,7 +29,7 @@ export const SyncIndicator = ({ className = '' }) => {
         tabIndex={0}
       >
         <ArrowPathIcon className={`h-4 w-4 ${isSyncing ? 'animate-spin' : ''}`} />
-        <span>Sync</span>
+        <span className="hidden md:block">Sync</span>
       </button>
     </div>
   );

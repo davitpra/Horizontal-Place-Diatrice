@@ -8,7 +8,7 @@ export const getMonthYearFromISO = (isoString, locale = "es-ES") => {
   const parsed = new Date(isoString);
   if (Number.isNaN(parsed.getTime())) return { month: "", year: "", day: "" };
 
-  const monthName = new Intl.DateTimeFormat(locale, { month: "long" }).format(parsed);
+  const monthName = new Intl.DateTimeFormat(locale, { month: "short" }).format(parsed);
   const year = parsed.getUTCFullYear();
   const day = parsed.getUTCDate();
 

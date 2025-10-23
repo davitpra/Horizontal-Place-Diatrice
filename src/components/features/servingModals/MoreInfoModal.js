@@ -62,7 +62,7 @@ export function MoreInfoModal({
       isOpen={open}
       close={InfoModal.onClose}
       title={resident?.full_name || 'Resident Information'}
-      button={localComplete ? "Mark as Incomplete" : "Mark as Complete"}
+      button={localComplete ? "Set as Incomplete" : "Set as Complete"}
       buttonAction={handleComplete}
     >
       <span

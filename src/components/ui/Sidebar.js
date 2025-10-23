@@ -265,7 +265,7 @@ export function Sidebar({ children }) {
             {/* Seating label */}
             {pathname !== "/trays" && (
               <Popover className="relative">
-                <PopoverButton className="inline-flex items-center gap-x-1 text-sm/6 font-semibold text-gray-900">
+                <PopoverButton className="text-xs md:text-sm inline-flex items-center gap-x-1  font-semibold text-gray-900">
                   <span>{seatingLabel}</span>
                   <ChevronDownIcon aria-hidden="true" className="size-5" />
                 </PopoverButton>
@@ -274,7 +274,7 @@ export function Sidebar({ children }) {
                   transition
                   className="absolute left-28 z-10 mt-5 flex w-screen max-w-min -translate-x-1/2 px-4 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
                 >
-                  <div className="w-56 shrink rounded-xl bg-white p-4 text-sm/6 font-semibold text-gray-900 shadow-lg ring-1 ring-gray-900/5">
+                  <div className="text-xs md:text-sm w-56 shrink rounded-xl bg-white p-4 font-semibold text-gray-900 shadow-lg ring-1 ring-gray-900/5">
                     {Serving.map((item) => (
                       <button
                         key={item.name}
@@ -291,6 +291,7 @@ export function Sidebar({ children }) {
                 </PopoverPanel>
               </Popover>
             )}
+            
             {/* Separator */}
             <div
               aria-hidden="true"
@@ -322,7 +323,8 @@ export function Sidebar({ children }) {
                     aria-hidden="true"
                     className="size-6"
                   />
-                  <p className="text-sm font-medium text-gray-900">{day} {month} {year}</p>
+                  <p className="hidden md:block text-sm font-medium text-gray-900">{day} {month} {year}</p>
+                  <p className="block md:hidden text-xs text-center font-medium text-gray-900">{day} {month}</p>
                 </div>
                 {/* Sync Indicator */}
                 <div className="">
@@ -332,7 +334,7 @@ export function Sidebar({ children }) {
                 {/* Sync Settings button */}
                 <button
                   type="button"
-                  onClick={() => setShowSyncSettings(true)}
+                  onClick={() => setShowSyncSettings(!showSyncSettings)}
                   className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500"
                   title="Sync settings"
                 >
@@ -340,6 +342,7 @@ export function Sidebar({ children }) {
                   <Cog6ToothIcon aria-hidden="true" className="size-6" />
                 </button>
                 {/* Notifications button */}
+                {/*
                 <button
                   type="button"
                   className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500"
@@ -347,6 +350,7 @@ export function Sidebar({ children }) {
                 >
                   <BellIcon aria-hidden="true" className="size-6" />
                 </button>
+                */}
 
                 {/* Separator */}
                 <div
