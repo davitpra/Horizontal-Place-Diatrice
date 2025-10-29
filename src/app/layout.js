@@ -52,9 +52,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="h-full">
       <head>
-        <link rel="icon" href="/horizon.png" sizes="any" />
-        <link rel="icon" href="/horizon.png" type="image/png" sizes="32x32" />
-        <link rel="apple-touch-icon" href="/horizon.png" />
+        <meta name="theme-color" content="#0ea5e9" />
+        <meta name="application-name" content="Horizontal Place" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <link rel="manifest" href="/manifest.webmanifest" />
+        <link rel="icon" href="/icons/icon-192x192.png" type="image/png" sizes="192x192" />
+        <link rel="icon" href="/icons/icon-512x512.png" type="image/png" sizes="512x512" />
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon-180x180.png" sizes="180x180" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-full`}
