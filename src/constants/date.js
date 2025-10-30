@@ -1,1 +1,1 @@
-export const date = "2025-10-15";
+export const date = "2025-10-13";
