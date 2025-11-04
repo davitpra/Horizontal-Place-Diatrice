@@ -1,12 +1,12 @@
 {
-  "name": "Horizontal Place",
-  "short_name": "Horizontal",
+  "name": "Horizon Place",
+  "short_name": "Horizon",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#ffffff",
-  "description": "Horizontal Place PWA",
+  "description": "Horizon Place PWA",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
@@ -27,13 +27,13 @@
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Horizontal Place - Dashboard"
+      "label": "Horizon Place - Dashboard"
     },
     {
       "src": "/screenshots/mobile-720x1280.png",
       "sizes": "720x1280",
       "type": "image/png",
-      "label": "Horizontal Place - Mobile"
+      "label": "Horizon Place - Mobile"
     }
   ]
 }

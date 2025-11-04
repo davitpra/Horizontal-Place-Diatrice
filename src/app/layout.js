@@ -53,7 +53,7 @@ export default function RootLayout({ children }) {
     <html lang="en" className="h-full">
       <head>
         <meta name="theme-color" content="#0ea5e9" />
-        <meta name="application-name" content="Horizontal Place" />
+        <meta name="application-name" content="Horizon Place" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="mobile-web-app-capable" content="yes" />

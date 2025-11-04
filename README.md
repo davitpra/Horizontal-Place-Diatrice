@@ -1,4 +1,4 @@
-# Horizontal Place - Sistema de Gestión de Residentes
+# Horizon Place - Sistema de Gestión de Residentes
 
 Un sistema completo de gestión de residentes para centros de cuidado, desarrollado con Next.js y Strapi CMS. La aplicación permite gestionar residentes, sus preferencias alimentarias, menús diarios y el servicio de comidas.
 
@@ -63,7 +63,7 @@ Antes de comenzar, asegúrate de tener instalado:
 
    ```bash
    git clone <repository-url>
-   cd horizontal-place
+   cd horizon-place
    ```
 
 2. **Instala las dependencias**
