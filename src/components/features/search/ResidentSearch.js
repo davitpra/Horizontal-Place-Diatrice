@@ -63,7 +63,7 @@ const ResidentSearch = ({
       <form onSubmit={handleSubmit} className="relative">
         <div className="relative flex items-center border-b border-gray-200">
           <label htmlFor="search-field" className="sr-only">
-            Buscar residente
+            Search resident
           </label>
           <MagnifyingGlassIcon
             aria-hidden="true"
@@ -85,7 +85,7 @@ const ResidentSearch = ({
               type="button"
               onClick={handleClearSearch}
               className="absolute inset-y-0 right-0 flex items-center pr-3 hover:text-gray-600"
-              aria-label="Limpiar búsqueda"
+              aria-label="Clear search"
             >
               <XMarkIcon className="h-5 w-5 text-gray-400 hover:text-gray-600" />
             </button>
@@ -107,7 +107,7 @@ const ResidentSearch = ({
                       <div className="font-medium">{resident.full_name}</div>
                       {resident.room_number && (
                         <div className="text-xs text-gray-500">
-                          Habitación: {resident.room_number}
+                          Room: {resident.room_number}
                         </div>
                       )}
                     </button>
@@ -116,7 +116,7 @@ const ResidentSearch = ({
               </ul>
             ) : (
               <div className="px-4 py-3 text-sm text-gray-500">
-                No se encontraron residentes con ese nombre
+                No residents found with that name
               </div>
             )}
           </div>
@@ -129,14 +129,14 @@ const ResidentSearch = ({
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-sm font-medium text-indigo-900">
-                Residente seleccionado:
+                Selected resident:
               </h3>
               <p className="text-lg font-semibold text-indigo-700 mt-1">
                 {selectedResident.full_name}
               </p>
               {selectedResident.room_number && (
                 <p className="text-sm text-indigo-600">
-                  Habitación: {selectedResident.room_number}
+                  Room: {selectedResident.room_number}
                 </p>
               )}
             </div>
@@ -145,7 +145,7 @@ const ResidentSearch = ({
               onClick={handleClearSearch}
               className="text-indigo-600 hover:text-indigo-800 font-medium text-sm"
             >
-              Cambiar
+              Change
             </button>
           </div>
         </div>
