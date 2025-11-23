@@ -2,7 +2,7 @@
 import { UserIcon } from "@heroicons/react/24/outline";
 
 const ResidentInfo = ({ resident, mealInfo }) => {
-  const host = process.env.NEXT_PUBLIC_STRAPI_HOST;
+
   const guidelines = resident.Guidelines?.split('\n').map(guideline => guideline.trim()) || [];
   return (
     <div className="flex">
@@ -10,7 +10,7 @@ const ResidentInfo = ({ resident, mealInfo }) => {
         {resident.Picture?.url ? (
           <img
             alt={`${resident.full_name} image`}
-            src={`${host}${resident.Picture.formats.thumbnail.url}`}
+            src={`/api/image-proxy?path=${resident.Picture.formats.thumbnail.url}`}
             className="size-11 rounded-full"
           />
         ) : (
